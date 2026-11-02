@@ -1,0 +1,11 @@
+# Data is fetched from the original public sources by evals/*/fetch_data.py and is never committed.
+data/
+*.part
+
+# Download caches
+.cache/
+_cache/
+
+# Python
+__pycache__/
+*.pyc

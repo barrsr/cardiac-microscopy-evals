@@ -1,0 +1,17 @@
+{
+ "eval": "brightfield_contractility_microbundle_pacing_capture_v1",
+ "model": "claude:sonnet",
+ "run": 3,
+ "answer": {
+  "n_captured": 8,
+  "not_captured": [
+   "Ex00636",
+   "Ex00637",
+   "Ex00638"
+  ]
+ },
+ "pass": true,
+ "note": "",
+ "seconds": 74,
+ "cost_usd": 0.1190996
+}

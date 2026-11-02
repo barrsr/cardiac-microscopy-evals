@@ -1,0 +1,15 @@
+{
+ "eval": "brightfield_contractility_microbundle_pacing_capture_v1",
+ "model": "codex:",
+ "run": 1,
+ "answer": {
+  "n_captured": 10,
+  "not_captured": [
+   "Ex00638"
+  ]
+ },
+ "pass": false,
+ "note": "",
+ "seconds": 29,
+ "cost_usd": null
+}

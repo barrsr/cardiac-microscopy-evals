@@ -1,0 +1,18 @@
+{
+ "eval": "spinningdisk_hipsc_cm_actn2_striation_panel_sarcomere_length_v2",
+ "model": "codex:",
+ "run": 1,
+ "answer": {
+  "striated_cell_ids": [
+   "cell_B",
+   "cell_D",
+   "cell_E"
+  ],
+  "n_striated": 3,
+  "median_sarcomere_length_um": 1.673
+ },
+ "pass": true,
+ "note": "",
+ "seconds": 40,
+ "cost_usd": null
+}

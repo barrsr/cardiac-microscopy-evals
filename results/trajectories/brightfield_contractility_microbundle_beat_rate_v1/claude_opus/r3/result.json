@@ -1,0 +1,12 @@
+{
+ "eval": "brightfield_contractility_microbundle_beat_rate_v1",
+ "model": "claude:opus",
+ "run": 3,
+ "answer": {
+  "beat_rate_bpm": 60.2
+ },
+ "pass": true,
+ "note": "",
+ "seconds": 37,
+ "cost_usd": 0.10928420000000001
+}

@@ -1,0 +1,12 @@
+{
+ "eval": "spinningdisk_hipsc_cm_actn2_sarcomere_length_v1",
+ "model": "claude:haiku",
+ "run": 1,
+ "answer": {
+  "sarcomere_length_um": 1.67
+ },
+ "pass": true,
+ "note": "",
+ "seconds": 241,
+ "cost_usd": 0.020459279999999996
+}

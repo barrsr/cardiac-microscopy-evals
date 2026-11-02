@@ -1,0 +1,218 @@
+<title>Beats and Z-Lines</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a lab notebook. A results grid first, then one plate per task (question, answer, traps, figure), then method. */
+:root{
+  --bg:#f6f7f5; --panel:#ffffff; --ink:#18201c; --muted:#5b6660; --rule:#dde2de;
+  --gfp:#1f8a5b; --gfp-soft:#e3f2ea; --bf:#a5671c; --bf-soft:#f6ebdc;
+  --pass:#1f8a5b; --fail:#c23b2a; --fail-soft:#f8e3df; --code:#eef1ee;
+  --f-display:"Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body:"Public Sans", "Helvetica Neue", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1412; --panel:#161d1a; --ink:#e4ebe7; --muted:#9aa8a1; --rule:#28322d;
+  --gfp:#4cc489; --gfp-soft:#16291f; --bf:#e0a453; --bf-soft:#2b2115;
+  --pass:#4cc489; --fail:#f07a68; --fail-soft:#331b17; --code:#1c2421; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1412; --panel:#161d1a; --ink:#e4ebe7; --muted:#9aa8a1; --rule:#28322d;
+  --gfp:#4cc489; --gfp-soft:#16291f; --bf:#e0a453; --bf-soft:#2b2115;
+  --pass:#4cc489; --fail:#f07a68; --fail-soft:#331b17; --code:#1c2421; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:1080px;margin:0 auto;display:grid;gap:56px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(2.2rem,5vw,3.4rem);line-height:1.05;font-weight:700}
+h2{font-size:1.6rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:0;max-width:68ch}
+.eyebrow{font:600 .74rem/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+header{display:grid;gap:18px}
+.lede{font-size:1.12rem;color:var(--ink)}
+.byline{color:var(--muted);font-size:.95rem}
+.mono{font-family:var(--f-mono);font-size:.86em}
+.num{font-variant-numeric:tabular-nums}
+/* results grid */
+.grid-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle}
+thead th{font:600 .78rem/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+thead th small{display:block;text-transform:none;letter-spacing:0;font-family:var(--f-body);font-weight:400}
+tbody tr:last-child td{border-bottom:0}
+.maker{color:var(--muted);font-size:.82rem;display:block}
+.v1{color:var(--muted)}
+.dots{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.dot{width:22px;height:22px;border-radius:50%;border:0;cursor:pointer;display:grid;place-items:center;font:600 11px/1 var(--f-mono);color:var(--bg)}
+.dot.p{background:var(--pass)} .dot.f{background:var(--fail)}
+.dot:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.dot[aria-pressed="true"]{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--ink)}
+.score{font:600 .86rem var(--f-mono);margin-left:4px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:.88rem}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend i{width:12px;height:12px;border-radius:50%;display:inline-block}
+/* run viewer */
+#viewer{border:1px solid var(--rule);border-radius:10px;background:var(--panel);padding:18px;display:grid;gap:12px}
+#viewer .head{display:flex;gap:12px;flex-wrap:wrap;align-items:baseline;justify-content:space-between}
+.verdict{font:600 .8rem var(--f-mono);padding:3px 9px;border-radius:99px}
+.verdict.p{background:var(--gfp-soft);color:var(--pass)} .verdict.f{background:var(--fail-soft);color:var(--fail)}
+.steps{display:grid;gap:8px;max-height:520px;overflow:auto;padding-right:4px}
+.step{min-width:0}
+.step pre{margin:0;padding:10px 12px;border-radius:6px;background:var(--code);font:12.5px/1.5 var(--f-mono);white-space:pre-wrap;word-break:break-word}
+.step.out pre{color:var(--muted)}
+.step.say p{max-width:none;font-size:.95rem}
+.step .k{font:600 .7rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+/* plates */
+.plate{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:820px){.plate{grid-template-columns:minmax(0,1fr)}}
+.plate .text{display:grid;gap:16px;min-width:0}
+.tag{display:inline-block;font:600 .74rem var(--f-mono);padding:3px 8px;border-radius:4px}
+.tag.bf{background:var(--bf-soft);color:var(--bf)} .tag.gfp{background:var(--gfp-soft);color:var(--gfp)}
+.answer{border-left:3px solid var(--gfp);padding:4px 0 4px 14px}
+.answer b{font-family:var(--f-mono);font-size:1.05rem}
+.traps{width:100%;min-width:0;font-size:.92rem}
+.traps td,.traps th{padding:8px 10px}
+.traps td:last-child{font-family:var(--f-mono);white-space:nowrap}
+.bad{color:var(--fail)} .good{color:var(--pass)}
+figure{margin:0;display:grid;gap:8px;min-width:0}
+figure img{border-radius:8px;border:1px solid var(--rule);background:#fff;width:100%}
+figcaption{font-size:.85rem;color:var(--muted)}
+.src{font-size:.85rem;color:var(--muted)}
+.src a,.byline a{color:inherit}
+.trail{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.trail div{display:grid;gap:8px;min-width:0}
+ul{margin:0;padding-left:1.2em;display:grid;gap:6px;max-width:72ch}
+hr{border:0;border-top:1px solid var(--rule);margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Benchmark tasks for agentic microscopy analysis</div>
+  <h1>Beats and Z-Lines</h1>
+  <p class="lede">Two benchmark tasks built from public cardiac microscopy data. Each has one right answer that is fixed by the experiment or by expert annotation, and each carries a trap built from how paced cardiac tissue and immature cardiomyocytes behave. I tested both as autonomous agents on Anthropic and OpenAI models, three runs each, graded with SpatialBench grader types. Every Claude run passed. GPT-6 Luna failed three of its six runs, each time on the planted trap: it counted tissues beating at 57 and 62 bpm as captured by a 1 Hz stimulus, and it called immature cells striated. Google's Gemini completed one run of a first-version task before its free-tier daily quota ran out.</p>
+  <p class="byline">Ryan Barrs, PhD · bioengineer, hiPSC-cardiomyocyte and human donor-eye models · <a href="https://github.com/barrsr/cardiac-microscopy-evals">code, data scripts and full transcripts</a></p>
+</header>
+
+<section style="display:grid;gap:16px">
+  <h2>Results</h2>
+  <p>Each dot is one independent agent run with only the data and a Python environment. Select a dot to read what the model did.</p>
+  <div class="grid-wrap"><table id="grid"></table></div>
+  <div class="legend"><span><i style="background:var(--pass)"></i>passed</span><span><i style="background:var(--fail)"></i>failed</span><span>Submitted tasks are A2 and B2. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
+  <div id="viewer"><p class="byline">Select any dot above to open that run.</p></div>
+</section>
+
+<hr>
+
+<section class="plate">
+  <div class="text">
+    <div><span class="tag bf">Task A2 · brightfield time-lapse</span></div>
+    <h2>Which paced tissues are captured?</h2>
+    <p>Eleven engineered hiPSC-cardiomyocyte microbundles were recorded on day 7 under 1 Hz field stimulation. The agent decides which tissues follow the stimulus 1:1. The pacing frequency is the experiment's own ground truth: a captured tissue beats exactly at the stimulus period.</p>
+    <div class="answer">Answer: <b>8 captured</b>; not captured <b>Ex00636, Ex00637, Ex00638</b></div>
+    <p>Every interval in the captured tissues sits within 0.010 s of 1.000 s. Each non-captured tissue has an interval at least 0.079 s off and drifts at least 0.137 s against the pacing grid. Ex00637 has intervals as short as 0.89 s, which a 1 Hz stimulus cannot produce.</p>
+    <table class="traps">
+      <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>"About 1 Hz" counts as captured (±5 to 10% rate window)</td><td class="bad">n = 10</td></tr>
+        <tr><td>Dominant spectral frequency only</td><td class="bad">n = 10</td></tr>
+        <tr><td>Regular rhythm alone, no phase check</td><td class="bad">n = 9</td></tr>
+        <tr><td>Trusting the sheet's 30 Hz frame rate (true 32.9)</td><td class="bad">n = 0 or 9</td></tr>
+        <tr><td>Counting every motion peak as a beat</td><td class="bad">n = 0</td></tr>
+        <tr><td>Beat intervals on file timestamps, phase vs a 1.000 s grid</td><td class="good">n = 8 ✓</td></tr>
+      </tbody>
+    </table>
+    <p class="src">Data: Kobeissi, Lejeune et al., strain-gauge microbundle time-lapse dataset, Dryad <a href="https://doi.org/10.5061/dryad.sqv9s4nbg">10.5061/dryad.sqv9s4nbg</a>, CC0. Platform from Zhang et al., Science Advances 2021. Files used unmodified.</p>
+  </div>
+  <figure><img id="figA2" alt="Beat phase against the 1 second pacing grid for captured and non-captured tissues"><figcaption>Beat times against the 1.000 s pacing grid. Captured tissues stay on the grid; the three others drift off it.</figcaption></figure>
+</section>
+
+<section class="plate">
+  <div class="text">
+    <div><span class="tag gfp">Task B2 · ACTN2-mEGFP confocal</span></div>
+    <h2>Which cells have sarcomeres, and how long are they?</h2>
+    <p>Eight day-32 hiPSC-cardiomyocytes from one imaging session, each with its mask. The agent decides which cells have striated myofibrils with measurable z-lines, then reports the median sarcomere length across only those cells. Striation calls come from the dataset's two expert scorers (4 to 5 versus 1 to 2 on their 5-point scale, no borderline cells), and agree with the authors' classifier.</p>
+    <div class="answer">Answer: <b>cells B, D, E</b>; median <b>1.73 µm</b> (±0.12)</div>
+    <p>A Fourier analysis or a line profile returns a number for every cell, including the immature ones whose alpha-actinin is punctate or fibrillar.</p>
+    <table class="traps">
+      <thead><tr><th>Approach, run on the real images</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Measure every cell and take the median</td><td class="bad">2.04 to 2.75 µm, n = 8</td></tr>
+        <tr><td>Authors' published GLCM spacing for every cell</td><td class="bad">1.56 µm, n = 8</td></tr>
+        <tr><td>Ignore the mask; neighbors' striations leak in</td><td class="bad">n = 5</td></tr>
+        <tr><td>Masked spectrum with a peak-prominence check</td><td class="good">B, D, E; 1.69 µm ✓</td></tr>
+      </tbody>
+    </table>
+    <p class="src">Data: Allen Institute for Cell Science, Gerbin et al., Cell Systems 2021, <a href="https://doi.org/10.1016/j.cels.2021.05.001">10.1016/j.cels.2021.05.001</a>. Pixel values unchanged; pixel size 0.1195 µm from the raw files' SlideBook calibration. Allen terms of use allow noncommercial research use, so a commercial benchmark would need their written permission.</p>
+  </div>
+  <figure><img id="figB2" alt="Striated versus immature cardiomyocytes with their power spectra"><figcaption>Striated cells against immature cells, with their power spectra. Only the striated cells show a sarcomere peak.</figcaption></figure>
+</section>
+
+<hr>
+
+<section style="display:grid;gap:18px">
+  <h2>How the tasks got harder</h2>
+  <p>The first versions trapped signal processing: a frame rate, a harmonic, an image axis. Every Claude run cleared them, GPT passed 3 of 6, and Gemini's completed run took the sheet's 30 Hz at face value. The second versions move the trap into the biology, what capture of a pacing stimulus means and when there is no sarcomere to measure, so passing them takes domain knowledge rather than careful arithmetic. Claude again cleared every run, and GPT's failures moved from the frame rate to the biology.</p>
+  <div class="trail">
+    <div>
+      <h3>A1 · beat rate of one paced tissue</h3>
+      <p>Answer 60 bpm, fixed by the 1 Hz pacing. A motion trace has a contraction and a relaxation peak per beat (120 bpm if both are counted), the third harmonic tops the spectrum (180 bpm), and the sheet's 30 Hz frame rate gives 54.5 to 54.7 bpm against the file's own 32.9 fps timestamps.</p>
+      <figure><img id="figA1" alt="Two motion peaks per beat in the speed trace, one in the displacement trace"><figcaption>Two speed peaks per beat; one displacement peak per beat.</figcaption></figure>
+    </div>
+    <div>
+      <h3>B1 · sarcomere length of one cell</h3>
+      <p>Answer 1.72 µm by two independent methods, within one pixel of the authors' value for the cell. Its myofibrils run at about 44°, so measurements along the image axes give 1.91 to 2.39 µm, and an answer left in pixels gives 14.1.</p>
+      <figure><img id="figB1" alt="Z-line profile along the myofibril versus along the image x axis"><figcaption>Along the myofibril 1.70 µm; along image x 1.91 µm.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<section style="display:grid;gap:14px">
+  <h2>Method</h2>
+  <ul>
+    <li>Each eval follows the SpatialBench format: the task prompt ends in a fixed answer block, and the notes give the ground truth, the traps, a separation table of approaches actually run, and the tolerance rationale. Grading uses <span class="mono">numeric_tolerance</span>, <span class="mono">label_set_jaccard</span> and <span class="mono">all_of</span>, checked against the latch-eval-tools grader classes.</li>
+    <li>Every number in the trap tables comes from a reproducible <span class="mono">ground_truth.py</span> run on the shipped data.</li>
+    <li>Each model ran as an agent in a fresh directory holding only the data, with shell access to Python: Claude through Claude Code, GPT through the Codex CLI in its workspace sandbox, Gemini through the Gemini CLI in its macOS sandbox. Prompts were identical across models. Full transcripts are kept.</li>
+    <li>The prompts state what an analyst would know, including the depositors' 30 Hz figure, and never name a trap.</li>
+  </ul>
+</section>
+</div>
+
+<script>
+const RUNS = /*__RUNS__*/[];
+const FIGS = /*__FIGS__*/{};
+for (const k of ['A2','B2','A1','B1']) { const el = document.getElementById('fig'+k); if (el && FIGS[k]) el.src = FIGS[k]; }
+const TASKS = [['A2','Task A2','pacing capture'],['B2','Task B2','striation panel'],['A1','A1','beat rate, v1'],['B1','B1','sarcomere, v1']];
+const MODELS = [...new Map(RUNS.map(r => [r.model, r.maker])).entries()];
+const order = ['Claude Haiku','Claude Sonnet','Claude Opus','GPT-6 Luna','Gemini 3 Flash'];
+MODELS.sort((a,b) => order.indexOf(a[0]) - order.indexOf(b[0]));
+const grid = document.getElementById('grid');
+let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s],i) => `<th class="${i>1?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
+for (const [m, maker] of MODELS) {
+  h += `<tr><td><b>${m}</b><span class="maker">${maker}</span></td>`;
+  for (const [k] of TASKS) {
+    const rs = RUNS.filter(r => r.model === m && r.task === k).sort((a,b) => a.run - b.run);
+    const n = rs.filter(r => r.pass).length;
+    h += '<td><div class="dots">' + rs.map(r => `<button class="dot ${r.pass?'p':'f'}" aria-pressed="false" data-i="${RUNS.indexOf(r)}" aria-label="${m}, ${k}, run ${r.run}, ${r.pass?'passed':'failed'}">${r.run}</button>`).join('')
+       + (rs.length ? `<span class="score num">${n}/${rs.length}</span>` : '<span class="byline">not run</span>') + '</div></td>';
+  }
+  h += '</tr>';
+}
+grid.innerHTML = h + '</tbody>';
+const esc = s => String(s ?? '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const viewer = document.getElementById('viewer');
+grid.addEventListener('click', e => {
+  const b = e.target.closest('.dot'); if (!b) return;
+  grid.querySelectorAll('.dot').forEach(d => d.setAttribute('aria-pressed','false'));
+  b.setAttribute('aria-pressed','true');
+  const r = RUNS[+b.dataset.i];
+  const label = {cmd:'command', out:'output', say:'model'};
+  viewer.innerHTML = `<div class="head"><h3>${esc(r.model)} · ${esc(r.task)} · run ${r.run}</h3><span class="verdict ${r.pass?'p':'f'}">${r.pass?'passed':'failed'}${r.seconds?` · ${r.seconds} s`:''}</span></div>
+    <div class="mono">answer: ${esc(JSON.stringify(r.answer))}</div>
+    <div class="steps">${r.steps.map(([k,t]) => `<div class="step ${k}"><div class="k">${label[k]}</div>${k==='say'?`<p>${esc(t)}</p>`:`<pre>${esc(t)}</pre>`}</div>`).join('') || '<p class="byline">This CLI returns only the final message.</p>'}</div>`;
+});
+</script>

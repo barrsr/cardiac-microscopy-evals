@@ -1,0 +1,12 @@
+{
+ "eval": "brightfield_contractility_microbundle_beat_rate_v1",
+ "model": "claude:sonnet",
+ "run": 1,
+ "answer": {
+  "beat_rate_bpm": 59.8
+ },
+ "pass": true,
+ "note": "",
+ "seconds": 36,
+ "cost_usd": 0.09890199999999999
+}

@@ -1,0 +1,12 @@
+{
+ "eval": "spinningdisk_hipsc_cm_actn2_sarcomere_length_v1",
+ "model": "codex:",
+ "run": 3,
+ "answer": {
+  "sarcomere_length_um": 1.85
+ },
+ "pass": false,
+ "note": "",
+ "seconds": 47,
+ "cost_usd": null
+}
