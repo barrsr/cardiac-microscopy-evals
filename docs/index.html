@@ -1,3 +1,10 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Expert-trap microscopy benchmark tasks from public cardiac data, run as agents on Claude, GPT and Gemini, with every transcript.">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Beats and Z-Lines</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,6 +95,8 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
+</head>
+<body>
 <div class="wrap">
 <header>
   <div class="eyebrow">Benchmark tasks for agentic microscopy analysis</div>
@@ -216,3 +225,6 @@ grid.addEventListener('click', e => {
     <div class="steps">${r.steps.map(([k,t]) => `<div class="step ${k}"><div class="k">${label[k]}</div>${k==='say'?`<p>${esc(t)}</p>`:`<pre>${esc(t)}</pre>`}</div>`).join('') || '<p class="byline">This CLI returns only the final message.</p>'}</div>`;
 });
 </script>
+
+</body>
+</html>

@@ -121,5 +121,11 @@ if __name__ == '__main__':
     tpl = (HERE / 'template.html').read_text()
     page = (tpl.replace('/*__RUNS__*/[]', json.dumps(data))
                .replace('/*__FIGS__*/{}', json.dumps(figs)))
-    (ROOT / 'docs' / 'index.html').write_text(page)
+    head = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
+            '<meta name="description" content="Expert-trap microscopy benchmark tasks from public cardiac data, '
+            'run as agents on Claude, GPT and Gemini, with every transcript.">\n'
+            '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n')
+    i = page.index('<div class="wrap">')  # title, fonts and styles belong in <head>
+    (ROOT / 'docs' / 'index.html').write_text(head + page[:i] + '</head>\n<body>\n' + page[i:] + '\n</body>\n</html>\n')
     print(len(data), 'runs;', round(len(page) / 1e6, 2), 'MB')
