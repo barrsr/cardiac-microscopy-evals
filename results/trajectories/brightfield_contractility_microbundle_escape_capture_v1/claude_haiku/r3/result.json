@@ -1,0 +1,21 @@
+{
+ "eval": "brightfield_contractility_microbundle_escape_capture_v1",
+ "model": "claude:haiku",
+ "run": 3,
+ "answer": {
+  "n_captured": 12,
+  "not_captured": [
+   "Ex00557",
+   "Ex00558",
+   "Ex00559",
+   "Ex00565",
+   "Ex00566",
+   "Ex00571",
+   "Ex00572"
+  ]
+ },
+ "pass": false,
+ "note": "",
+ "seconds": 67,
+ "cost_usd": 0.01210107
+}

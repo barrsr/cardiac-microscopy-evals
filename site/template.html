@@ -90,7 +90,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
 <header>
   <div class="eyebrow">Benchmark tasks for agentic microscopy analysis</div>
   <h1>Beats and Z-Lines</h1>
-  <p class="lede">Two benchmark tasks built from public cardiac microscopy data. Each has one right answer that is fixed by the experiment or by expert annotation, and each carries a trap built from how paced cardiac tissue and immature cardiomyocytes behave. I tested both as autonomous agents on Anthropic and OpenAI models, three runs each, graded with SpatialBench grader types. On the capture task, Claude Opus and Haiku passed every run, while Claude Sonnet missed one run and GPT-6 Luna two, each time by calling tissues that drift off the 1 Hz stimulus captured. Every model passed every run of the striation panel.</p>
+  <p class="lede">Benchmark tasks built from public cardiac microscopy data. Each has one right answer that is fixed by the experiment or by expert annotation, and each carries a trap built from how paced cardiac tissue and immature cardiomyocytes behave. I ran each as an autonomous agent task on Anthropic and OpenAI models, three runs each, graded with SpatialBench grader types. The hardest, A3, asks which of nineteen paced tissues are captured by the stimulus. Only Claude Opus passed every run. Sonnet passed one of three, and Haiku and GPT-6 Luna passed none, each failing run counting two tissues that beat steadily just faster than the stimulus as captured.</p>
   <p class="byline">Ryan Barrs, PhD · bioengineer, hiPSC-cardiomyocyte and human donor-eye models · <a href="https://github.com/barrsr/cardiac-microscopy-evals">code, data scripts and full transcripts</a></p>
 </header>
 
@@ -98,11 +98,34 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
   <h2>Results</h2>
   <p>Each dot is one independent agent run with only the data and a Python environment. Select a dot to read what the model did.</p>
   <div class="grid-wrap"><table id="grid"></table></div>
-  <div class="legend"><span><i style="background:var(--pass)"></i>passed</span><span><i style="background:var(--fail)"></i>failed</span><span>A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
+  <div class="legend"><span><i style="background:var(--pass)"></i>passed</span><span><i style="background:var(--fail)"></i>failed</span><span>A3, A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
   <div id="viewer"><p class="byline">Select any dot above to open that run.</p></div>
 </section>
 
 <hr>
+
+<section class="plate">
+  <div class="text">
+    <div><span class="tag bf">Task A3 · brightfield time-lapse</span></div>
+    <h2>Captured, or escaping the stimulus?</h2>
+    <p>Nineteen engineered hiPSC-cardiomyocyte microbundles from a patient line carrying an HCM-associated MYBPC3 variant, recorded on day 7 under 1 Hz field stimulation across three imaging sessions. The agent decides which tissues follow the stimulus 1:1. The stimulus is not recorded in the images.</p>
+    <div class="answer">Answer: <b>6 captured</b> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
+    <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98 s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval sits within 0.010 s of 1.000 s; the closest escaping tissue, Ex00575, is 0.024 to 0.035 s short on every interval.</p>
+    <table class="traps">
+      <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Every interval within 5% of 1.000 s</td><td class="bad">n = 8</td></tr>
+        <tr><td>Mean rate within 3% or 5% of 60 bpm</td><td class="bad">n = 8 or 11</td></tr>
+        <tr><td>Dominant spectral frequency at 1.00 ± 0.05 Hz</td><td class="bad">n = 10</td></tr>
+        <tr><td>Rate at or above 58.8 bpm (98% of the pacing rate)</td><td class="bad">n = 15</td></tr>
+        <tr><td>Trusting the sheet's 30 Hz frame rate</td><td class="bad">n = 2 or 12</td></tr>
+        <tr><td>Upstroke times on file timestamps, every interval held to the 1.000 s period</td><td class="good">n = 6 ✓</td></tr>
+      </tbody>
+    </table>
+    <p class="src">Same deposit as task A2, condition 023, nineteen of its twenty-three files used unmodified. Four were left out because their beats are too faint or the call depends on the beat marker. The ground truth rests on the depositors' 1 Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
+  </div>
+  <figure><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption>Every beat interval of every tissue. Captured tissues sit on 1.000 s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
+</section>
 
 <section class="plate">
   <div class="text">
@@ -152,7 +175,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
 
 <section style="display:grid;gap:18px">
   <h2>How the tasks got harder</h2>
-  <p>The first versions trapped signal processing: a frame rate, a harmonic, an image axis. Every Claude run cleared them. GPT-6 Luna passed every sarcomere run but missed the beat rate in all three runs, answering 55 to 56 bpm for a tissue paced at 60. The second versions move the trap into the biology, what capture of a pacing stimulus means and when there is no sarcomere to measure. On capture, the misses moved from the time base to the biology. The striation panel turned out to be answerable by every model: a masked spectrum with a check for a sarcomere peak is enough.</p>
+  <p>The first versions trapped signal processing: a frame rate, a harmonic, an image axis. Every Claude run cleared them. GPT-6 Luna passed every sarcomere run but missed the beat rate in all three runs, answering 55 to 56 bpm for a tissue paced at 60. The second versions move the trap into the biology, what capture of a pacing stimulus means and when there is no sarcomere to measure. On capture, the misses moved from the time base to the biology. A3 then took away the shortcut of regular beating close to 1 Hz, and only Opus passed every run. The striation panel turned out to be answerable by every model: a masked spectrum with a check for a sarcomere peak is enough.</p>
   <div class="trail">
     <div>
       <h3>A1 · beat rate of one paced tissue</h3>
@@ -183,13 +206,13 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
 <script>
 const RUNS = /*__RUNS__*/[];
 const FIGS = /*__FIGS__*/{};
-for (const k of ['A2','B2','A1','B1']) { const el = document.getElementById('fig'+k); if (el && FIGS[k]) el.src = FIGS[k]; }
-const TASKS = [['A2','Task A2','pacing capture'],['B2','Task B2','striation panel'],['A1','A1','beat rate, v1'],['B1','B1','sarcomere, v1']];
+for (const k of ['A3','A2','B2','A1','B1']) { const el = document.getElementById('fig'+k); if (el && FIGS[k]) el.src = FIGS[k]; }
+const TASKS = [['A3','Task A3','escape vs capture'],['A2','Task A2','pacing capture'],['B2','Task B2','striation panel'],['A1','A1','beat rate, v1'],['B1','B1','sarcomere, v1']];
 const MODELS = [...new Map(RUNS.map(r => [r.model, r.maker])).entries()];
 const order = ['Claude Haiku','Claude Sonnet','Claude Opus','GPT-6 Luna'];
 MODELS.sort((a,b) => order.indexOf(a[0]) - order.indexOf(b[0]));
 const grid = document.getElementById('grid');
-let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s],i) => `<th class="${i>1?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
+let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s],i) => `<th class="${i>2?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
 for (const [m, maker] of MODELS) {
   h += `<tr><td><b>${m}</b><span class="maker">${maker}</span></td>`;
   for (const [k] of TASKS) {

@@ -12,6 +12,7 @@ ROOT = HERE.parent
 TRAJ = ROOT / 'results' / 'trajectories'
 
 TASKS = {  # eval id -> folder, short key
+    'brightfield_contractility_microbundle_escape_capture_v1': ('task_A3_escape_capture', 'A3'),
     'brightfield_contractility_microbundle_pacing_capture_v1': ('task_A2_pacing_capture', 'A2'),
     'spinningdisk_hipsc_cm_actn2_striation_panel_sarcomere_length_v2': ('task_B2_sarcomere_maturity', 'B2'),
     'brightfield_contractility_microbundle_beat_rate_v1': ('task_A_beat_rate', 'A1'),
@@ -115,6 +116,7 @@ def img(rel):
 if __name__ == '__main__':
     data = runs()
     figs = {
+        'A3': img('evals/task_A3_escape_capture/figures/fig1_intervals_per_tissue.png'),
         'A2': img('evals/task_A2_pacing_capture/figures/fig1_phase_vs_pacing_grid.png'),
         'B2': img('evals/task_B2_sarcomere_maturity/figures/fig1_striated_vs_immature.png'),
         'A1': img('evals/task_A_beat_rate/figures/fig1_motion_trace.png'),
@@ -126,7 +128,7 @@ if __name__ == '__main__':
     head = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             '<meta name="description" content="Microscopy benchmark tasks with biology traps, built from public cardiac data, '
-            'run as agents on Claude, GPT and Gemini, with every transcript.">\n'
+            'run as agents on Claude and GPT, with every transcript.">\n'
             '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n')
     i = page.index('<div class="wrap">')  # title, fonts and styles belong in <head>
     (ROOT / 'docs' / 'index.html').write_text(head + page[:i] + '</head>\n<body>\n' + page[i:] + '\n</body>\n</html>\n')

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Fetch and verify the data for all four evals.
+"""Fetch and verify the data for all five evals.
 
 Runs evals/<task>/fetch_data.py for each task in turn with the same Python interpreter.
-Tasks A and A2 share one Zenodo archive in the cache, so it is downloaded once. Each script is
+Tasks A1 and A2 share one Zenodo archive in the cache, so it is downloaded once; A3 uses a second archive from the same record. Each script is
 idempotent, so rerunning this only fills in whatever is missing or does not verify.
 
 Cache directory: ~/.cache/cardiac-microscopy-evals, or the CME_CACHE environment variable.
 
 usage: python scripts/fetch_all.py [--clean-cache] [task ...]
-    task           one or more task folder names (default: all four)
+    task           one or more task folder names (default: all five)
     --clean-cache  after every task has verified, delete the cached downloads
 """
 import subprocess
@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TASKS = [
     "task_A_beat_rate",
     "task_A2_pacing_capture",
+    "task_A3_escape_capture",
     "task_B_sarcomere_length",
     "task_B2_sarcomere_maturity",
 ]
