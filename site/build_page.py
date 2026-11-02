@@ -19,12 +19,14 @@ TASKS = {  # eval id -> folder, short key
 }
 MODELS = [  # folder name, label, maker
     ('claude_haiku', 'Claude Haiku', 'Anthropic'), ('claude_sonnet', 'Claude Sonnet', 'Anthropic'),
-    ('claude_opus', 'Claude Opus', 'Anthropic'), ('codex_', 'GPT-6 Luna', 'OpenAI'),
-    ('gemini_gemini-3-flash-preview', 'Gemini 3 Flash', 'Google'),
+    ('claude_opus', 'Claude Opus', 'Anthropic'), ('codex_gpt-6-luna', 'GPT-6 Luna', 'OpenAI'),
 ]
 
 
 SCRUB = [(re.compile(r'/Users/[^/\s]+/\.claude/jobs/[^/\s]+/tmp/lbenv/bin/python3?'), 'python'),
+         (re.compile(r'(~|/Users/[^/\s"\']+)?/\.claude/jobs/[^/\s]+/tmp/lbenv'), '<env>'),
+         (re.compile(r'/private/tmp/claude-\d+/[^\s"\']+'), '<tmp>'),
+         (re.compile(r'~/\.claude/jobs/[^/\s"\']+/tmp'), '<scratch>'),
          (re.compile(r'(/private)?/var/folders/[^\s"\']*?/T/(lb|cme)_[A-Za-z0-9_-]+'), '<workdir>'),
          (re.compile(r'(/private)?/var/folders/[^\s"\']+'), '<tmp>'),
          (re.compile(r'/Users/[^/\s"\']+'), '~')]
@@ -123,7 +125,7 @@ if __name__ == '__main__':
                .replace('/*__FIGS__*/{}', json.dumps(figs)))
     head = ('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-            '<meta name="description" content="Expert-trap microscopy benchmark tasks from public cardiac data, '
+            '<meta name="description" content="Microscopy benchmark tasks with biology traps, built from public cardiac data, '
             'run as agents on Claude, GPT and Gemini, with every transcript.">\n'
             '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n')
     i = page.index('<div class="wrap">')  # title, fonts and styles belong in <head>

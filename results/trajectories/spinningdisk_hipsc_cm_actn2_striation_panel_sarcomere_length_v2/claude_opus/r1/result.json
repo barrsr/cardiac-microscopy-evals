@@ -9,10 +9,10 @@
    "cell_E"
   ],
   "n_striated": 3,
-  "median_sarcomere_length_um": 1.72
+  "median_sarcomere_length_um": 1.75
  },
  "pass": true,
  "note": "",
- "seconds": 85,
- "cost_usd": 0.39597140000000003
+ "seconds": 51,
+ "cost_usd": 0.28508659999999997
 }

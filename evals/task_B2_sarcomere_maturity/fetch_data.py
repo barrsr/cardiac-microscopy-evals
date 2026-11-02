@@ -24,7 +24,7 @@ segmentation label listed in PANEL. The crop is the cell's bounding box grown by
   data/cell_<X>_mask.ome.tif   the same crop of channel 9 with the target label set to 1, uint8
 Both carry PhysicalSizeX/Y = 0.1195257 um, the SlideBook calibration (tag 65007 and TIFF
 XResolution) of the session's raw files. The panel table, crop windows and author annotations
-are those of the original build (provenance/panel_author_annotations.csv in the take-home);
+are those of the original build (provenance/panel_author_annotations.csv);
 the script checks that the recomputed crop windows and mask sizes match them.
 
 Intermediate downloads (eight fields, about 136 MB) go to the cache directory, default

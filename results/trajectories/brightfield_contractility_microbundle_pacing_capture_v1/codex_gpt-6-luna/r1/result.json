@@ -1,0 +1,13 @@
+{
+ "eval": "brightfield_contractility_microbundle_pacing_capture_v1",
+ "model": "codex:gpt-6-luna",
+ "run": 1,
+ "answer": {
+  "n_captured": 11,
+  "not_captured": []
+ },
+ "pass": false,
+ "note": "",
+ "seconds": 15,
+ "cost_usd": null
+}

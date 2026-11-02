@@ -1,0 +1,12 @@
+{
+ "eval": "brightfield_contractility_microbundle_beat_rate_v1",
+ "model": "codex:gpt-6-luna",
+ "run": 1,
+ "answer": {
+  "beat_rate_bpm": 55.0
+ },
+ "pass": false,
+ "note": "",
+ "seconds": 28,
+ "cost_usd": null
+}

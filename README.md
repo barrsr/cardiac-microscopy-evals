@@ -1,6 +1,6 @@
 # Cardiac microscopy evals
 
-Benchmark tasks for AI agents that analyze microscopy data, built from public cardiac datasets. Each task has one right answer that is fixed by the experiment itself or by expert annotation, and a trap that a careful generalist walks into and a cardiac biologist does not. Every task was run as an autonomous agent on models from Anthropic, OpenAI and Google, and every run's transcript is in this repository.
+Benchmark tasks for AI agents that analyze microscopy data, built from public cardiac datasets. Each task has one right answer that is fixed by the experiment itself or by expert annotation, and a trap built from how paced cardiac tissue and immature cardiomyocytes behave. Every task was run as an autonomous agent on Anthropic and OpenAI models, and every run's transcript is in this repository.
 
 **Results page with run-by-run transcripts: https://barrsr.github.io/cardiac-microscopy-evals/**
 
@@ -24,12 +24,11 @@ Each cell counts passing runs out of completed runs. Every run was an independen
 | Model | A2 capture | B2 striation | A1 (v1) | B1 (v1) |
 |---|---|---|---|---|
 | Claude Haiku | 3/3 | 3/3 | 3/3 | 3/3 |
-| Claude Sonnet | 3/3 | 3/3 | 3/3 | 3/3 |
+| Claude Sonnet | 2/3 | 3/3 | 3/3 | 3/3 |
 | Claude Opus | 3/3 | 3/3 | 3/3 | 3/3 |
-| GPT-6 Luna (Codex CLI) | 1/3 | 2/3 | 1/3 | 2/3 |
-| Gemini 3 Flash | not run | not run | 0/1 | not run |
+| GPT-6 Luna (Codex CLI) | 1/3 | 3/3 | 0/3 | 3/3 |
 
-Every Claude run passed. GPT-6 Luna's failures are the planted traps: on A2 it counted tissues beating at 57 and 62 bpm as captured by the 1 Hz stimulus, on B2 it called immature cells striated, and on A1 it took the depositors' 30 Hz frame rate over the file's 32.9 fps timestamps. Gemini ran on the free API tier, whose daily quota ended after one completed run; runs stopped by the quota are not counted. Claude runs used Claude Code, GPT runs the Codex CLI in its workspace sandbox, and Gemini runs the Gemini CLI in its macOS sandbox, all with the same prompt.
+On A2, Claude Sonnet's miss and one of GPT-6 Luna's two misses counted the tissues beating at 57 and 62 bpm as captured by the 1 Hz stimulus; GPT's other miss called every tissue captured. On A1, every GPT-6 Luna run answered 55 to 56 bpm for a tissue paced at 60, close to what the depositors' 30 Hz frame rate gives against the file's 32.9 fps timestamps. B1 and B2 were passed by every model in every run. Claude ran through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox; the task prompt was the only input. Gemini 3 Flash was set up through the Gemini CLI, but the free API tier's daily quota did not allow a full set of runs, so it is not reported.
 
 ## Repository layout
 
@@ -41,6 +40,7 @@ evals/<task>/SOURCE.md        citation, license, and what was selected and why
 evals/<task>/NOTES.md         summary of the task and its open questions
 evals/<task>/figures/         figures used on the results page
 harness/run_models.py         runs the evals as agents (Claude Code, Codex CLI, Gemini CLI) and grades them
+scripts/fetch_all.py          fetches and verifies the data for all four tasks
 results/trajectories/         one folder per eval, model and run: result.json and the full transcript
 site/                         builds docs/index.html, the results page
 ```
@@ -52,15 +52,15 @@ python -m venv .venv && . .venv/bin/activate
 pip install numpy scipy scikit-image opencv-python-headless tifffile matplotlib pandas requests
 python scripts/fetch_all.py                         # about 1.1 GB; checksums verified
 python evals/task_A2_pacing_capture/ground_truth.py # prints the per-tissue table and the separation table
-python harness/run_models.py --evals A2,B2 --models claude:sonnet,codex: --runs 3
+python harness/run_models.py --evals A2,B2 --models claude:sonnet,codex:gpt-6-luna --runs 3
 python site/build_page.py                           # rebuilds docs/index.html from results/
 ```
 
-The harness needs the `claude`, `codex` and `gemini` command-line tools signed in, and `GEMINI_API_KEY` for Gemini. Claude runs are isolated from the operator's own Claude Code setup (no personal CLAUDE.md, memory, skills, MCP servers or user settings).
+The harness needs the `claude` and `codex` command-line tools signed in (and the `gemini` CLI with `GEMINI_API_KEY` for Gemini runs). Claude runs are isolated from the operator's own Claude Code setup (no personal CLAUDE.md, memory, skills, MCP servers or user settings).
 
 ## Data and licenses
 
-- **A1, A2:** Kobeissi, Lejeune et al., "Strain gauge platforms: Time-lapse microscopy dataset of engineered cardiac microbundles," Dryad [10.5061/dryad.sqv9s4nbg](https://doi.org/10.5061/dryad.sqv9s4nbg), CC0. The experiments are from Zhang et al., Science Advances 2021. Files are used unmodified.
+- **A1, A2:** Kobeissi, Lejeune et al., "Strain gauge platforms: Time-lapse microscopy dataset of engineered cardiac microbundles," Dryad [10.5061/dryad.sqv9s4nbg](https://doi.org/10.5061/dryad.sqv9s4nbg), CC0. The platform is described in Zhang et al., Science Advances 2021. Files are used unmodified.
 - **B1, B2:** Allen Institute for Cell Science, Gerbin et al., Cell Systems 2021, [10.1016/j.cels.2021.05.001](https://doi.org/10.1016/j.cels.2021.05.001). The Allen Institute's [terms of use](https://www.allencell.org/terms-of-use.html) allow noncommercial research use with attribution, so this repository ships scripts that rebuild the snapshots from the public bucket instead of the images themselves. Use in a commercial benchmark would need the Allen Institute's written permission.
 
 Code in this repository is released under the MIT License.

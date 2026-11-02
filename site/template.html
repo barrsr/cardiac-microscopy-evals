@@ -1,9 +1,7 @@
 <title>Beats and Z-Lines</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: a lab notebook. A results grid first, then one plate per task (question, answer, traps, figure), then method. */
 :root{
   --bg:#f6f7f5; --panel:#ffffff; --ink:#18201c; --muted:#5b6660; --rule:#dde2de;
   --gfp:#1f8a5b; --gfp-soft:#e3f2ea; --bf:#a5671c; --bf-soft:#f6ebdc;
@@ -92,7 +90,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
 <header>
   <div class="eyebrow">Benchmark tasks for agentic microscopy analysis</div>
   <h1>Beats and Z-Lines</h1>
-  <p class="lede">Two benchmark tasks built from public cardiac microscopy data. Each has one right answer that is fixed by the experiment or by expert annotation, and each carries a trap built from how paced cardiac tissue and immature cardiomyocytes behave. I tested both as autonomous agents on Anthropic and OpenAI models, three runs each, graded with SpatialBench grader types. Every Claude run passed. GPT-6 Luna failed three of its six runs, each time on the planted trap: it counted tissues beating at 57 and 62 bpm as captured by a 1 Hz stimulus, and it called immature cells striated. Google's Gemini completed one run of a first-version task before its free-tier daily quota ran out.</p>
+  <p class="lede">Two benchmark tasks built from public cardiac microscopy data. Each has one right answer that is fixed by the experiment or by expert annotation, and each carries a trap built from how paced cardiac tissue and immature cardiomyocytes behave. I tested both as autonomous agents on Anthropic and OpenAI models, three runs each, graded with SpatialBench grader types. On the capture task, Claude Opus and Haiku passed every run, while Claude Sonnet missed one run and GPT-6 Luna two, each time by calling tissues that drift off the 1 Hz stimulus captured. Every model passed every run of the striation panel.</p>
   <p class="byline">Ryan Barrs, PhD · bioengineer, hiPSC-cardiomyocyte and human donor-eye models · <a href="https://github.com/barrsr/cardiac-microscopy-evals">code, data scripts and full transcripts</a></p>
 </header>
 
@@ -100,7 +98,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
   <h2>Results</h2>
   <p>Each dot is one independent agent run with only the data and a Python environment. Select a dot to read what the model did.</p>
   <div class="grid-wrap"><table id="grid"></table></div>
-  <div class="legend"><span><i style="background:var(--pass)"></i>passed</span><span><i style="background:var(--fail)"></i>failed</span><span>Submitted tasks are A2 and B2. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
+  <div class="legend"><span><i style="background:var(--pass)"></i>passed</span><span><i style="background:var(--fail)"></i>failed</span><span>A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
   <div id="viewer"><p class="byline">Select any dot above to open that run.</p></div>
 </section>
 
@@ -154,7 +152,7 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
 
 <section style="display:grid;gap:18px">
   <h2>How the tasks got harder</h2>
-  <p>The first versions trapped signal processing: a frame rate, a harmonic, an image axis. Every Claude run cleared them, GPT passed 3 of 6, and Gemini's completed run took the sheet's 30 Hz at face value. The second versions move the trap into the biology, what capture of a pacing stimulus means and when there is no sarcomere to measure, so passing them takes domain knowledge rather than careful arithmetic. Claude again cleared every run, and GPT's failures moved from the frame rate to the biology.</p>
+  <p>The first versions trapped signal processing: a frame rate, a harmonic, an image axis. Every Claude run cleared them. GPT-6 Luna passed every sarcomere run but missed the beat rate in all three runs, answering 55 to 56 bpm for a tissue paced at 60. The second versions move the trap into the biology, what capture of a pacing stimulus means and when there is no sarcomere to measure. On capture, the misses moved from the time base to the biology. The striation panel turned out to be answerable by every model: a masked spectrum with a check for a sarcomere peak is enough.</p>
   <div class="trail">
     <div>
       <h3>A1 · beat rate of one paced tissue</h3>
@@ -175,8 +173,8 @@ hr{border:0;border-top:1px solid var(--rule);margin:0}
   <h2>Method</h2>
   <ul>
     <li>Each eval follows the SpatialBench format: the task prompt ends in a fixed answer block, and the notes give the ground truth, the traps, a separation table of approaches actually run, and the tolerance rationale. Grading uses <span class="mono">numeric_tolerance</span>, <span class="mono">label_set_jaccard</span> and <span class="mono">all_of</span>, checked against the latch-eval-tools grader classes.</li>
-    <li>Every number in the trap tables comes from a reproducible <span class="mono">ground_truth.py</span> run on the shipped data.</li>
-    <li>Each model ran as an agent in a fresh directory holding only the data, with shell access to Python: Claude through Claude Code, GPT through the Codex CLI in its workspace sandbox, Gemini through the Gemini CLI in its macOS sandbox. Prompts were identical across models. Full transcripts are kept.</li>
+    <li>Every number in the trap tables comes from a reproducible <span class="mono">ground_truth.py</span> run on the source files that <span class="mono">fetch_data.py</span> downloads.</li>
+    <li>Each model ran as an agent in a fresh directory holding only the data, with shell access to Python: Claude through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox. The task prompt was the only input, identical across models. Full transcripts are kept.</li>
     <li>The prompts state what an analyst would know, including the depositors' 30 Hz figure, and never name a trap.</li>
   </ul>
 </section>
@@ -188,7 +186,7 @@ const FIGS = /*__FIGS__*/{};
 for (const k of ['A2','B2','A1','B1']) { const el = document.getElementById('fig'+k); if (el && FIGS[k]) el.src = FIGS[k]; }
 const TASKS = [['A2','Task A2','pacing capture'],['B2','Task B2','striation panel'],['A1','A1','beat rate, v1'],['B1','B1','sarcomere, v1']];
 const MODELS = [...new Map(RUNS.map(r => [r.model, r.maker])).entries()];
-const order = ['Claude Haiku','Claude Sonnet','Claude Opus','GPT-6 Luna','Gemini 3 Flash'];
+const order = ['Claude Haiku','Claude Sonnet','Claude Opus','GPT-6 Luna'];
 MODELS.sort((a,b) => order.indexOf(a[0]) - order.indexOf(b[0]));
 const grid = document.getElementById('grid');
 let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s],i) => `<th class="${i>1?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';

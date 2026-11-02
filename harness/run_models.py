@@ -8,11 +8,11 @@ Full transcripts are written to results/trajectories/<eval id>/<model>/r<run>/.
 Agents:
   claude:<model>  Claude Code (`claude -p`), isolated from the operator's own
                   CLAUDE.md, memory, skills, MCP servers and user settings
-  codex:[model]   OpenAI Codex CLI (`codex exec`), workspace-write sandbox
+  codex:<model>   OpenAI Codex CLI (`codex exec`), workspace-write sandbox
   gemini:<model>  Gemini CLI (`gemini -p`), macOS seatbelt sandbox; needs GEMINI_API_KEY
 
 usage:
-  python harness/run_models.py --evals A2,B2 --models claude:haiku,claude:sonnet,claude:opus,codex: --runs 3
+  python harness/run_models.py --evals A2,B2 --models claude:haiku,claude:sonnet,claude:opus,codex:gpt-6-luna --runs 3
 Fetch the data first: python scripts/fetch_all.py
 """
 import argparse, concurrent.futures as cf, json, os, re, shutil, subprocess, sys, tempfile, time
@@ -20,7 +20,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PY = os.environ.get('CME_PYTHON', sys.executable)  # interpreter the agents are told to use
-EVALS = {'A': ROOT / 'evals' / 'task_A_beat_rate', 'B': ROOT / 'evals' / 'task_B_sarcomere_length',
+EVALS = {'A1': ROOT / 'evals' / 'task_A_beat_rate', 'B1': ROOT / 'evals' / 'task_B_sarcomere_length',
          'A2': ROOT / 'evals' / 'task_A2_pacing_capture', 'B2': ROOT / 'evals' / 'task_B2_sarcomere_maturity'}
 OUT = ROOT / 'results'
 
@@ -107,7 +107,8 @@ def one(key, model, run):
     t0 = time.time()
     try:
         p = subprocess.run(command(vendor, name, PREAMBLE + ev['task'], work), cwd=work,
-                           capture_output=True, text=True, timeout=1500, env=env)
+                           capture_output=True, text=True, timeout=1500, env=env,
+                           stdin=subprocess.DEVNULL)  # the prompt is the only input
         stdout, stderr = p.stdout, p.stderr
     except subprocess.TimeoutExpired as e:
         stdout = e.stdout.decode() if isinstance(e.stdout, bytes) else (e.stdout or '')
@@ -125,7 +126,7 @@ def one(key, model, run):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--evals', default='A2,B2')
-    ap.add_argument('--models', default='claude:haiku,claude:sonnet,claude:opus,codex:')
+    ap.add_argument('--models', default='claude:haiku,claude:sonnet,claude:opus,codex:gpt-6-luna')
     ap.add_argument('--runs', type=int, default=3)
     ap.add_argument('--jobs', type=int, default=4)
     a = ap.parse_args()

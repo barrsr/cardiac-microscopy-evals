@@ -1,0 +1,12 @@
+{
+ "eval": "spinningdisk_hipsc_cm_actn2_sarcomere_length_v1",
+ "model": "codex:gpt-6-luna",
+ "run": 2,
+ "answer": {
+  "sarcomere_length_um": 1.7
+ },
+ "pass": true,
+ "note": "",
+ "seconds": 34,
+ "cost_usd": null
+}

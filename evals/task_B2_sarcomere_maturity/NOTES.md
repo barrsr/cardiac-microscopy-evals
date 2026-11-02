@@ -11,6 +11,6 @@ The traps that fire are about running the measurement without asking whether the
 
 Grading needs the exact set, n_striated = 3, and a median within 1.73 +/- 0.12 um.
 
-**Model results** (autonomous agents, three runs each; transcripts in results/trajectories/). Claude Haiku, Sonnet and Opus passed 9 of 9; every run masked the cells, fit a 2D FFT and dropped the five cells whose spectra had no sarcomere peak. GPT-6 Luna passed 2 of 3: one run called six cells striated, adding the immature cells C, G and H. A harder variant would add expert-called score-3 cells, at the cost of a less clean ground truth.
+**Model results** (autonomous agents, three runs each; transcripts in results/trajectories/). Claude Haiku, Sonnet and Opus and GPT-6 Luna passed every run (12 of 12); every run masked the cells, fit a 2D spectrum and dropped the five cells with no sarcomere peak. As built, the panel does not separate these models. A harder variant would add expert-called score-3 cells, at the cost of a less clean ground truth.
 
 The Allen terms permit noncommercial redistribution only.

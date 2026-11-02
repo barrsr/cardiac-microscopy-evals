@@ -3,10 +3,10 @@
  "model": "claude:haiku",
  "run": 2,
  "answer": {
-  "sarcomere_length_um": 1.7
+  "sarcomere_length_um": 1.67
  },
  "pass": true,
  "note": "",
- "seconds": 95,
- "cost_usd": 0.012827179999999999
+ "seconds": 65,
+ "cost_usd": 0.01029977
 }

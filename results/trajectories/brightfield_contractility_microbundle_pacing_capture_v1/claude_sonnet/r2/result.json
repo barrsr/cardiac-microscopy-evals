@@ -3,15 +3,13 @@
  "model": "claude:sonnet",
  "run": 2,
  "answer": {
-  "n_captured": 8,
+  "n_captured": 10,
   "not_captured": [
-   "Ex00636",
-   "Ex00637",
    "Ex00638"
   ]
  },
- "pass": true,
+ "pass": false,
  "note": "",
- "seconds": 65,
- "cost_usd": 0.1303184
+ "seconds": 51,
+ "cost_usd": 0.0723028
 }
