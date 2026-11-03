@@ -44,19 +44,11 @@ h3{font:600 1rem/1.35 var(--sans);letter-spacing:-.005em}
 .mast nav{display:flex;gap:22px;font-size:.88rem;flex-wrap:wrap}
 .mast nav a{color:var(--ink-2);text-decoration:none}
 .mast nav a:hover{color:var(--accent)}
-.vernier{position:relative;height:58px;margin:14px 0 72px;border-top:1.5px solid var(--ink)}
-.vernier i{position:absolute;width:1.5px;height:10px;background:var(--ink);top:0}
-.vernier i.own{top:20px;background:var(--accent);height:10px}
-.vernier b{position:absolute;top:34px;transform:translateX(-50%);font:italic 400 .9rem var(--serif);color:var(--accent);white-space:nowrap}
-.vernier i{animation:tick .5s ease-out both}
 @keyframes tick{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
 .big .ticks.play i{animation:fill .6s cubic-bezier(.2,.7,.2,1) both}
 @keyframes fill{from{transform:scaleY(.08);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
 .big .r.play{animation:rise .6s ease-out both}
-@media (prefers-reduced-motion:reduce){h1 .off,h1 .beat,.vernier i,.big .ticks.play i,.big .r.play,.metro .m{animation:none!important}}
-.vernier .row{position:absolute;right:0;font:600 .6rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--paper);padding-left:10px}
-.vernier .row.r1{top:-2px} .vernier .row.r2{top:18px;color:var(--accent)}
-@media (max-width:620px){.vernier .row{display:none}}
+@media (prefers-reduced-motion:reduce){h1 .off,h1 .beat,.drift *,.big .ticks.play i,.big .r.play,.metro .m{animation:none!important}}
 
 /* hero: a centered entrance. "Off" lands, "beat" arrives a beat late. */
 .hero{text-align:center;display:grid;justify-items:center;gap:22px;margin:24px 0 88px}
@@ -231,6 +223,21 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .runfacts tr:last-child td{border-bottom:1.5px solid var(--ink)}
 .runfacts td:last-child{text-align:right;font:500 .84rem var(--mono);color:var(--ink)}
 .runfacts td:first-child{color:var(--ink-2)}
+/* drift figure: a pulse every 1.000 s against a tissue beating every 0.96 s */
+.drift{margin:8px auto 88px;max-width:1040px;text-align:center}
+.drift svg{display:block;width:100%;height:auto;overflow:visible}
+.drift .lane{font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;fill:var(--muted)}
+.drift .lane.t{fill:var(--accent)}
+.drift .axis{stroke:var(--rule);stroke-width:1}
+.drift .p{fill:var(--ink)} .drift .o{fill:var(--accent)}
+.drift .c{stroke:var(--accent);stroke-width:1;opacity:.45}
+.drift .gap{fill:var(--accent-wash)}
+.drift .ms{font:500 11px var(--mono);fill:var(--accent);text-anchor:middle}
+.drift .sec{font:400 11px var(--mono);fill:var(--muted);text-anchor:middle}
+.drift figcaption{margin:18px auto 0;max-width:60ch;font-size:.92rem;color:var(--muted);text-wrap:balance}
+.drift .b{opacity:0;transition:opacity .35s ease-out}
+.drift.seen .b{opacity:1}
+@media (prefers-reduced-motion:reduce){.drift .b{opacity:1;transition:none}}
 /* opening title sequence: a dark screen band, read before scrolling */
 .film{background:#0e0c0b;color:#efe9e1;margin-left:calc(max(24px,env(safe-area-inset-left,0px))*-1);margin-right:calc(max(24px,env(safe-area-inset-right,0px))*-1);margin-bottom:72px}
 .film-in{max-width:1232px;margin:0 auto;min-height:100svh;padding:24px max(24px,env(safe-area-inset-right,0px)) 26px max(24px,env(safe-area-inset-left,0px));display:grid;grid-template-rows:auto 1fr auto;gap:28px}
@@ -338,7 +345,10 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </header>
 
 <div class="wrap" id="study">
-<div class="vernier" id="vernier" aria-hidden="true"></div>
+<figure class="drift" id="drift">
+  <svg id="driftSvg" viewBox="0 0 1000 170" role="img" aria-label="Pulse beats every 1.000 seconds and tissue beats every 0.96 seconds over twelve seconds; the tissue drifts 40 milliseconds earlier on each beat, 480 milliseconds by the twelfth."></svg>
+  <figcaption>A tissue beating every 0.96&nbsp;s against a pulse every 1.000&nbsp;s. Each beat lands 40&nbsp;ms earlier than the one before, so after twelve beats it is nearly half a second ahead.</figcaption>
+</figure>
 
 <section id="background" class="three">
   <div class="head"><div class="kicker">01 · The biology</div>
@@ -517,18 +527,26 @@ const vid = document.getElementById('vidA3');
 if (FIGS.A3poster) vid.poster = FIGS.A3poster;
 if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hidden = true;
 
-// vernier rule: stimulus ticks every 1.000 s against a tissue beating every 0.96 s, over 12 s
+// drift figure: pair each pulse with the tissue beat it would be mistaken for; the pairs pull apart by 40 ms a beat
 (function () {
-  const v = document.getElementById('vernier'), span = 12; let h = '';
-  const W = 86;  // leave the right edge for the row labels
-  for (let k = 0; k <= span; k++) h += `<i style="left:${k/span*W}%;animation-delay:${.4 + k*.06}s"></i>`;
-  for (let k = 0; k * 0.96 <= span; k++) {
-    const x = k * 0.96 / span * W;
-    h += `<i class="own" style="left:${x}%;animation-delay:${.55 + k*.06}s"></i>`;
-    if (k && k % 3 === 0) h += `<b style="left:${x}%">${-Math.round(k * 40)} ms</b>`;
+  const svg = document.getElementById('driftSvg'), fig = document.getElementById('drift');
+  const x0 = 110, x1 = 890, span = 12, X = s => x0 + s / span * (x1 - x0), yp = 52, yt = 112;
+  let h = `<text class="lane" x="0" y="${yp+4}">Pulse</text><text class="lane t" x="0" y="${yt+4}">Tissue</text>`;
+  h += `<line class="axis" x1="${x0}" x2="${x1}" y1="${yp}" y2="${yp}"/><line class="axis" x1="${x0}" x2="${x1}" y1="${yt}" y2="${yt}"/>`;
+  for (let s = 0; s <= span; s += 3) h += `<text class="sec" x="${X(s)}" y="${yp-18}">${s} s</text>`;
+  for (let k = 0; k <= span; k++) {
+    const xp = X(k), xt = X(k * 0.96), d = `style="transition-delay:${k * .12}s"`;
+    h += `<g class="b" ${d}>`;
+    if (k) h += `<polygon class="gap" points="${xt},${yt} ${xp},${yp} ${xp},${yt}"/>`;
+    h += `<line class="c" x1="${xp}" y1="${yp}" x2="${xt}" y2="${yt}"/>`;
+    h += `<circle class="p" cx="${xp}" cy="${yp}" r="4.5"/><circle class="o" cx="${xt}" cy="${yt}" r="4.5"/>`;
+    if (k && k % 3 === 0) h += `<text class="ms" x="${xt}" y="${yt+28}">${k * 40} ms early</text>`;
+    h += '</g>';
   }
-  h += '<span class="row r1">stimulus 1.000 s</span><span class="row r2">tissue 0.96 s</span>';
-  v.innerHTML = h;
+  svg.innerHTML = h;
+  if (!('IntersectionObserver' in window)) { fig.classList.add('seen'); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { fig.classList.add('seen'); io.disconnect(); } }), {threshold: .5});
+  io.observe(fig);
 })();
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
