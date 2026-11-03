@@ -37,26 +37,12 @@ h3{font:600 1rem/1.35 var(--sans);letter-spacing:-.005em}
 .mast nav{display:flex;gap:22px;font-size:.88rem;flex-wrap:wrap}
 .mast nav a{color:var(--ink-2);text-decoration:none}
 .mast nav a:hover{color:var(--accent)}
-@keyframes tick{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
-.big .ticks.play i{animation:fill .6s cubic-bezier(.2,.7,.2,1) both}
-@keyframes fill{from{transform:scaleY(.08);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
-.big .r.play{animation:rise .6s ease-out both}
-@media (prefers-reduced-motion:reduce){h1 .off,h1 .beat,.drift *,.big .ticks.play i,.big .r.play,.metro .m{animation:none!important}}
 
 /* hero: a centered entrance. "Off" lands, "beat" arrives a beat late. */
 .hero{text-align:center;display:grid;justify-items:center;gap:22px;margin:24px 0 88px}
 h1{font:400 clamp(5.5rem,19vw,15.5rem)/.8 var(--serif);letter-spacing:-.04em;white-space:nowrap;margin-bottom:6px}
 h1 .off,h1 .beat{display:inline-block}
 h1 .beat{font-style:italic;color:var(--accent);transform:translateY(.06em) skewX(-2deg);margin-left:.01em}
-@keyframes rise{from{transform:translateY(.18em);opacity:0}to{transform:none;opacity:1}}
-@keyframes late{0%{transform:translate(.08em,.3em) skewX(-2deg);opacity:0}70%{transform:translate(0,.02em) skewX(-2deg);opacity:1}100%{transform:translateY(.06em) skewX(-2deg);opacity:1}}
-h1 .off{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
-h1 .beat{animation:late .9s cubic-bezier(.2,.7,.2,1) .28s both}
-.metro{display:flex;justify-content:center;align-items:center;gap:10px 12px;flex-wrap:wrap;font:italic 400 1.2rem var(--serif);color:var(--ink-2)}
-.metro .m{width:12px;height:12px;border-radius:50%;display:inline-block;animation:pulse 1s infinite}
-.metro .stim{background:var(--ink)}
-.metro .own{background:var(--accent);animation-duration:.96s;margin-left:14px}
-@keyframes pulse{0%{transform:scale(1.8);opacity:1}18%{transform:scale(1);opacity:.85}100%{transform:scale(1);opacity:.25}}
 .tagline{font:400 clamp(1.6rem,3vw,2.35rem)/1.18 var(--serif);color:var(--ink);max-width:36ch;margin-top:18px;text-wrap:balance}
 .sub{font-size:1.02rem;color:var(--ink-2);max-width:62ch;text-wrap:balance}
 .hero .facts{width:min(720px,100%);margin-top:14px;text-align:center}
@@ -228,9 +214,6 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .drift .ms{font:500 11px var(--mono);fill:var(--accent);text-anchor:middle}
 .drift .sec{font:400 11px var(--mono);fill:var(--muted);text-anchor:middle}
 .drift figcaption{margin:18px auto 0;max-width:92ch;font-size:.92rem;color:var(--muted);text-wrap:balance}
-.drift .b{opacity:0;transition:opacity .35s ease-out}
-.drift.seen .b{opacity:1}
-@media (prefers-reduced-motion:reduce){.drift .b{opacity:1;transition:none}}
 /* opening title sequence: a dark screen band, read before scrolling */
 .film{background:#0e0c0b;color:#efe9e1;margin-left:calc(max(24px,env(safe-area-inset-left,0px))*-1);margin-right:calc(max(24px,env(safe-area-inset-right,0px))*-1);margin-bottom:72px}
 .film-in{max-width:1232px;margin:0 auto;min-height:100svh;padding:24px max(24px,env(safe-area-inset-right,0px)) 26px max(24px,env(safe-area-inset-left,0px));display:grid;grid-template-rows:auto 1fr auto;gap:28px}
@@ -245,7 +228,7 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .fkick{font:600 .7rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#a9a196}
 .film h1{font:400 clamp(4.4rem,9vw,8.4rem)/.82 var(--serif);letter-spacing:-.04em;color:#f4efe8;margin:0}
 .film h1 .beat{color:#d9737b}
-.ftag{font:400 clamp(1.35rem,2.1vw,1.7rem)/1.22 var(--serif);color:#efe9e1;max-width:28ch;text-wrap:balance}
+.ftag{font:400 clamp(1.35rem,2.1vw,1.7rem)/1.22 var(--serif);color:#efe9e1;max-width:34ch;text-wrap:balance}
 .acts{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:0;counter-reset:act;border-top:1px solid #2b2724}
 .acts li{display:grid;grid-template-columns:44px minmax(0,1fr);padding:14px 0;border-bottom:1px solid #2b2724}
 .acts li::before{counter-increment:act;content:counter(act);font:400 1.1rem/1.2 var(--serif);color:#d9737b}
@@ -273,38 +256,15 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .credits span{margin-right:16px;white-space:nowrap}
 .credits.right{text-align:right}
 .cue{display:grid;justify-items:center;gap:8px;text-decoration:none;font:600 .66rem var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#a9a196!important}
-.cue i{width:1.5px;height:36px;background:linear-gradient(#d9737b,transparent);animation:drip 2.2s ease-in-out infinite;transform-origin:top}
-@keyframes drip{0%{transform:scaleY(0)}45%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
-/* the title sequence: each element enters in order, the way opening titles do */
-@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes fadein{from{opacity:0}to{opacity:1}}
-.film .fkick{animation:fadein .8s ease-out both}
-.film .ftag{animation:fadeup .9s cubic-bezier(.2,.7,.2,1) .9s both}
-.film .acts li:nth-child(1){animation:fadeup .8s cubic-bezier(.2,.7,.2,1) 1.25s both}
-.film .acts li:nth-child(2){animation:fadeup .8s cubic-bezier(.2,.7,.2,1) 1.6s both}
-.film .acts li:nth-child(3){animation:fadeup .8s cubic-bezier(.2,.7,.2,1) 1.95s both}
-.film .screen{animation:fadein 1.4s ease-out .4s both}
-.film .fcap{animation:fadein 1s ease-out 1.1s both}
-.film .mini{animation:fadeup .9s cubic-bezier(.2,.7,.2,1) 2.2s both}
-.film .film-bottom{animation:fadein 1s ease-out 2.6s both}
-@media (prefers-reduced-motion:reduce){.film *,.film{animation:none!important}}
 /* story interludes between chapters */
 .interlude{margin:0 auto 96px;max-width:920px;text-align:center;display:grid;justify-items:center;gap:22px}
 .interlude blockquote{margin:0;max-width:64ch;font:400 1.02rem/1.6 var(--sans);color:var(--ink-2);text-wrap:balance}
 .interlude cite{display:block;margin-top:8px;font:600 .66rem var(--sans);letter-spacing:.14em;text-transform:uppercase;font-style:normal;color:var(--muted)}
-.interlude i{width:1.5px;height:44px;background:var(--accent)}
 .interlude p{font:400 clamp(1.9rem,4.2vw,3.2rem)/1.14 var(--serif);color:var(--ink);max-width:none;text-wrap:balance;letter-spacing:-.01em}
-.interlude.seen i{animation:grow .7s ease-out both}
-.interlude.seen p{animation:rise .8s cubic-bezier(.2,.7,.2,1) .12s both}
-.interlude.seen blockquote{animation:rise .8s cubic-bezier(.2,.7,.2,1) .4s both}
-@keyframes grow{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
-.progress{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);z-index:20}
-@media (prefers-reduced-motion:reduce){.interlude.seen i,.interlude.seen p,.interlude.seen blockquote{animation:none!important}}
 footer{border-top:1.5px solid var(--ink);padding-top:16px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
 footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </style>
 
-<div class="progress" id="progress" aria-hidden="true"></div>
 <header class="film" id="top">
  <div class="film-in">
   <div class="film-top">
@@ -332,7 +292,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </div>
   <div class="film-bottom">
     <div class="credits">Ryan Barrs, PhD</div>
-    <a class="cue" href="#study"><span>Details</span><i></i></a>
+    <a class="cue" href="#study"><span>Details</span></a>
     <div class="credits right"><a href="https://github.com/barrsr/cardiac-microscopy-evals">Code and transcripts</a></div>
   </div>
  </div>
@@ -452,7 +412,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </article>
 </section>
 
-<div class="interlude"><i></i><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p><blockquote>"Ex00575 and Ex00576 run slightly under 1 s (about 0.97 and 0.94–0.97 s), and I kept them as captured."<cite>Claude Sonnet, run 1, explaining its answer</cite></blockquote></div>
+<div class="interlude"><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p><blockquote>"Ex00575 and Ex00576 run slightly under 1 s (about 0.97 and 0.94–0.97 s), and I kept them as captured."<cite>Claude Sonnet, run 1, explaining its answer</cite></blockquote></div>
 
 <section id="runs">
   <div class="head"><div class="kicker">05 · The failures</div>
@@ -526,8 +486,8 @@ if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hi
   h += `<line class="axis" x1="${x0}" x2="${x1}" y1="${yp}" y2="${yp}"/><line class="axis" x1="${x0}" x2="${x1}" y1="${yt}" y2="${yt}"/>`;
   for (let s = 0; s <= span; s += 3) h += `<text class="sec" x="${X(s)}" y="${yp-18}">${s} s</text>`;
   for (let k = 0; k <= span; k++) {
-    const xp = X(k), xt = X(k * 0.96), d = `style="transition-delay:${k * .12}s"`;
-    h += `<g class="b" ${d}>`;
+    const xp = X(k), xt = X(k * 0.96);
+    h += '<g>';
     if (k) h += `<polygon class="gap" points="${xt},${yt} ${xp},${yp} ${xp},${yt}"/>`;
     h += `<line class="c" x1="${xp}" y1="${yp}" x2="${xt}" y2="${yt}"/>`;
     h += `<circle class="p" cx="${xp}" cy="${yp}" r="4.5"/><circle class="o" cx="${xt}" cy="${yt}" r="4.5"/>`;
@@ -535,9 +495,6 @@ if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hi
     h += '</g>';
   }
   svg.innerHTML = h;
-  if (!('IntersectionObserver' in window)) { fig.classList.add('seen'); return; }
-  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { fig.classList.add('seen'); io.disconnect(); } }), {threshold: .5});
-  io.observe(fig);
 })();
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -550,16 +507,6 @@ document.getElementById('mini').innerHTML = MODELS.map(([m,maker]) => {
   const rs = of(m,'A3'), n = rs.filter(r => r.pass).length;
   return `<tr><td class="mm">${esc(m)}<small>${esc(maker)}</small></td><td><div class="tk">${rs.map(r => `<i class="${r.pass?'':'f'}"></i>`).join('')}</div></td><td class="fr num ${n*2<rs.length?'lo':''}">${n}/${rs.length}</td></tr>`;
 }).join('');
-
-// story: interludes rise into place as they scroll in; a reading-progress line fills along the top
-(function () {
-  const bar = document.getElementById('progress');
-  const upd = () => { const h = document.documentElement; const f = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight); bar.style.transform = `scaleX(${f})`; };
-  addEventListener('scroll', upd, {passive: true}); upd();
-  if (!('IntersectionObserver' in window)) return;
-  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); } }), {threshold: .4});
-  document.querySelectorAll('.interlude').forEach(el => io.observe(el));
-})();
 
 const grid = document.getElementById('grid');
 let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s,lead],i) => `<th class="${lead?'lead':''} ${i>2?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
