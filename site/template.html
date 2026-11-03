@@ -68,6 +68,7 @@ section{margin-bottom:112px}
 @media (max-width:760px){.head{grid-template-columns:minmax(0,1fr);gap:10px}}
 .head .kicker{padding-top:10px}
 .head .t{display:grid;gap:14px;min-width:0}
+.head.centered .t{text-align:center;justify-items:center}
 
 /* headline result */
 .score{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:56px;align-items:start}
@@ -200,7 +201,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 <div class="wrap">
 <div class="mast">
   <div class="name">Cardiac Microscopy Evals</div>
-  <nav><a href="#results">Results</a><a href="#tasks">Tasks</a><a href="#design">Design</a><a href="#method">Method</a><a href="https://github.com/barrsr/cardiac-microscopy-evals">GitHub</a></nav>
+  <nav><a href="#background">Background</a><a href="#results">Results</a><a href="#tasks">Tasks</a><a href="#design">Design</a><a href="#method">Method</a><a href="https://github.com/barrsr/cardiac-microscopy-evals">GitHub</a></nav>
 </div>
 <div class="axis" id="axis" aria-hidden="true"></div>
 
@@ -217,6 +218,17 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   <video id="vidA3" autoplay muted loop playsinline aria-label="Two paced tissues side by side: one captured by the 1 Hz stimulus, one beating on its own rhythm"></video>
   <figcaption class="figcap"><b>Figure 1.</b> Two tissues from the same experiment, both under 1 Hz pacing, played in real time. Left, every beat lands on the 1.000 s period. Right, Ex00576 beats on its own rhythm every 0.96 s, so its beats run ahead of the stimulus. The stimulus itself is not recorded; each grid is anchored to that tissue's first beat.</figcaption>
 </figure>
+
+<section id="background">
+  <div class="head"><div class="kicker">Background</div>
+    <div class="t"><h2>The biology behind the tasks</h2></div></div>
+  <div class="princ">
+    <div><h3>Engineered heart tissues</h3><p>Heart muscle cells made from human stem cells are grown into small strips stretched between two flexible pillars. The strips beat on their own, and labs use them to study disease variants and test drugs. Each contraction bends the pillars, and a brightfield camera records it.</p></div>
+    <div><h3>Pacing and capture</h3><p>Labs often pace these tissues with an electrical field, for example once a second (1 Hz), so every tissue beats at the same rate. A tissue is captured when every stimulus produces exactly one beat, which locks its beat interval to the stimulus period. A tissue whose own rate is above the pacing rate keeps its own rhythm, and its beats drift ahead of the stimulus.</p></div>
+    <div><h3>Sarcomeres</h3><p>The sarcomere is the repeating contractile unit of heart muscle. A fluorescent tag on alpha-actinin marks its z-lines, so a mature cell shows regular stripes, about 1.7 µm apart in these cells. Immature cells show scattered dots and fibers instead, and have no sarcomere length to measure.</p></div>
+    <div><h3>Why this tests an AI agent</h3><p>Benchmarks like SpatialBench measure whether agents can analyze real biological data on their own. Reading a frame rate or an image axis correctly tests care. Knowing what capture means, or when there is no sarcomere to measure, tests whether the agent understands the biology it is analyzing.</p></div>
+  </div>
+</section>
 
 <section id="results">
   <div class="head"><div class="kicker">Headline result</div>
@@ -342,7 +354,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </section>
 
 <section id="method">
-  <div class="head"><div class="kicker">Method</div><div class="t"><h2>How the runs were made</h2></div></div>
+  <div class="head centered"><div class="kicker">Method</div><div class="t"><h2>How the runs were made</h2></div></div>
   <div class="method-grid">
   <ol class="method">
     <li><span><b>Format.</b> Each eval follows the SpatialBench format: a fixed answer block, and notes giving the ground truth, the traps, a separation table and the tolerance rationale. Graded with <span class="mono">numeric_tolerance</span>, <span class="mono">label_set_jaccard</span> and <span class="mono">all_of</span>, checked against the latch-eval-tools grader classes.</span></li>
