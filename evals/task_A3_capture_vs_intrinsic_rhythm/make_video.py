@@ -97,12 +97,14 @@ def build(panels, dur):
         tl.set_xticks([])
         tl.set_yticks([])
         tl.axhline(0.15, color=GRID, lw=1, zorder=0)
+        off = p["off"]                    # this panel's clock is shifted so first beats coincide
         grid = p["bt"][0] + PACING_S * np.arange(10)
-        grid = grid[grid <= p["t"][-1]]
+        grid = grid[grid <= p["t"][-1]] - off
         for g in grid:
             tl.plot([g], [0.15], "o", ms=10, mfc=PAPER, mec=FAINT, mew=1.3, zorder=2)
         marks = []
         for k, (b, ph) in enumerate(zip(p["bt"], p["phase"])):
+            b = b - off
             g = b - ph
             bar, = tl.plot([g, b], [0.15, 0.15], color=p["color"], lw=2.2, alpha=0.55, zorder=3)
             dot, = tl.plot([b], [0.15], "o", ms=7, color=p["color"], zorder=4)
@@ -125,7 +127,7 @@ def build(panels, dur):
              "Brightfield, 4x, shown in real time from the per-frame timestamps. Beat time: contraction upstroke, "
              "from the task's ground-truth code.", fontsize=7.5, color=FAINT, va="center")
     fig.text(24 / W, 1 - 514 / H,
-             "Rings: a 1.000 s grid from each tissue's first beat; the pulse itself is not recorded. "
+             "Rings: a 1.000 s grid from each tissue's first beat; the pulse itself is not recorded. The two clips are aligned at their first beats. "
              "Data: Kobeissi, Lejeune et al., Zenodo 11120809, CC0.", fontsize=7.5, color=FAINT, va="center")
     return fig, clock, dyn
 
@@ -133,7 +135,7 @@ def build(panels, dur):
 def render(fig, clock, dyn, tau):
     clock.set_text(f"{tau:4.2f} s")
     for p, im, marks, cur in dyn:
-        i = int(np.searchsorted(p["t"], tau, side="right") - 1)
+        i = int(np.searchsorted(p["t"], tau + p["off"], side="right") - 1)
         im.set_data(p["small"][max(0, min(i, len(p["t"]) - 1))])
         for b, arts in marks:
             for a in arts:
@@ -146,8 +148,12 @@ def render(fig, clock, dyn, tau):
 def main():
     ddir = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE / "data"
     panels = [prepare(ddir, dict(p)) for p in PANELS]
-    # Common loop length: the longer recording plus one frame; the shorter holds its last frame.
-    dur = max(p["t"][-1] + np.median(np.diff(p["t"])) for p in panels)
+    # Align the first beats: each panel starts that far before its own first beat as the earliest one does.
+    lead = min(p["bt"][0] for p in panels)
+    for p in panels:
+        p["off"] = p["bt"][0] - lead
+    # Loop length: the shortest recording after its shift, plus one frame.
+    dur = min(p["t"][-1] - p["off"] + np.median(np.diff(p["t"])) for p in panels)
     for p in panels:
         print(p["id"], "beat times (s):", ", ".join(f"{b:.3f}" for b in p["bt"]),
               "| intervals:", ", ".join(f"{v:.3f}" for v in p["ibi"]),
