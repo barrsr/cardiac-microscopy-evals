@@ -479,7 +479,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
     <div><h3>Ground truth</h3><p>A tissue paced at 1&nbsp;Hz has a known period, and the dataset's expert scorers decide which cells are striated. The analysis measures each tissue or cell against that fixed reference.</p></div>
     <div><h3>Where the trap sits</h3><p>A wrong frame rate can be caught by careful checking. Recognizing that a tissue beating 3% faster than its stimulus is not captured takes training in cardiac physiology.</p></div>
     <div><h3>What the prompt says</h3><p>It quotes the depositors' 30&nbsp;Hz frame rate because that is what anyone opening the deposit would read, and it never names the trap.</p></div>
-    <div><h3>When to drop a task</h3><p>I drop a design once its answer stops being unambiguous. A twitch-force task and a paced-versus-spontaneous task were dropped for that reason.</p></div>
+    <div><h3>Tasks set aside</h3><p>Two other tasks were built on the same data and set aside because their correct answer couldn't be pinned down. One asked for the force of each beat, measured from how far the pillars bend, but the two pillars under one tissue often bent by very different amounts and three tracking methods disagreed by about 12%. The other asked which tissues were paced, but two tissues labeled as unpaced beat exactly once a second, so the labels couldn't serve as the answer key.</p></div>
   </div>
 </section>
 
