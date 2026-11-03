@@ -12,7 +12,7 @@ ROOT = HERE.parent
 TRAJ = ROOT / 'results' / 'trajectories'
 
 TASKS = {  # eval id -> folder, short key
-    'brightfield_contractility_microbundle_escape_capture_v1': ('task_A3_escape_capture', 'A3'),
+    'brightfield_contractility_microbundle_capture_vs_intrinsic_rhythm_v1': ('task_A3_capture_vs_intrinsic_rhythm', 'A3'),
     'brightfield_contractility_microbundle_pacing_capture_v1': ('task_A2_pacing_capture', 'A2'),
     'spinningdisk_hipsc_cm_actn2_striation_panel_sarcomere_length_v2': ('task_B2_sarcomere_maturity', 'B2'),
     'brightfield_contractility_microbundle_beat_rate_v1': ('task_A_beat_rate', 'A1'),
@@ -149,16 +149,16 @@ def img(rel):
 if __name__ == '__main__':
     data = runs()
     figs = {
-        'A3': img('evals/task_A3_escape_capture/figures/fig1_intervals_per_tissue.png'),
+        'A3': img('evals/task_A3_capture_vs_intrinsic_rhythm/figures/fig1_intervals_per_tissue.png'),
         'A2': img('evals/task_A2_pacing_capture/figures/fig1_phase_vs_pacing_grid.png'),
         'B2': img('evals/task_B2_sarcomere_maturity/figures/fig1_striated_vs_immature.png'),
         'A1': img('evals/task_A_beat_rate/figures/fig1_motion_trace.png'),
         'B1': img('evals/task_B_sarcomere_length/figures/fig1_profile_axis_vs_myofibril.png'),
     }
-    vid = ROOT / 'evals/task_A3_escape_capture/figures/beating_side_by_side.mp4'
+    vid = ROOT / 'evals/task_A3_capture_vs_intrinsic_rhythm/figures/beating_side_by_side.mp4'
     if vid.exists():
         figs['A3vid'] = 'data:video/mp4;base64,' + base64.b64encode(vid.read_bytes()).decode()
-        figs['A3poster'] = img('evals/task_A3_escape_capture/figures/beating_side_by_side_poster.png')
+        figs['A3poster'] = img('evals/task_A3_capture_vs_intrinsic_rhythm/figures/beating_side_by_side_poster.png')
     tpl = (HERE / 'template.html').read_text()
     page = (tpl.replace('/*__RUNS__*/[]', json.dumps(data))
                .replace('/*__FIGS__*/{}', json.dumps(figs)))

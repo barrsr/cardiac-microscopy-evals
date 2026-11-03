@@ -1,0 +1,22 @@
+{
+ "eval": "brightfield_contractility_microbundle_capture_vs_intrinsic_rhythm_v1",
+ "model": "codex:gpt-6-luna",
+ "run": 3,
+ "answer": {
+  "n_captured": 11,
+  "not_captured": [
+   "Ex00556",
+   "Ex00557",
+   "Ex00559",
+   "Ex00563",
+   "Ex00565",
+   "Ex00566",
+   "Ex00571",
+   "Ex00574"
+  ]
+ },
+ "pass": false,
+ "note": "",
+ "seconds": 38,
+ "cost_usd": null
+}

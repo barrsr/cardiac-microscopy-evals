@@ -1,6 +1,6 @@
 # Task A2: which paced microbundles show 1:1 capture
 
-The data is all eleven unmodified brightfield TIFF stacks (Ex00628 to Ex00638, 150 frames each) from condition 025 of the CC0 Chen/Lejeune microbundle deposit (Dryad 10.5061/dryad.sqv9s4nbg, Zenodo 11120809). The depositors document the condition as recorded at day 7 under 1 Hz electrical stimulation, and the prompt says so. The agent decides which tissues follow the stimulus 1:1 and returns `{"n_captured": int, "not_captured": [sorted IDs]}`.
+The data is all eleven unmodified brightfield TIFF stacks (Ex00628 to Ex00638, 150 frames each) from condition 025 of the CC0 Kobeissi, Lejeune et al. microbundle deposit (Dryad 10.5061/dryad.sqv9s4nbg, Zenodo 11120809). The depositors document the condition as recorded at day 7 under 1 Hz electrical stimulation, and the prompt says so. The agent decides which tissues follow the stimulus 1:1 and returns `{"n_captured": int, "not_captured": [sorted IDs]}`.
 
 **Ground truth: n_captured = 8; not captured = Ex00636, Ex00637, Ex00638.** ground_truth.py builds one event per beat from displacement against a relaxed reference frame and times each beat with the per-plane MetaMorph timestamps. The eight captured tissues have all 27 of their intervals within 0.010 s of 1.000 s and drift of 0.012 s or less from a 1.000 s grid. The three others each have at least one interval 0.079 s or more off and drift of 0.137 s or more:
 - Ex00636 averages 57.3 bpm; its intervals lengthen beat by beat (1.007, 1.056, 1.079 s) and it slides 0.14 s off the grid.

@@ -21,7 +21,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PY = os.environ.get('CME_PYTHON', sys.executable)  # interpreter the agents are told to use
 EVALS = {'A1': ROOT / 'evals' / 'task_A_beat_rate', 'B1': ROOT / 'evals' / 'task_B_sarcomere_length',
-         'A2': ROOT / 'evals' / 'task_A2_pacing_capture', 'B2': ROOT / 'evals' / 'task_B2_sarcomere_maturity', 'A3': ROOT / 'evals' / 'task_A3_escape_capture'}
+         'A2': ROOT / 'evals' / 'task_A2_pacing_capture', 'B2': ROOT / 'evals' / 'task_B2_sarcomere_maturity', 'A3': ROOT / 'evals' / 'task_A3_capture_vs_intrinsic_rhythm'}
 OUT = ROOT / 'results'
 
 PREAMBLE = (

@@ -201,8 +201,8 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </div>
 
 <figure class="plate" id="heroFig" style="margin-bottom:104px">
-  <video id="vidA3" autoplay muted loop playsinline aria-label="Two paced tissues side by side: one captured by the 1 Hz stimulus, one escaping it"></video>
-  <figcaption class="figcap"><b>Figure 1.</b> Two tissues from the same experiment, both under 1 Hz pacing, played in real time. Left, every beat lands on the 1.000 s period. Right, Ex00576 beats every 0.96 s, so its beats run ahead of the stimulus. The stimulus itself is not recorded; each grid is anchored to that tissue's first beat.</figcaption>
+  <video id="vidA3" autoplay muted loop playsinline aria-label="Two paced tissues side by side: one captured by the 1 Hz stimulus, one beating on its own rhythm"></video>
+  <figcaption class="figcap"><b>Figure 1.</b> Two tissues from the same experiment, both under 1 Hz pacing, played in real time. Left, every beat lands on the 1.000 s period. Right, Ex00576 beats on its own rhythm every 0.96 s, so its beats run ahead of the stimulus. The stimulus itself is not recorded; each grid is anchored to that tissue's first beat.</figcaption>
 </figure>
 
 <section id="results">
@@ -234,10 +234,10 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   <article class="task">
     <div class="text">
       <div class="label"><b>A3</b><span>Brightfield time-lapse · 19 tissues</span></div>
-      <h2>Captured, or escaping the stimulus?</h2>
+      <h2>Captured, or beating on its own?</h2>
       <p>Nineteen engineered hiPSC-cardiomyocyte microbundles from a patient line carrying an HCM-associated MYBPC3 variant, recorded on day 7 under 1 Hz field stimulation across three imaging sessions. The agent decides which tissues follow the stimulus 1:1. The stimulus is not recorded in the images.</p>
       <div class="answer"><span class="kicker">Answer</span><strong>6 captured</strong> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
-      <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98 s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval sits within 0.010 s of 1.000 s; the closest escaping tissue, Ex00575, is 0.024 to 0.035 s short on every interval.</p>
+      <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98 s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval sits within 0.010 s of 1.000 s; the closest uncaptured tissue, Ex00575, is 0.024 to 0.035 s short on every interval.</p>
       <table class="traps">
         <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
         <tbody>
@@ -305,7 +305,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   <div class="head"><div class="kicker">Design</div><div class="t"><h2>How I build a trap</h2></div></div>
   <div class="princ">
     <div><h3>The experiment sets the answer</h3><p>A tissue paced at 1 Hz has a known period, and the dataset's expert scorers decide which cells are striated. The analysis measures each tissue or cell against that fixed reference.</p></div>
-    <div><h3>The trap comes from the biology</h3><p>A frame-rate slip tests care. Recognizing that a tissue beating 3% faster than its stimulus has escaped it tests training in cardiac physiology.</p></div>
+    <div><h3>The trap comes from the biology</h3><p>A frame-rate slip tests care. Recognizing that a tissue beating 3% faster than its stimulus is not captured by it tests training in cardiac physiology.</p></div>
     <div><h3>The prompt gives what an analyst would have</h3><p>It quotes the depositors' 30 Hz frame rate because that is what anyone opening the deposit would read, and it never names the trap.</p></div>
     <div><h3>I raise the bar until the strongest agent is tested</h3><p>I drop a design once its answer stops being unambiguous. A twitch-force task and a paced-versus-spontaneous task were dropped for that reason.</p></div>
   </div>
@@ -313,7 +313,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 
 <section>
   <div class="head"><div class="kicker">Development</div>
-    <div class="t"><h2>How the tasks got harder</h2><p>The first versions trapped signal processing: a frame rate, a harmonic, an image axis. Every Claude run cleared them. GPT-6 Luna passed every sarcomere run but missed the beat rate in all three runs, answering 55 to 56 bpm for a tissue paced at 60. The second versions move the trap into the biology, what capture of a pacing stimulus means and when there is no sarcomere to measure. On capture, the misses moved from the time base to the biology. A3 then took away the shortcut of regular beating close to 1 Hz, and only Opus passed every run.</p></div></div>
+    <div class="t"><h2>How the tasks got harder</h2><p>The first versions trapped signal processing: a frame rate, a harmonic, an image axis. Every Claude run cleared them. GPT-6 Luna passed every sarcomere run but missed the beat rate in all three runs, answering 55 to 56 bpm for a tissue paced at 60. The second versions move the trap into the biology, what capture of a pacing stimulus means and when there is no sarcomere to measure. On capture, two of the three misses moved from the time base to the biology, counting tissues near 60 bpm as captured. A3 then took away the shortcut of regular beating close to 1 Hz, and only Opus passed every run.</p></div></div>
   <div class="trail">
     <div>
       <h3>A1 · beat rate of one paced tissue</h3>
@@ -333,7 +333,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   <ol class="method">
     <li><span>Each eval follows the SpatialBench format: the task prompt ends in a fixed answer block, and the notes give the ground truth, the traps, a separation table of approaches actually run, and the tolerance rationale. Grading uses <span class="mono">numeric_tolerance</span>, <span class="mono">label_set_jaccard</span> and <span class="mono">all_of</span>, checked against the latch-eval-tools grader classes.</span></li>
     <li><span>Every number in the trap tables comes from a reproducible <span class="mono">ground_truth.py</span> run on the source files that <span class="mono">fetch_data.py</span> downloads.</span></li>
-    <li><span>Each model ran as an agent in a fresh directory holding only the data, with shell access to Python: Claude through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox. The task prompt was the only input, identical across models. Full transcripts are kept.</span></li>
+    <li><span>Each model ran as an agent in a fresh directory holding only the data, with shell access to Python: Claude through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox. A short fixed environment note plus the task prompt was the only input, identical across models. Full transcripts are kept.</span></li>
     <li><span>The prompts state what an analyst would know, including the depositors' 30 Hz figure, and never name a trap.</span></li>
   </ol>
 </section>
@@ -366,7 +366,7 @@ if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hi
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const order = ['Claude Opus','Claude Sonnet','Claude Haiku','GPT-6 Luna'];
 const MODELS = [...new Map(RUNS.map(r => [r.model, r.maker])).entries()].sort((a,b) => order.indexOf(a[0]) - order.indexOf(b[0]));
-const TASKS = [['A3','A3','escape vs capture',true],['A2','A2','pacing capture',false],['B2','B2','striation panel',false],['A1','A1','beat rate, first version',false],['B1','B1','sarcomere, first version',false]];
+const TASKS = [['A3','A3','capture vs own rhythm',true],['A2','A2','pacing capture',false],['B2','B2','striation panel',false],['A1','A1','beat rate, first version',false],['B1','B1','sarcomere, first version',false]];
 const of = (m,k) => RUNS.filter(r => r.model === m && r.task === k).sort((a,b) => a.run - b.run);
 
 const nTasks = new Set(RUNS.map(r => r.task)).size;

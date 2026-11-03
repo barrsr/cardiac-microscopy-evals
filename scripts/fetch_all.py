@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TASKS = [
     "task_A_beat_rate",
     "task_A2_pacing_capture",
-    "task_A3_escape_capture",
+    "task_A3_capture_vs_intrinsic_rhythm",
     "task_B_sarcomere_length",
     "task_B2_sarcomere_maturity",
 ]

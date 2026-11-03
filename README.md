@@ -10,26 +10,26 @@ The tasks follow the [SpatialBench](https://github.com/latchbio/spatialbench) ev
 
 | Task | Data | Question | Answer |
 |---|---|---|---|
-| **A3** escape vs capture | 19 brightfield time-lapses of hiPSC-cardiomyocyte microbundles under 1 Hz field stimulation, three imaging sessions | Which tissues show 1:1 capture of the stimulus? | 6 captured (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); 13 are not |
+| **A3** capture vs own rhythm | 19 brightfield time-lapses of hiPSC-cardiomyocyte microbundles under 1 Hz field stimulation, three imaging sessions | Which tissues show 1:1 capture of the stimulus? | 6 captured (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); 13 are not |
 | **A2** pacing capture | 11 brightfield time-lapses of hiPSC-cardiomyocyte microbundles under 1 Hz field stimulation | Which tissues show 1:1 capture of the stimulus? | 8 captured; Ex00636, Ex00637 and Ex00638 are not |
 | **B2** striation panel | 8 ACTN2-mEGFP confocal projections of day-32 hiPSC-cardiomyocytes, with masks | Which cells have striated myofibrils, and what is their median sarcomere length? | cells B, D and E; 1.73 µm |
 | A1 beat rate (first version) | one tissue from A2's set | Beat rate in bpm | 60.0 bpm |
 | B1 sarcomere length (first version) | one ACTN2-mEGFP confocal z-stack | Sarcomere length in µm | 1.72 µm |
 
-A3 is the hardest: two of its tissues beat as regularly as captured ones but a few percent faster than the stimulus, so they are escaping it. A1 and B1 are the first versions. Their traps sat in signal processing (two motion peaks per beat, a stated 30 Hz frame rate against 32.9 fps file timestamps, measuring along the image axis instead of the myofibril). A2 and B2 move the trap into the biology: what capture of a pacing stimulus means, and when there is no sarcomere to measure.
+A3 is the hardest: two of its tissues beat as regularly as captured ones but a few percent faster than the stimulus, so they are beating on their own rhythm, not following it. A1 and B1 are the first versions. Their traps sat in signal processing (two motion peaks per beat, a stated 30 Hz frame rate against 32.9 fps file timestamps, measuring along the image axis instead of the myofibril). A2 and B2 move the trap into the biology: what capture of a pacing stimulus means, and when there is no sarcomere to measure.
 
 ## Results
 
 Each cell counts passing runs out of completed runs. Every run was an independent agent session with only the task data and a Python environment.
 
-| Model | A3 escape | A2 capture | B2 striation | A1 (v1) | B1 (v1) |
+| Model | A3 capture vs own rhythm | A2 capture | B2 striation | A1 (v1) | B1 (v1) |
 |---|---|---|---|---|---|
 | Claude Haiku | 0/3 | 3/3 | 3/3 | 3/3 | 3/3 |
 | Claude Sonnet | 1/3 | 2/3 | 3/3 | 3/3 | 3/3 |
 | Claude Opus | 3/3 | 3/3 | 3/3 | 3/3 | 3/3 |
 | GPT-6 Luna (Codex CLI) | 0/3 | 1/3 | 3/3 | 0/3 | 3/3 |
 
-On A3, every failing run counted Ex00575 and Ex00576, which beat steadily at 0.96 to 0.98 s per beat, as captured by the 1 Hz stimulus; only Claude Opus held every interval to the 1.000 s period in all three runs. On A2, Claude Sonnet's miss and one of GPT-6 Luna's two misses counted the tissues beating at 57 and 62 bpm as captured; GPT's other miss called every tissue captured. On A1, every GPT-6 Luna run answered 55 to 56 bpm for a tissue paced at 60, close to what the depositors' 30 Hz frame rate gives against the file's 32.9 fps timestamps. B1 and B2 were passed by every model in every run. Claude ran through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox; the task prompt was the only input. Gemini 3 Flash was set up through the Gemini CLI, but the free API tier's daily quota did not allow a full set of runs, so it is not reported.
+On A3, every failing run counted Ex00575 and Ex00576, which beat steadily at 0.96 to 0.98 s per beat, as captured by the 1 Hz stimulus; only Claude Opus held every interval to the 1.000 s period in all three runs. On A2, Claude Sonnet's miss and one of GPT-6 Luna's two misses counted the tissues beating at 57 and 62 bpm as captured; GPT's other miss read the sheet's 30 Hz and called every tissue captured. On A1, every GPT-6 Luna run answered 55 to 56 bpm for a tissue paced at 60, close to what the depositors' 30 Hz frame rate gives against the file's 32.9 fps timestamps. B1 and B2 were passed by every model in every run. Claude ran through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox; a short fixed environment note plus the task prompt was the only input. Gemini 3 Flash was set up through the Gemini CLI, but the free API tier's daily quota did not allow a full set of runs, so it is not reported.
 
 ## Repository layout
 
@@ -40,6 +40,8 @@ evals/<task>/fetch_data.py    downloads the source data and rebuilds the exact s
 evals/<task>/SOURCE.md        citation, license, and what was selected and why
 evals/<task>/NOTES.md         summary of the task and its open questions
 evals/<task>/figures/         figures used on the results page
+evals/task_A3_*/make_video.py builds the Figure 1 clip from the ground-truth beat times
+evals/task_B*/provenance/     source metadata and the B2 snapshot builder
 harness/run_models.py         runs the evals as agents (Claude Code, Codex CLI, Gemini CLI) and grades them
 scripts/fetch_all.py          fetches and verifies the data for all five tasks
 results/trajectories/         one folder per eval, model and run: result.json and the full transcript
