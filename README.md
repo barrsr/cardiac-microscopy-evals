@@ -1,6 +1,6 @@
-# Cardiac microscopy evals
+# Offbeat
 
-Benchmark tasks for AI agents that analyze microscopy data, built from public cardiac datasets. Each task has one right answer that is fixed by the experiment itself or by expert annotation, and a trap built from how paced cardiac tissue and immature cardiomyocytes behave. Every task was run as an autonomous agent on Anthropic and OpenAI models, and every run's transcript is in this repository.
+**Cardiac microscopy evals.** Benchmark tasks for AI agents that analyze microscopy data, built from public cardiac datasets. Each task has one right answer that is fixed by the experiment itself or by expert annotation, and a trap built from how paced cardiac tissue and immature cardiomyocytes behave. Every task was run as an autonomous agent on Anthropic and OpenAI models, and every run's transcript is in this repository.
 
 **Results page with run-by-run transcripts: https://barrsr.github.io/cardiac-microscopy-evals/**
 

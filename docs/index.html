@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Microscopy benchmark tasks with biology traps, built from public cardiac data, run as agents on Claude and GPT, with every transcript.">
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Beats and Z-Lines</title>
+<title>Offbeat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -37,21 +37,32 @@ h3{font:600 1rem/1.35 var(--sans);letter-spacing:-.005em}
 
 /* masthead + 1 Hz axis */
 .mast{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding-top:26px;flex-wrap:wrap}
-.mast .name{font:400 1.35rem/1 var(--serif);letter-spacing:.005em}
+.mast .name{font:400 1.6rem/1 var(--serif);letter-spacing:.005em;display:flex;align-items:baseline;gap:12px}
+.mast .name em{color:var(--accent)}
+.mast .name small{font:500 .64rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .mast nav{display:flex;gap:22px;font-size:.88rem;flex-wrap:wrap}
 .mast nav a{color:var(--ink-2);text-decoration:none}
 .mast nav a:hover{color:var(--accent)}
-.axis{position:relative;height:30px;margin:14px 0 64px;border-top:1.5px solid var(--ink)}
-.axis i{position:absolute;top:0;width:1px;height:9px;background:var(--ink)}
-.axis i.minor{height:4px;background:var(--faint)}
-.axis b{position:absolute;top:12px;transform:translateX(-50%);font:400 .64rem var(--mono);color:var(--muted);white-space:nowrap}
-.axis b.first{transform:none} .axis b.last{transform:translateX(-100%)}
+.vernier{position:relative;height:58px;margin:14px 0 72px;border-top:1.5px solid var(--ink)}
+.vernier i{position:absolute;width:1.5px;height:10px;background:var(--ink);top:0}
+.vernier i.own{top:20px;background:var(--accent);height:10px}
+.vernier b{position:absolute;top:34px;transform:translateX(-50%);font:400 .62rem var(--mono);color:var(--accent);white-space:nowrap}
+.vernier .row{position:absolute;right:0;font:500 .6rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--paper);padding-left:10px}
+.vernier .row.r1{top:-2px} .vernier .row.r2{top:18px;color:var(--accent)}
+@media (max-width:620px){.vernier .row{display:none}}
 
 /* hero */
 .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:end;margin-bottom:56px}
 @media (max-width:920px){.hero{grid-template-columns:minmax(0,1fr);gap:28px}}
-h1{font:400 clamp(4rem,10.5vw,8.6rem)/.86 var(--serif);letter-spacing:-.025em}
-h1 span{display:block;font-style:italic;color:var(--accent)}
+h1{font:400 clamp(5rem,15vw,12.5rem)/.82 var(--serif);letter-spacing:-.035em;white-space:nowrap}
+h1 span{font-style:italic;color:var(--accent);display:inline-block;transform:translateY(.06em) skewX(-2deg);margin-left:.01em}
+.hero .left{display:grid;gap:26px;min-width:0}
+.metro{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;font:400 .78rem var(--mono);color:var(--muted)}
+.metro .m{width:12px;height:12px;border-radius:50%;display:inline-block;animation:pulse 1s infinite}
+.metro .stim{background:var(--ink)}
+.metro .own{background:var(--accent);animation-duration:.96s;margin-left:14px}
+@keyframes pulse{0%{transform:scale(1.8);opacity:1}18%{transform:scale(1);opacity:.85}100%{transform:scale(1);opacity:.25}}
+@media (prefers-reduced-motion:reduce){.metro .m{animation:none;opacity:1}}
 .hero .right{display:grid;gap:22px;min-width:0}
 .lede{font-size:1.14rem;line-height:1.58;color:var(--ink)}
 .byline{font-size:.88rem;color:var(--muted)}
@@ -74,6 +85,7 @@ section{margin-bottom:112px}
 .head{display:grid;grid-template-columns:180px minmax(0,1fr);gap:28px;border-top:1.5px solid var(--ink);padding-top:16px;margin-bottom:36px}
 @media (max-width:760px){.head{grid-template-columns:minmax(0,1fr);gap:10px}}
 .head .kicker{padding-top:10px}
+.head h2{margin-left:-.06em}
 .head .t{display:grid;gap:14px;min-width:0}
 .head.centered .t{text-align:center;justify-items:center}
 
@@ -209,13 +221,19 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 <body>
 <div class="wrap">
 <div class="mast">
-  <div class="name">Cardiac Microscopy Evals</div>
+  <div class="name"><span>Off<em>beat</em></span><small>cardiac microscopy evals</small></div>
   <nav><a href="#background">Background</a><a href="#results">Results</a><a href="#tasks">Tasks</a><a href="#design">Design</a><a href="#method">Method</a><a href="https://github.com/barrsr/cardiac-microscopy-evals">GitHub</a></nav>
 </div>
-<div class="axis" id="axis" aria-hidden="true"></div>
+<div class="vernier" id="vernier" aria-hidden="true"></div>
 
 <div class="hero">
-  <h1>Beats and <span>Z-Lines</span></h1>
+  <div class="left">
+    <h1>Off<span>beat</span></h1>
+    <div class="metro" aria-hidden="true">
+      <span class="m stim"></span><span class="lab">stimulus, every 1.000 s</span>
+      <span class="m own"></span><span class="lab">tissue, every 0.96 s</span>
+    </div>
+  </div>
   <div class="right">
     <p class="lede">Benchmark tasks built from public cardiac microscopy data. Each has one right answer that is fixed by the experiment or by expert annotation, and each carries a trap built from how paced cardiac tissue and immature cardiomyocytes behave. I ran each as an autonomous agent task on Anthropic and OpenAI models, three runs each, graded with SpatialBench grader types.</p>
     <div class="facts" id="facts"></div>
@@ -406,15 +424,18 @@ const vid = document.getElementById('vidA3');
 if (FIGS.A3poster) vid.poster = FIGS.A3poster;
 if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hidden = true;
 
-// 1 Hz time axis: a tick per second, minor ticks every 0.1 s
+// vernier rule: stimulus ticks every 1.000 s against a tissue beating every 0.96 s, over 12 s
 (function () {
-  const ax = document.getElementById('axis'); let h = '';
-  for (let i = 0; i <= 50; i++) {
-    const x = i * 2;
-    h += `<i class="${i % 10 ? 'minor' : ''}" style="left:${x}%"></i>`;
-    if (i % 10 === 0) h += `<b class="${i === 0 ? 'first' : i === 50 ? 'last' : ''}" style="left:${x}%">${i / 10} s</b>`;
+  const v = document.getElementById('vernier'), span = 12; let h = '';
+  const W = 86;  // leave the right edge for the row labels
+  for (let k = 0; k <= span; k++) h += `<i style="left:${k/span*W}%"></i>`;
+  for (let k = 0; k * 0.96 <= span; k++) {
+    const x = k * 0.96 / span * W;
+    h += `<i class="own" style="left:${x}%"></i>`;
+    if (k && k % 3 === 0) h += `<b style="left:${x}%">${-Math.round(k * 40)} ms</b>`;
   }
-  ax.innerHTML = h;
+  h += '<span class="row r1">stimulus 1.000 s</span><span class="row r2">tissue 0.96 s</span>';
+  v.innerHTML = h;
 })();
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
