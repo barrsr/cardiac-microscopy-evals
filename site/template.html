@@ -150,6 +150,12 @@ table.matrix{border-collapse:collapse;width:100%;min-width:760px}
 .why{font:italic 400 1.2rem/1.35 var(--serif);color:var(--fail)}
 .ans{font:400 .8rem/1.55 var(--mono);color:var(--ink-2);border-left:2px solid var(--rule-2);padding:2px 0 2px 12px;word-break:break-word}
 .steps{display:grid;gap:10px;max-height:470px;overflow:auto;padding-right:6px}
+.viewer .blk{display:grid;gap:6px}
+.viewer .blk .k,.viewer .full summary{font:600 .66rem var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.viewer .blk p{margin:0}
+.viewer .say{white-space:pre-wrap;font-size:.92rem;line-height:1.6;color:var(--ink-2);max-height:320px;overflow:auto;border-left:2px solid var(--rule-2);padding-left:14px}
+.viewer .full summary{cursor:pointer;padding:10px 0;border-top:1px solid var(--rule)}
+.viewer .full[open] summary{margin-bottom:10px}
 .step{min-width:0}
 .step .k{font:600 .6rem var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:3px}
 .step pre{margin:0;padding:10px 12px;background:#f5f5f2;border:1px solid var(--rule);font:12px/1.55 var(--mono);white-space:pre-wrap;word-break:break-word;color:var(--ink-2)}
@@ -417,7 +423,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 
 <section id="runs">
   <div class="head"><div class="kicker">04 · The failures</div>
-    <div class="t"><h2>Every run and every failure</h2><p>Each bar is one agent run, given only the data and a Python environment. Every failed run is listed with what it got wrong; select one to read the agent's own reasoning.</p></div></div>
+    <div class="t"><h2>Every run and every failure</h2><p>Each bar is one agent run, given only the data and a Python environment. Every failed run is listed below with its mistake. Select one to see its answer and its own explanation; the full transcript sits underneath.</p></div></div>
   <div class="matrix-wrap"><table class="matrix" id="grid"></table></div>
   <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A2 and A3 are the two tasks. A1, B1 and B2 are earlier versions, kept to show how the tasks were developed.</span></div>
   <div class="runs">
@@ -562,9 +568,17 @@ function open(i) {
   const r = RUNS[i];
   document.querySelectorAll('.dot').forEach(d => d.setAttribute('aria-pressed', d.dataset.i == i ? 'true' : 'false'));
   document.querySelectorAll('.fails button').forEach(b => b.setAttribute('aria-current', b.dataset.i == i ? 'true' : 'false'));
+  const says = r.steps.filter(([k]) => k === 'say');
+  const last = says.length ? says[says.length - 1][1].replace(/<EVAL_ANSWER>[\s\S]*?<\/EVAL_ANSWER>/g, '').replace(/\*\*/g, '').trim() : '';
+  const a = r.answer || {};
+  const plain = ('n_captured' in a) ? `${a.n_captured} captured. Not captured: ${(a.not_captured || []).join(', ') || 'none'}.`
+    : Object.entries(a).map(([k,v]) => `${k.replace(/_/g,' ')}: ${Array.isArray(v) ? v.join(', ') : v}`).join('; ');
   viewer.innerHTML = `<h3>${esc(r.model)} · ${esc(r.task)} · run ${r.run}<span class="st ${r.pass?'p':'f'}">${r.pass?'passed':'failed'}${r.seconds?` · ${r.seconds} s`:''}</span></h3>
-    ${r.why ? `<div class="why">${esc(r.why)}</div>` : ''}<div class="ans">${esc(JSON.stringify(r.answer))}</div>
-    <div class="steps">${r.steps.map(([k,t]) => `<div class="step ${k}"><div class="k">${label[k]}</div>${k==='say'?`<p>${esc(t)}</p>`:`<pre>${esc(t)}</pre>`}</div>`).join('') || '<p class="empty">This CLI returns only the final message.</p>'}</div>`;
+    ${r.why ? `<div class="blk"><div class="k">What it got wrong</div><div class="why">${esc(r.why)}</div></div>` : ''}
+    <div class="blk"><div class="k">Its answer</div><p>${esc(plain || JSON.stringify(a))}</p></div>
+    ${last ? `<div class="blk"><div class="k">Its explanation, in its own words</div><div class="say">${esc(last)}</div></div>` : ''}
+    <details class="full"><summary>Full transcript, ${r.steps.length} steps: every command it ran and what came back</summary>
+    <div class="steps">${r.steps.map(([k,t]) => `<div class="step ${k}"><div class="k">${label[k]}</div>${k==='say'?`<p>${esc(t)}</p>`:`<pre>${esc(t)}</pre>`}</div>`).join('') || '<p class="empty">This CLI returns only the final message.</p>'}</div></details>`;
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) open(+b.dataset.i); });
 if (fails.length) open(fails[0][1]);
