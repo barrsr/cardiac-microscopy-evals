@@ -318,7 +318,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       <p class="ftag">Testing whether AI agents can analyze heart cells like a cardiac biologist.</p>
       <ol class="acts">
         <li><div><b>Task</b><span>Heart tissue grown in a dish beats on its own. An electrical pulse once a second can take over and set the pace, and a tissue that follows it beats exactly once a second. The agent watched videos of nineteen paced tissues and reported which ones were following the pulse.</span></div></li>
-        <li><div><b>Why it's hard</b><span>Two of the tissues beat every 0.96 seconds, slightly faster than the pulse. Timing the beats shows this easily. Knowing what it means takes physiology: a pulse can only take over a tissue that beats slower than it does, so these two are keeping their own rhythm.</span></div></li>
+        <li><div><b>Why it's hard</b><span>Two of the tissues beat every 0.96 seconds, slightly faster than the pulse. The prompt defines following as beating locked to the pulse, and a pulse can't take over a tissue that already beats faster than it, so the answer is clear. The difficulty is resisting "about once a second" as close enough.</span></div></li>
         <li><div><b>Result</b><span>Claude Opus answered correctly in all three runs. The other models answered correctly in one run or none, and the failed Claude runs had measured the faster beat before calling it captured.</span></div></li>
       </ol>
     </div>
