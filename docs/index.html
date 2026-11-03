@@ -315,7 +315,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
  <div class="film-in">
   <div class="film-top">
     <div class="fname">Off<em>beat</em></div>
-    <nav><a href="#background">Biology</a><a href="#test">Test</a><a href="#harder">How it got harder</a><a href="#design">Design</a><a href="#method">Method</a><a href="https://github.com/barrsr/cardiac-microscopy-evals">GitHub</a></nav>
+    <nav><a href="#background">Biology</a><a href="#v1">Tasks</a><a href="#runs">Failures</a><a href="#design">Design</a><a href="#method">Method</a><a href="https://github.com/barrsr/cardiac-microscopy-evals">GitHub</a></nav>
   </div>
   <div class="film-main">
     <div class="film-copy">
@@ -360,64 +360,36 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </div>
 </section>
 
-<section id="test">
-  <div class="head"><div class="kicker">02 · The test</div>
-    <div class="t"><h2>Captured or beating on its own?</h2></div></div>
-  <article class="task long">
-    <div class="text">
-      <div class="label"><b>A3</b><span>Brightfield time-lapse · 19 tissues</span></div>
-      <p>hiPSC-cardiomyocyte microbundles from a patient line with an HCM-associated MYBPC3 variant, recorded on day 7 under 1&nbsp;Hz field stimulation in three imaging sessions. The stimulus itself is not in the images.</p>
-      <div class="answer"><span class="kicker">Answer</span><strong>6 captured</strong> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
-      <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98&nbsp;s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval sits within 0.010&nbsp;s of 1.000&nbsp;s; the closest uncaptured tissue, Ex00575, is 0.024 to 0.035&nbsp;s short on every interval.</p>
-      <table class="traps">
-        <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
-        <tbody>
-          <tr><td>Every interval within 5% of 1.000&nbsp;s</td><td><span class="res bad">n = 8</span></td></tr>
-          <tr><td>Mean rate within 3% or 5% of 60&nbsp;bpm</td><td><span class="res bad">n = 8 or 11</span></td></tr>
-          <tr><td>Dominant spectral frequency at 1.00 ± 0.05&nbsp;Hz</td><td><span class="res bad">n = 10</span></td></tr>
-          <tr><td>Rate at or above 58.8&nbsp;bpm (98% of the pacing rate)</td><td><span class="res bad">n = 15</span></td></tr>
-          <tr><td>Trusting the sheet's 30&nbsp;Hz frame rate</td><td><span class="res bad">n = 2 or 12</span></td></tr>
-          <tr class="ok"><td>Upstroke times on file timestamps, every interval held to the 1.000&nbsp;s period</td><td><span class="res good">n = 6 ✓</span></td></tr>
-        </tbody>
-      </table>
-      <p class="src">These recordings come from condition 023 of the same deposit as task A2. Nineteen of its twenty-three files were used unmodified. Four were left out because their beats are too faint or the call depends on how a beat is timed. The ground truth rests on the depositors' 1&nbsp;Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
-    </div>
-    <figure class="plate"><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption class="figcap"><b>Figure 2.</b> Every beat interval of every tissue. Captured tissues sit on 1.000&nbsp;s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
-  </article>
-</section>
-
-<div class="interlude"><i></i><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p></div>
-
-<section id="runs">
-  <div class="head"><div class="kicker">03 · The failures</div>
-    <div class="t"><h2>Every run and every failure</h2><p>Each bar is one independent agent run with only the data and a Python environment. Every failed run is listed with what it got wrong. Select one to read the agent's own reasoning.</p></div></div>
-  <div class="matrix-wrap"><table class="matrix" id="grid"></table></div>
-  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A3, A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
-  <div class="runs">
-    <div class="list"><h3>Failed runs <span id="nfail"></span></h3><ul class="fails" id="fails"></ul></div>
-    <div class="viewer" id="viewer"><p class="empty">Select a run to open its transcript.</p></div>
-  </div>
-</section>
-
-<div class="interlude"><i></i><p>The earlier versions of the task were easier.</p></div>
-
-<section id="harder">
-  <div class="head"><div class="kicker">04 · Getting harder</div>
-    <div class="t"><h2>How the tasks got harder</h2><p>In the first versions the traps were in the signal processing, such as a misleading frame rate or measuring along the wrong image axis. Every Claude run passed them. GPT-6 Luna passed every sarcomere run but missed the beat rate in all three runs, answering 55 to 56&nbsp;bpm for a tissue paced at 60. The second versions put the trap in the biology. On the capture task, two of the three misses counted tissues beating near 60&nbsp;bpm as captured. A3 removed the remaining shortcut of regular beating close to 1&nbsp;Hz, and only Opus passed every run.</p></div></div>
+<section id="v1">
+  <div class="head"><div class="kicker">02 · First versions</div>
+    <div class="t"><h2>Measurement tasks</h2><p>The first two tasks each asked for one number, and their traps were in the signal processing, such as a misleading frame rate or measuring along the wrong image axis. Every Claude run passed both. GPT-6 Luna passed every sarcomere run and missed the beat rate in all three, answering 55 to 56&nbsp;bpm for a tissue paced at 60.</p></div></div>
   <article class="task">
     <div class="text">
       <div class="label"><b>A1</b><span>First version · 1 tissue</span></div>
       <h2>What is this tissue's beat rate?</h2>
-      <p>The answer is 60&nbsp;bpm, set by the 1&nbsp;Hz pacing. A motion trace has a contraction and a relaxation peak per beat (120&nbsp;bpm if both are counted), the third harmonic tops the spectrum (180&nbsp;bpm), and the sheet's 30&nbsp;Hz frame rate gives 54.5 to 54.7&nbsp;bpm against the file's own 32.9&nbsp;fps timestamps.</p>
+      <p>The tissue is paced at 1&nbsp;Hz, so the answer is 60&nbsp;bpm. Three shortcuts give a wrong number. A motion trace has two peaks per beat, one for contraction and one for relaxation, so counting both gives 120&nbsp;bpm. The tallest peak in the spectrum is the third harmonic, at 180&nbsp;bpm. The data sheet says 30 frames per second while the file's own timestamps say 32.9, and using the sheet's figure gives 54.5 to 54.7&nbsp;bpm.</p>
     </div>
-    <figure class="plate"><img id="figA1" alt="Two motion peaks per beat in the speed trace, one in the displacement trace"><figcaption class="figcap"><b>Figure 3.</b> Two speed peaks per beat; one displacement peak per beat.</figcaption></figure>
+    <figure class="plate"><img id="figA1" alt="Two motion peaks per beat in the speed trace, one in the displacement trace"><figcaption class="figcap"><b>Figure 2.</b> Two speed peaks per beat; one displacement peak per beat.</figcaption></figure>
   </article>
 
+  <article class="task">
+    <div class="text">
+      <div class="label"><b>B1</b><span>First version · 1 cell</span></div>
+      <h2>How long are this cell's sarcomeres?</h2>
+      <p>The answer is 1.72&nbsp;µm by two independent methods, within one pixel of the authors' value for this cell. Its myofibrils run at about 44° to the image axes, so measuring along x or y gives 1.91 to 2.39&nbsp;µm, and an answer left in pixels gives 14.1.</p>
+    </div>
+    <figure class="plate"><img id="figB1" alt="Z-line profile along the myofibril versus along the image x axis"><figcaption class="figcap"><b>Figure 3.</b> Along the myofibril 1.70&nbsp;µm; along image x 1.91&nbsp;µm.</figcaption></figure>
+  </article>
+</section>
+
+<section id="v2">
+  <div class="head"><div class="kicker">03 · Second versions</div>
+    <div class="t"><h2>Judgment tasks</h2><p>The second versions asked for a judgment that depends on knowing how heart tissue behaves. The capture task was missed in three runs, and two of those counted tissues beating near 60&nbsp;bpm as captured. Every model passed the sarcomere panel.</p></div></div>
   <article class="task long">
     <div class="text">
       <div class="label"><b>A2</b><span>Second version · 11 tissues</span></div>
       <h2>Which paced tissues are captured?</h2>
-      <p>Eleven engineered hiPSC-cardiomyocyte microbundles were recorded on day 7 under 1&nbsp;Hz field stimulation. The agent decides which tissues follow the stimulus 1:1. Because a captured tissue beats exactly at the stimulus period, the pacing itself supplies the ground truth.</p>
+      <p>Eleven tissues were filmed on day 7 under 1&nbsp;Hz pacing, and the agent decides which ones follow the pulse beat for beat. A captured tissue beats exactly once a second, so the pacing itself supplies the answer key.</p>
       <div class="answer"><span class="kicker">Answer</span><strong>8 captured</strong>; not captured <strong>Ex00636, Ex00637, Ex00638</strong></div>
       <p>Every interval in the captured tissues sits within 0.010&nbsp;s of 1.000&nbsp;s. Each non-captured tissue has an interval at least 0.079&nbsp;s off and drifts at least 0.137&nbsp;s against the pacing grid. Ex00637 has intervals as short as 0.89&nbsp;s, which a 1&nbsp;Hz stimulus cannot produce.</p>
       <table class="traps">
@@ -435,20 +407,16 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
     </div>
     <figure class="plate"><img id="figA2" alt="Beat phase against the 1 second pacing grid for captured and non-captured tissues"><figcaption class="figcap"><b>Figure 4.</b> Beat times against the 1.000&nbsp;s pacing grid. Captured tissues stay on the grid; the three others drift off it.</figcaption></figure>
   </article>
-</section>
 
-<section id="sarcomeres">
-  <div class="head"><div class="kicker">05 · Sarcomeres</div>
-    <div class="t"><h2>Sarcomeres in confocal images</h2><p>These tasks use fluorescence images of the sarcomere's z-lines. Immature cells have no sarcomeres, but a Fourier analysis or a line profile still returns a number for them.</p></div></div>
   <article class="task wide">
     <div class="col">
       <div class="label"><b>B2</b><span>ACTN2-mEGFP confocal · 8 cells</span></div>
       <h2>Which cells have sarcomeres, and how long are they?</h2>
-      <p>Eight day-32 hiPSC-cardiomyocytes from one imaging session, each with its mask. The agent decides which cells have striated myofibrils with measurable z-lines, then reports the median sarcomere length across only those cells. Striation calls come from the dataset's two expert scorers (4 to 5 versus 1 to 2 on their 5-point scale, no borderline cells), and agree with the authors' classifier.</p>
+      <p>Eight day-32 heart muscle cells from one imaging session, each with its outline. The agent decides which cells have organized sarcomeres, then reports the median sarcomere length across only those cells. Immature cells have no sarcomeres, but a Fourier analysis or a line profile still returns a number for them. Which cells count as striated comes from the dataset's two expert scorers (4 to 5 versus 1 to 2 on their 5-point scale, with no borderline cells), and their calls agree with the authors' classifier.</p>
       <div class="answer"><span class="kicker">Answer</span><strong>cells B, D, E</strong>; median <strong>1.73&nbsp;µm</strong> (±0.12)</div>
     </div>
     <div class="col">
-      <p>In the immature cells alpha-actinin is punctate or fibrillar. Every model passed every run of this panel, because a masked spectrum with a check for a sarcomere peak is enough to separate the two groups.</p>
+      <p>Every model passed every run of this panel. A spectrum of each outlined cell, with a check for a sarcomere peak, is enough to separate the two groups.</p>
       <table class="traps">
         <thead><tr><th>Approach, run on the real images</th><th>Result</th></tr></thead>
         <tbody>
@@ -462,24 +430,53 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
     </div>
     <figure class="plate"><img id="figB2" alt="Striated versus immature cardiomyocytes with their power spectra"><figcaption class="figcap"><b>Figure 5.</b> Striated cells against immature cells, with their power spectra. Only the striated cells show a sarcomere peak.</figcaption></figure>
   </article>
+</section>
 
-  <article class="task">
+<section id="test">
+  <div class="head"><div class="kicker">04 · Third version</div>
+    <div class="t"><h2>Captured or beating on its own?</h2><p>In A2, every tissue that wasn't captured had at least one beat interval 0.08&nbsp;s or more away from a second, so a check for a steady rhythm near 1&nbsp;Hz was nearly enough. A3 uses nineteen different tissues, two of which beat as steadily as the captured ones and only slightly too fast.</p></div></div>
+  <article class="task long">
     <div class="text">
-      <div class="label"><b>B1</b><span>First version · 1 cell</span></div>
-      <h2>How long are this cell's sarcomeres?</h2>
-      <p>The answer is 1.72&nbsp;µm by two independent methods, within one pixel of the authors' value for this cell. Its myofibrils run at about 44°, so measurements along the image axes give 1.91 to 2.39&nbsp;µm, and an answer left in pixels gives 14.1.</p>
+      <div class="label"><b>A3</b><span>Brightfield time-lapse · 19 tissues</span></div>
+      <p>Tissues grown from a patient's cells carrying a MYBPC3 variant linked to hypertrophic cardiomyopathy, filmed on day 7 under 1&nbsp;Hz pacing in three imaging sessions. The pulse itself doesn't appear in the images.</p>
+      <div class="answer"><span class="kicker">Answer</span><strong>6 captured</strong> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
+      <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98&nbsp;s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval sits within 0.010&nbsp;s of 1.000&nbsp;s; the closest uncaptured tissue, Ex00575, is 0.024 to 0.035&nbsp;s short on every interval.</p>
+      <table class="traps">
+        <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Every interval within 5% of 1.000&nbsp;s</td><td><span class="res bad">n = 8</span></td></tr>
+          <tr><td>Mean rate within 3% or 5% of 60&nbsp;bpm</td><td><span class="res bad">n = 8 or 11</span></td></tr>
+          <tr><td>Dominant spectral frequency at 1.00 ± 0.05&nbsp;Hz</td><td><span class="res bad">n = 10</span></td></tr>
+          <tr><td>Rate at or above 58.8&nbsp;bpm (98% of the pacing rate)</td><td><span class="res bad">n = 15</span></td></tr>
+          <tr><td>Trusting the sheet's 30&nbsp;Hz frame rate</td><td><span class="res bad">n = 2 or 12</span></td></tr>
+          <tr class="ok"><td>Upstroke times on file timestamps, every interval held to the 1.000&nbsp;s period</td><td><span class="res good">n = 6 ✓</span></td></tr>
+        </tbody>
+      </table>
+      <p class="src">These recordings come from condition 023 of the same deposit as A2. Nineteen of its twenty-three files were used unmodified. Four were left out because their beats are too faint or the call depends on how a beat is timed. The ground truth rests on the depositors' 1&nbsp;Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
     </div>
-    <figure class="plate"><img id="figB1" alt="Z-line profile along the myofibril versus along the image x axis"><figcaption class="figcap"><b>Figure 6.</b> Along the myofibril 1.70&nbsp;µm; along image x 1.91&nbsp;µm.</figcaption></figure>
+    <figure class="plate"><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption class="figcap"><b>Figure 6.</b> Every beat interval of every tissue. Captured tissues sit on 1.000&nbsp;s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
   </article>
 </section>
 
-<section id="design">
-  <div class="head"><div class="kicker">06 · Design</div><div class="t"><h2>How I build a trap</h2></div></div>
+<div class="interlude"><i></i><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p></div>
+
+<section id="runs">
+  <div class="head"><div class="kicker">05 · The failures</div>
+    <div class="t"><h2>Every run and every failure</h2><p>Each bar is one agent run, given only the data and a Python environment. Every failed run is listed with what it got wrong; select one to read the agent's own reasoning.</p></div></div>
+  <div class="matrix-wrap"><table class="matrix" id="grid"></table></div>
+  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A3, A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
+  <div class="runs">
+    <div class="list"><h3>Failed runs <span id="nfail"></span></h3><ul class="fails" id="fails"></ul></div>
+    <div class="viewer" id="viewer"><p class="empty">Select a run to open its transcript.</p></div>
+  </div>
+</section>
+
+<section id="design" class="three">
+  <div class="head"><div class="kicker">06 · Design</div><div class="t"><h2>Design rules</h2></div></div>
   <div class="princ">
     <div><h3>Ground truth</h3><p>A tissue paced at 1&nbsp;Hz has a known period, and the dataset's expert scorers decide which cells are striated. The analysis measures each tissue or cell against that fixed reference.</p></div>
-    <div><h3>Where the trap sits</h3><p>A wrong frame rate can be caught by careful checking. Recognizing that a tissue beating 3% faster than its stimulus is not captured takes training in cardiac physiology.</p></div>
+    <div><h3>Where the trap sits</h3><p>A wrong frame rate can be caught by careful checking. Recognizing that a tissue beating a few percent faster than its stimulus is not captured takes training in cardiac physiology.</p></div>
     <div><h3>What the prompt says</h3><p>It quotes the depositors' 30&nbsp;Hz frame rate because that is what anyone opening the deposit would read, and it never names the trap.</p></div>
-    <div><h3>Tasks set aside</h3><p>Two other tasks were built on the same data and set aside because their correct answer couldn't be pinned down. One asked for the force of each beat, measured from how far the pillars bend, but the two pillars under one tissue often bent by very different amounts and three tracking methods disagreed by about 12%. The other asked which tissues were paced, but two tissues labeled as unpaced beat exactly once a second, so the labels couldn't serve as the answer key.</p></div>
   </div>
 </section>
 
