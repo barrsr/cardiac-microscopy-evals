@@ -167,6 +167,6 @@ if __name__ == '__main__':
             '<meta name="description" content="Microscopy benchmark tasks with biology traps, built from public cardiac data, '
             'run as agents on Claude and GPT, with every transcript.">\n'
             '<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>\n')
-    i = page.index('<div class="wrap">')  # title, fonts and styles belong in <head>
+    i = page.index('<div class="progress"')  # title, fonts and styles belong in <head>
     (ROOT / 'docs' / 'index.html').write_text(head + page[:i] + '</head>\n<body>\n' + page[i:] + '\n</body>\n</html>\n')
     print(len(data), 'runs;', round(len(page) / 1e6, 2), 'MB')
