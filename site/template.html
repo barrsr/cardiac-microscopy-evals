@@ -296,9 +296,7 @@ html{scroll-padding-top:72px}
 .interlude{margin:0 auto 96px;max-width:920px;text-align:center;display:grid;justify-items:center;gap:22px}
 .interlude blockquote{margin:0;max-width:64ch;font:400 1.02rem/1.6 var(--sans);color:var(--ink-2);text-wrap:balance}
 .interlude cite{display:block;margin-top:8px;font:600 .66rem var(--sans);letter-spacing:.14em;text-transform:uppercase;font-style:normal;color:var(--muted)}
-.interlude i{width:1.5px;height:44px;background:var(--accent)}
 .interlude p{font:400 clamp(1.9rem,4.2vw,3.2rem)/1.14 var(--serif);color:var(--ink);max-width:none;text-wrap:balance;letter-spacing:-.01em}
-.interlude.seen i{animation:grow .7s ease-out both}
 .interlude.seen p{animation:rise .8s cubic-bezier(.2,.7,.2,1) .12s both}
 .interlude.seen blockquote{animation:rise .8s cubic-bezier(.2,.7,.2,1) .4s both}
 @keyframes grow{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
@@ -409,7 +407,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </article>
 </section>
 
-<div class="interlude"><i></i><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p><blockquote>"Ex00575 and Ex00576 run slightly under 1 s (about 0.97 and 0.94–0.97 s), and I kept them as captured."<cite>Claude Sonnet, run 1, explaining its answer</cite></blockquote></div>
+<div class="interlude"><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p><blockquote>"Ex00575 and Ex00576 run slightly under 1 s (about 0.97 and 0.94–0.97 s), and I kept them as captured."<cite>Claude Sonnet, run 1, explaining its answer</cite></blockquote></div>
 
 <section id="runs">
   <div class="head"><div class="kicker">04 · The failures</div>
