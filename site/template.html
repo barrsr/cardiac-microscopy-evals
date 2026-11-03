@@ -241,7 +241,7 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .ftag{font:400 clamp(1.35rem,2.1vw,1.7rem)/1.22 var(--serif);color:#efe9e1;max-width:28ch;text-wrap:balance}
 .acts{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:0;counter-reset:act;border-top:1px solid #2b2724}
 .acts li{display:grid;grid-template-columns:44px minmax(0,1fr);padding:14px 0;border-bottom:1px solid #2b2724}
-.acts li::before{counter-increment:act;content:counter(act,upper-roman);font:italic 400 1.35rem/1.2 var(--serif);color:#d9737b}
+.acts li::before{counter-increment:act;content:counter(act);font:400 1.1rem/1.2 var(--serif);color:#d9737b}
 .acts b{display:block;font:600 .68rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#a9a196;margin:4px 0 7px}
 .acts span{display:block;font-size:.95rem;line-height:1.55;color:#ddd6cb;text-wrap:pretty}
 .film-screen{display:grid;gap:14px;min-width:0}
@@ -303,13 +303,13 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </div>
   <div class="film-main">
     <div class="film-copy">
-      <div class="fkick">A study of AI agents and cardiac microscopy</div>
+      <div class="fkick">Cardiac microscopy evals for AI agents</div>
       <h1><span class="off">Off</span><span class="beat">beat</span></h1>
       <p class="ftag">Testing whether AI agents can analyze heart cells like a cardiac biologist.</p>
       <ol class="acts">
-        <li><div><b>The question</b><span>Nineteen engineered heart tissues were paced once a second and filmed. Each AI agent had to say which tissues follow the stimulus.</span></div></li>
-        <li><div><b>The trap</b><span>Two tissues beat as steadily as the rest, but every 0.96&nbsp;s instead of every 1.000&nbsp;s. A 1&nbsp;Hz stimulus cannot produce that rhythm, so neither is following it.</span></div></li>
-        <li><div><b>The verdict</b><span>Only one of four models caught them in every run.</span></div></li>
+        <li><div><b>Task</b><span>Nineteen engineered heart tissues were paced at 1&nbsp;Hz and filmed. The agent reports which tissues follow the stimulus.</span></div></li>
+        <li><div><b>Difficulty</b><span>Two tissues beat regularly, every 0.96&nbsp;s. A 1&nbsp;Hz stimulus can't produce that interval, so they aren't following it.</span></div></li>
+        <li><div><b>Result</b><span>Claude Opus answered correctly in all three runs. The other models answered correctly in one run or none.</span></div></li>
       </ol>
     </div>
     <div class="film-screen">
@@ -322,7 +322,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </div>
   <div class="film-bottom">
     <div class="credits">Ryan Barrs, PhD</div>
-    <a class="cue" href="#study"><span>The full study</span><i></i></a>
+    <a class="cue" href="#study"><span>Details</span><i></i></a>
     <div class="credits right"><a href="https://github.com/barrsr/cardiac-microscopy-evals">Code and transcripts</a></div>
   </div>
  </div>
@@ -367,7 +367,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </article>
 </section>
 
-<div class="interlude"><i></i><p>Three of the four models fell for the same trap.</p></div>
+<div class="interlude"><i></i><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p></div>
 
 <section id="runs">
   <div class="head"><div class="kicker">03 · The failures</div>
@@ -380,7 +380,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </div>
 </section>
 
-<div class="interlude"><i></i><p>A task that hard took three versions to build.</p></div>
+<div class="interlude"><i></i><p>The earlier versions of the task were easier.</p></div>
 
 <section id="harder">
   <div class="head"><div class="kicker">04 · Getting harder</div>
