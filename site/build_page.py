@@ -151,9 +151,6 @@ if __name__ == '__main__':
     figs = {
         'A3': img('evals/task_A3_capture_vs_intrinsic_rhythm/figures/fig1_intervals_per_tissue.png'),
         'A2': img('evals/task_A2_pacing_capture/figures/fig1_phase_vs_pacing_grid.png'),
-        'B2': img('evals/task_B2_sarcomere_maturity/figures/fig1_striated_vs_immature.png'),
-        'A1': img('evals/task_A_beat_rate/figures/fig1_motion_trace.png'),
-        'B1': img('evals/task_B_sarcomere_length/figures/fig1_profile_axis_vs_myofibril.png'),
     }
     vid = ROOT / 'evals/task_A3_capture_vs_intrinsic_rhythm/figures/beating_side_by_side.mp4'
     if vid.exists():
