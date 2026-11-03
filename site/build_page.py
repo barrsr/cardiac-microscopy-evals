@@ -136,7 +136,7 @@ def runs():
                     continue  # provider quota or outage, not a model answer
                 evj = json.loads((ROOT / 'evals' / folder / 'eval.json').read_text())
                 out.append({'task': key, 'model': label, 'maker': maker, 'run': r['run'], 'why': '' if r.get('pass') else why(evj, r.get('answer')),
-                            'answer': r.get('answer'), 'pass': r.get('pass'), 'seconds': r.get('seconds'),
+                            'answer': r.get('answer'), 'pass': r.get('pass'), 'seconds': r.get('seconds'), 'cost': r.get('cost_usd'),
                             'steps': condense(rj.parent / 'trajectory.jsonl', mdir)})
     return out
 

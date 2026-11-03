@@ -177,10 +177,22 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 @media (max-width:760px){.trail{grid-template-columns:minmax(0,1fr);gap:40px}}
 .trail > div{display:grid;gap:14px;align-content:start;min-width:0}
 .trail h3{font:400 1.45rem/1.15 var(--serif)}
-.method{list-style:none;margin:0 0 0 208px;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 56px;counter-reset:m}
-@media (max-width:760px){.method{margin-left:0;grid-template-columns:minmax(0,1fr)}}
-.method li{display:grid;grid-template-columns:32px minmax(0,1fr);color:var(--ink-2);border-top:1px solid var(--rule-2);padding-top:16px;align-content:start}
+.method-grid{margin-left:208px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start}
+@media (max-width:920px){.method-grid{margin-left:0;grid-template-columns:minmax(0,1fr);gap:36px}}
+.method{list-style:none;margin:0;padding:0;display:grid;counter-reset:m}
+.method li{display:grid;grid-template-columns:32px minmax(0,1fr);color:var(--ink-2);border-top:1px solid var(--rule-2);padding:16px 0 18px}
+.method li:last-child{border-bottom:1px solid var(--rule-2)}
+.method li b{color:var(--ink);font-weight:600}
 .method li::before{counter-increment:m;content:counter(m,lower-roman) ".";font:italic 400 1.05rem var(--serif);color:var(--accent)}
+.repro{margin:0;display:grid;gap:12px;min-width:0}
+.repro pre{margin:0;background:var(--ink);color:#e9ebf2;padding:28px 28px 26px;font:12.5px/1.75 var(--mono);overflow-x:auto;white-space:pre}
+.repro .c{color:#8f96a8}
+.runfacts{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:10px}
+.runfacts td{padding:9px 0;border-bottom:1px solid var(--rule)}
+.runfacts tr:first-child td{border-top:1.5px solid var(--ink)}
+.runfacts tr:last-child td{border-bottom:1.5px solid var(--ink)}
+.runfacts td:last-child{text-align:right;font:500 .84rem var(--mono);color:var(--ink)}
+.runfacts td:first-child{color:var(--ink-2)}
 footer{border-top:1.5px solid var(--ink);padding-top:16px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
 footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </style>
@@ -331,12 +343,32 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 
 <section id="method">
   <div class="head"><div class="kicker">Method</div><div class="t"><h2>How the runs were made</h2></div></div>
+  <div class="method-grid">
   <ol class="method">
-    <li><span>Each eval follows the SpatialBench format: the task prompt ends in a fixed answer block, and the notes give the ground truth, the traps, a separation table of approaches actually run, and the tolerance rationale. Grading uses <span class="mono">numeric_tolerance</span>, <span class="mono">label_set_jaccard</span> and <span class="mono">all_of</span>, checked against the latch-eval-tools grader classes.</span></li>
-    <li><span>Every number in the trap tables comes from a reproducible <span class="mono">ground_truth.py</span> run on the source files that <span class="mono">fetch_data.py</span> downloads.</span></li>
-    <li><span>Each model ran as an agent in a fresh directory holding only the data, with shell access to Python: Claude through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox. A short fixed environment note plus the task prompt was the only input, identical across models. Full transcripts are kept.</span></li>
-    <li><span>The prompts state what an analyst would know, including the depositors' 30 Hz figure, and never name a trap.</span></li>
+    <li><span><b>Format.</b> Each eval follows the SpatialBench format: a fixed answer block, and notes giving the ground truth, the traps, a separation table and the tolerance rationale. Graded with <span class="mono">numeric_tolerance</span>, <span class="mono">label_set_jaccard</span> and <span class="mono">all_of</span>, checked against the latch-eval-tools grader classes.</span></li>
+    <li><span><b>Ground truth.</b> Every number in the trap tables comes from <span class="mono">ground_truth.py</span>, run on source files that <span class="mono">fetch_data.py</span> downloads and verifies by checksum.</span></li>
+    <li><span><b>Agents.</b> Each model ran in a fresh directory with only the data and shell access to Python: Claude through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox.</span></li>
+    <li><span><b>Input.</b> A short fixed environment note plus the task prompt was the only input, identical across models. The prompts state what an analyst would know, including the depositors' 30 Hz figure, and never name a trap.</span></li>
   </ol>
+  <figure class="repro">
+    <div class="kicker">Reproduce it</div>
+<pre><span class="c"># download the source data, checksums verified (2.4 GB)</span>
+python scripts/fetch_all.py
+
+<span class="c"># ground truth and every naive approach in the notes</span>
+python evals/task_A3_capture_vs_intrinsic_rhythm/\
+ground_truth.py
+
+<span class="c"># run the agents and grade them</span>
+python harness/run_models.py --evals A3 \
+  --models claude:opus,codex:gpt-6-luna --runs 3
+
+<span class="c"># rebuild this page from results/</span>
+python site/build_page.py</pre>
+    <figcaption class="figcap">Full instructions in the <a href="https://github.com/barrsr/cardiac-microscopy-evals#reproduce">README</a>.</figcaption>
+    <table class="runfacts" id="runfacts"></table>
+  </figure>
+</div>
 </section>
 
 <footer>
@@ -410,4 +442,16 @@ function open(i) {
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) open(+b.dataset.i); });
 if (fails.length) open(fails[0][1]);
+
+// run facts, computed from the runs on this page
+(function () {
+  const secs = RUNS.map(r => r.seconds).filter(Boolean).sort((a,b) => a - b);
+  const med = secs.length % 2 ? secs[(secs.length-1)/2] : (secs[secs.length/2-1] + secs[secs.length/2]) / 2;
+  const fmt = s => s < 120 ? `${Math.round(s)} s` : `${Math.round(s/60)} min`;
+  const claude = RUNS.filter(r => r.model.startsWith('Claude') && r.cost != null);
+  const cost = claude.reduce((a,r) => a + r.cost, 0);
+  const rows = [['Agent runs', RUNS.length], ['Median run time', fmt(med)], ['Fastest and slowest run', `${fmt(secs[0])} and ${fmt(secs[secs.length-1])}`],
+                [`API-equivalent cost of the ${claude.length} Claude runs`, `$${cost.toFixed(2)}`], ['Transcripts kept', `${RUNS.length} of ${RUNS.length}`]];
+  document.getElementById('runfacts').innerHTML = rows.map(([a,b]) => `<tr><td>${a}</td><td class="num">${b}</td></tr>`).join('');
+})();
 </script>
