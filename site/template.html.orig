@@ -1,0 +1,553 @@
+<title>Offbeat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* A journal plate: one deliberate light look, ink on white, a single oxblood accent,
+   numbered figures and ruled tables. The rule under the masthead is a 1 Hz time axis. */
+:root{
+  color-scheme:light;
+  --paper:#fcfcfa; --plate:#ffffff; --ink:#0e0f12; --ink-2:#3a3d45; --muted:#6f737c; --faint:#a3a7ae;
+  --rule:#e4e3df; --rule-2:#cfcdc7; --accent:#7a1f2b; --accent-wash:#f6eded;
+  --pass:#13774f; --pass-wash:#e6f2ec; --fail:#d4471f; --fail-wash:#fcece6;
+  --serif:"Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --sans:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.62 var(--sans);
+  padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));padding-block:0 96px}
+a{color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wrap{max-width:1180px;margin:0 auto}
+p{margin:0;max-width:64ch;color:var(--ink-2);text-wrap:pretty}
+li,figcaption,td{text-wrap:pretty}
+h1,h2,h3{margin:0;font-weight:400;color:var(--ink);text-wrap:balance}
+h2{font:400 clamp(2rem,3.6vw,2.9rem)/1.04 var(--serif);letter-spacing:-.01em}
+h3{font:600 1rem/1.35 var(--sans);letter-spacing:-.005em}
+.mono{font-family:var(--mono);font-size:.86em}
+.num{font-variant-numeric:tabular-nums}
+.kicker{font:600 .7rem/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+/* masthead + 1 Hz axis */
+.mast{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding-top:26px;flex-wrap:wrap}
+.mast .name{font:400 1.6rem/1 var(--serif);letter-spacing:.005em;display:flex;align-items:baseline;gap:12px}
+.mast .name em{color:var(--accent)}
+.mast .name small{font:600 .64rem var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.mast nav{display:flex;gap:22px;font-size:.88rem;flex-wrap:wrap}
+.mast nav a{color:var(--ink-2);text-decoration:none}
+.mast nav a:hover{color:var(--accent)}
+
+/* hero: a centered entrance. "Off" lands, "beat" arrives a beat late. */
+.hero{text-align:center;display:grid;justify-items:center;gap:22px;margin:24px 0 88px}
+h1{font:400 clamp(5.5rem,19vw,15.5rem)/.8 var(--serif);letter-spacing:-.04em;white-space:nowrap;margin-bottom:6px}
+h1 .off,h1 .beat{display:inline-block}
+h1 .beat{font-style:italic;color:var(--accent);transform:translateY(.06em) skewX(-2deg);margin-left:.01em}
+.tagline{font:400 clamp(1.6rem,3vw,2.35rem)/1.18 var(--serif);color:var(--ink);max-width:36ch;margin-top:18px;text-wrap:balance}
+.sub{font-size:1.02rem;color:var(--ink-2);max-width:62ch;text-wrap:balance}
+.hero .facts{width:min(720px,100%);margin-top:14px;text-align:center}
+.hero .facts div{padding-left:0;padding-right:0}
+.hero .byline{max-width:none}
+.lede{font-size:1.14rem;line-height:1.58;color:var(--ink)}
+.byline{font-size:.88rem;color:var(--muted)}
+.byline b{color:var(--ink);font-weight:500}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--rule-2);border-bottom:1px solid var(--rule-2)}
+.facts div{padding:12px 0 12px 14px;border-left:1px solid var(--rule)}
+.facts div:first-child{border-left:0;padding-left:0}
+.facts b{display:block;font:400 2rem/1 var(--serif)}
+.facts span{font-size:.76rem;color:var(--muted)}
+
+/* figure plates */
+figure{margin:0}
+.plate{background:var(--plate);border:1px solid var(--rule);padding:18px;display:grid;gap:12px;min-width:0}
+.plate video,.plate img{width:100%;max-width:100%;display:block}
+.figcap{font-size:.86rem;line-height:1.5;color:var(--ink-2);max-width:none}
+.figcap b{font-weight:600;color:var(--ink)}
+
+/* section heads */
+section{margin-bottom:96px}
+.head{display:grid;justify-items:center;text-align:center;gap:16px;border-top:1.5px solid var(--ink);padding-top:28px;margin-bottom:48px}
+.head .kicker{padding-top:0}
+
+.head .t{display:grid;gap:14px;min-width:0;justify-items:center}
+.head .t p{max-width:92ch;text-wrap:pretty}
+
+
+/* headline result */
+.score{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center}
+@media (max-width:920px){.score{grid-template-columns:minmax(0,1fr);gap:28px}}
+.big{width:100%;border-collapse:collapse}
+.big td{padding:16px 0;border-bottom:1px solid var(--rule);vertical-align:middle}
+.big tr:first-child td{border-top:1px solid var(--rule-2)}
+.big tr:last-child td{border-bottom:1px solid var(--rule-2)}
+.big .m{font:400 1.7rem/1 var(--serif)}
+.big .m small{display:block;font:400 .74rem var(--sans);color:var(--muted);margin-top:6px}
+.big .ticks{display:flex;gap:6px;justify-content:center}
+.big .ticks i{width:12px;height:30px;background:var(--pass)}
+.big .ticks i.f{background:transparent;box-shadow:inset 0 0 0 1.5px var(--fail)}
+.big .r{font:400 2.6rem/1 var(--serif);text-align:right;width:90px}
+.big .r.lo{color:var(--fail)}
+.quote{font:400 clamp(1.4rem,2.3vw,1.85rem)/1.25 var(--serif);color:var(--ink);max-width:28ch}
+.quote + p{margin-top:16px}
+
+/* matrix */
+.matrix-wrap{overflow-x:auto}
+table.matrix{border-collapse:collapse;width:100%;min-width:760px}
+.matrix th,.matrix td{padding:13px 14px;text-align:left;vertical-align:middle;border-bottom:1px solid var(--rule)}
+.matrix thead th{border-top:1.5px solid var(--ink);border-bottom:1px solid var(--ink);font:600 .68rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);padding-block:12px}
+.matrix thead th small{display:block;font:italic 400 .95rem var(--serif);letter-spacing:0;text-transform:none;color:var(--muted);margin-top:2px}
+.matrix tbody tr:last-child td{border-bottom:1.5px solid var(--ink)}
+.matrix .lead{background:var(--accent-wash)}
+.matrix thead th.lead{color:var(--accent)}
+.matrix .who{font:400 1.12rem/1.1 var(--serif)} .matrix .who span{display:block;font:400 .72rem var(--sans);color:var(--muted)}
+.cell{display:flex;align-items:center;gap:10px}
+.dots{display:flex;gap:4px}
+.dot{width:11px;height:24px;border:0;padding:0;cursor:pointer;background:var(--pass)}
+.dot.f{background:transparent;box-shadow:inset 0 0 0 1.5px var(--fail)}
+.dot:hover{outline:1px solid var(--ink);outline-offset:2px}
+.dot[aria-pressed="true"]{outline:2px solid var(--accent);outline-offset:2px}
+.frac{font:500 .8rem var(--mono);color:var(--ink-2)}
+.v1{color:var(--muted)}
+.key{display:flex;gap:22px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin-top:14px;align-items:center}
+.key span{display:inline-flex;gap:8px;align-items:center}
+.key i{width:8px;height:16px;display:inline-block;background:var(--pass)}
+.key i.f{background:transparent;box-shadow:inset 0 0 0 1.5px var(--fail)}
+
+/* runs */
+.runs{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.35fr);margin-top:44px;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+@media (max-width:920px){.runs{grid-template-columns:minmax(0,1fr)}}
+.runs > div{min-width:0}
+.runs .list{border-right:1px solid var(--rule);padding:18px 22px 18px 0}
+@media (max-width:920px){.runs .list{border-right:0;border-bottom:1px solid var(--rule);padding-right:0}}
+.runs .list h3,.viewer h3{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.runs .list h3{margin-bottom:10px}
+.runs .list h3 span{font:400 .82rem var(--sans);color:var(--muted)}
+.fails{list-style:none;margin:0;padding:0;max-height:600px;overflow:auto}
+.fails button{all:unset;cursor:pointer;display:grid;grid-template-columns:34px minmax(0,1fr);gap:2px 10px;padding:11px 8px;border-bottom:1px solid var(--rule);width:100%;box-sizing:border-box}
+.fails li:last-child button{border-bottom:0}
+.fails button:hover,.fails button[aria-current="true"]{background:var(--fail-wash)}
+.fails .t{font:italic 400 1.05rem var(--serif);color:var(--fail);padding-top:0}
+.fails .m{font-weight:500;font-size:.9rem}
+.fails .r{grid-column:2;font-size:.84rem;color:var(--ink-2)}
+.viewer{padding:18px 0 18px 26px;display:grid;gap:12px;align-content:start}
+@media (max-width:920px){.viewer{padding-left:0}}
+.viewer .st{font:600 .68rem var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.viewer .st.p{color:var(--pass)} .viewer .st.f{color:var(--fail)}
+.why{font:italic 400 1.2rem/1.35 var(--serif);color:var(--fail)}
+.ans{font:400 .8rem/1.55 var(--mono);color:var(--ink-2);border-left:2px solid var(--rule-2);padding:2px 0 2px 12px;word-break:break-word}
+.steps{display:grid;gap:10px;max-height:470px;overflow:auto;padding-right:6px}
+.step{min-width:0}
+.step .k{font:600 .6rem var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:3px}
+.step pre{margin:0;padding:10px 12px;background:#f5f5f2;border:1px solid var(--rule);font:12px/1.55 var(--mono);white-space:pre-wrap;word-break:break-word;color:var(--ink-2)}
+.step.out pre{color:var(--muted);background:var(--paper)}
+.step.say p{max-width:none;font-size:.92rem}
+.empty{color:var(--muted)}
+
+/* tasks */
+.task{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr);gap:56px;align-items:center;padding-block:48px;border-top:1px solid var(--rule)}
+.task:first-of-type{border-top:0;padding-top:8px}
+.task.long{align-items:start}
+.task.long > figure{position:sticky;top:28px}
+@media (max-width:920px){.task.long > figure{position:static}}
+@media (max-width:920px){.task{grid-template-columns:minmax(0,1fr);gap:28px}}
+.task .text,.task .col{display:grid;gap:18px;min-width:0;align-content:start}
+.task .label{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.task .label b{font:400 3.2rem/1 var(--serif);color:var(--accent)}
+.task .label span{font:500 .9rem var(--sans);letter-spacing:.01em;color:var(--muted)}
+.task h2{font-size:clamp(1.8rem,3vw,2.4rem)}
+.answer{border-top:1px solid var(--ink);border-bottom:1px solid var(--rule-2);padding:12px 0;font-size:.96rem;color:var(--ink-2)}
+.answer strong{color:var(--ink);font-weight:600}
+.answer .kicker{display:block;margin-bottom:6px}
+table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
+.traps th,.traps td{padding:9px 0;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+.traps thead th{border-top:1.5px solid var(--ink);border-bottom:1px solid var(--ink);font:600 .66rem var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.traps tbody tr:last-child td{border-bottom:1.5px solid var(--ink)}
+.traps td:last-child,.traps th:last-child{text-align:right;padding-left:16px;white-space:nowrap}
+.res{font:500 .8rem var(--mono)}
+.res.bad{color:var(--fail)} .res.good{color:var(--pass)}
+.traps tr.ok td{background:var(--pass-wash)}
+.traps tr.ok td:first-child{padding-left:8px} .traps tr.ok td:last-child{padding-right:8px}
+.src{font-size:.82rem;color:var(--muted)}
+.task.wide{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.task.wide .plate{grid-column:1 / -1}
+@media (max-width:920px){.task.wide{grid-template-columns:minmax(0,1fr)}}
+
+/* principles */
+.princ{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:56px}
+.three .princ{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:44px}
+@media (max-width:900px){.three .princ{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.princ{grid-template-columns:minmax(0,1fr)}}
+.princ div{border-top:1px solid var(--rule-2);padding:20px 0 28px;display:grid;gap:10px;align-content:start}
+.princ h3{font:400 1.55rem/1.15 var(--serif)}
+.princ p{font-size:.95rem}
+
+/* trail */
+.trail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:56px}
+@media (max-width:760px){.trail{grid-template-columns:minmax(0,1fr);gap:40px}}
+.trail > div{display:grid;gap:14px;align-content:start;min-width:0}
+.trail h3{font:400 1.45rem/1.15 var(--serif)}
+.method-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:center}
+@media (max-width:920px){.method-grid{margin-left:0;grid-template-columns:minmax(0,1fr);gap:36px}}
+.method{list-style:none;margin:0;padding:0;display:grid;counter-reset:m}
+.method li{display:grid;grid-template-columns:32px minmax(0,1fr);color:var(--ink-2);border-top:1px solid var(--rule-2);padding:16px 0 18px}
+.method li:last-child{border-bottom:1px solid var(--rule-2)}
+.method li b{color:var(--ink);font-weight:600}
+.method li::before{counter-increment:m;content:counter(m,lower-roman) ".";font:italic 400 1.05rem var(--serif);color:var(--accent)}
+.repro{margin:0;display:grid;gap:12px;min-width:0}
+.repro pre{margin:0;background:var(--ink);color:#e9ebf2;padding:28px 28px 26px;font:12.5px/1.75 var(--mono);overflow-x:auto;white-space:pre}
+.repro .c{color:#8f96a8}
+.runfacts{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:10px}
+.runfacts td{padding:9px 0;border-bottom:1px solid var(--rule)}
+.runfacts tr:first-child td{border-top:1.5px solid var(--ink)}
+.runfacts tr:last-child td{border-bottom:1.5px solid var(--ink)}
+.runfacts td:last-child{text-align:right;font:500 .84rem var(--mono);color:var(--ink)}
+.runfacts td:first-child{color:var(--ink-2)}
+/* drift figure: a pulse every 1.000 s against a tissue beating every 0.96 s */
+.drift{margin:8px auto 88px;max-width:1040px;text-align:center}
+.drift svg{display:block;width:100%;height:auto;overflow:visible}
+.drift .lane{font:600 11px var(--sans);letter-spacing:.12em;text-transform:uppercase;fill:var(--muted)}
+.drift .lane.t{fill:var(--accent)}
+.drift .axis{stroke:var(--rule);stroke-width:1}
+.drift .p{fill:var(--ink)} .drift .o{fill:var(--accent)}
+.drift .c{stroke:var(--accent);stroke-width:1;opacity:.45}
+.drift .gap{fill:var(--accent-wash)}
+.drift .ms{font:500 11px var(--mono);fill:var(--accent);text-anchor:middle}
+.drift .sec{font:400 11px var(--mono);fill:var(--muted);text-anchor:middle}
+.drift figcaption{margin:18px auto 0;max-width:92ch;font-size:.92rem;color:var(--muted);text-wrap:balance}
+/* opening title sequence: a dark screen band, read before scrolling */
+.film{background:#0e0c0b;color:#efe9e1;margin-left:calc(max(24px,env(safe-area-inset-left,0px))*-1);margin-right:calc(max(24px,env(safe-area-inset-right,0px))*-1);margin-bottom:72px}
+.film-in{max-width:1232px;margin:0 auto;min-height:100svh;padding:24px max(24px,env(safe-area-inset-right,0px)) 26px max(24px,env(safe-area-inset-left,0px));display:grid;grid-template-rows:auto 1fr auto;gap:28px}
+.film a{color:#efe9e1}
+.film-top{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;border-bottom:1px solid #2b2724;padding-bottom:16px}
+.fname{font:400 1.55rem/1 var(--serif)} .fname em{color:#d9737b}
+.film-top nav{display:flex;gap:22px;flex-wrap:wrap;font-size:.86rem}
+.film-top nav a{color:#a9a196;text-decoration:none} .film-top nav a:hover{color:#efe9e1}
+.film-main{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:56px;align-items:center}
+@media (max-width:960px){.film-main{grid-template-columns:minmax(0,1fr);gap:36px}.film-in{min-height:0}}
+.film-copy{display:grid;gap:20px;min-width:0}
+.fkick{font:600 .7rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#a9a196}
+.film h1{font:400 clamp(4.4rem,9vw,8.4rem)/.82 var(--serif);letter-spacing:-.04em;color:#f4efe8;margin:0}
+.film h1 .beat{color:#d9737b}
+.ftag{font:400 clamp(1.35rem,2.1vw,1.7rem)/1.22 var(--serif);color:#efe9e1;max-width:34ch;text-wrap:balance}
+.acts{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:0;counter-reset:act;border-top:1px solid #2b2724}
+.acts li{display:grid;grid-template-columns:44px minmax(0,1fr);padding:14px 0;border-bottom:1px solid #2b2724}
+.acts li::before{counter-increment:act;content:counter(act);font:400 1.1rem/1.2 var(--serif);color:#d9737b}
+.acts b{display:block;font:600 .68rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#a9a196;margin:4px 0 7px}
+.acts span{display:block;font-size:.95rem;line-height:1.55;color:#ddd6cb;text-wrap:pretty}
+.film-screen{display:grid;gap:14px;min-width:0}
+.screen{margin:0;background:#fff;box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)}
+.screen video{display:block;width:100%;max-width:100%}
+.fcap{font-size:.8rem;line-height:1.5;color:#a9a196;max-width:none;text-wrap:pretty}
+.fcap b{color:#efe9e1;font-weight:600}
+.mini{width:100%;border-collapse:collapse;font-size:.9rem}
+.mini td{padding:7px 0;border-bottom:1px solid #2b2724;vertical-align:middle}
+.mini tr:first-child td{border-top:1px solid #2b2724}
+.mini .mm{font:400 1.12rem var(--serif);color:#efe9e1}
+.mini .mm small{font:400 .72rem var(--sans);color:#8f887e;margin-left:8px}
+.mini .tk{display:flex;gap:4px;justify-content:flex-end}
+.mini .tk i{width:9px;height:20px;background:#4fbf8b}
+.mini .tk i.f{background:transparent;box-shadow:inset 0 0 0 1.5px #ef6b4f}
+.mini .fr{font:400 1.25rem var(--serif);text-align:right;width:56px;color:#efe9e1}
+.mini .fr.lo{color:#ef6b4f}
+.film-bottom{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:16px;border-top:1px solid #2b2724;padding-top:16px}
+@media (max-width:760px){.film-bottom{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}.credits.right{text-align:center!important}}
+.credits{font-size:.8rem;color:#a9a196}
+.credits b{font:400 1.05rem var(--serif);color:#efe9e1;margin-right:4px}
+.credits span{margin-right:16px;white-space:nowrap}
+.credits.right{text-align:right}
+.cue{display:grid;justify-items:center;gap:8px;text-decoration:none;font:600 .66rem var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#a9a196!important}
+/* story interludes between chapters */
+.interlude{margin:0 auto 96px;max-width:920px;text-align:center;display:grid;justify-items:center;gap:22px}
+.interlude blockquote{margin:0;max-width:64ch;font:400 1.02rem/1.6 var(--sans);color:var(--ink-2);text-wrap:balance}
+.interlude cite{display:block;margin-top:8px;font:600 .66rem var(--sans);letter-spacing:.14em;text-transform:uppercase;font-style:normal;color:var(--muted)}
+.interlude p{font:400 clamp(1.9rem,4.2vw,3.2rem)/1.14 var(--serif);color:var(--ink);max-width:none;text-wrap:balance;letter-spacing:-.01em}
+footer{border-top:1.5px solid var(--ink);padding-top:16px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
+footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
+</style>
+
+<header class="film" id="top">
+ <div class="film-in">
+  <div class="film-top">
+    <div class="fname">Off<em>beat</em></div>
+    <nav><a href="#background">Biology</a><a href="#v1">Tasks</a><a href="#runs">Failures</a><a href="#design">Design</a><a href="#method">Method</a><a href="https://github.com/barrsr/cardiac-microscopy-evals">GitHub</a></nav>
+  </div>
+  <div class="film-main">
+    <div class="film-copy">
+      <div class="fkick">Cardiac microscopy evals for AI agents</div>
+      <h1><span class="off">Off</span><span class="beat">beat</span></h1>
+      <p class="ftag">Microscopy tasks for AI agents, built from public data on engineered heart tissue.</p>
+      <ol class="acts">
+        <li><div><b>Task</b><span>Heart tissue grown in a dish beats on its own. An electrical pulse once a second can take over and set the pace, and a tissue that follows it beats exactly once a second. The agent watched videos of nineteen paced tissues and reported which ones were following the pulse.</span></div></li>
+        <li><div><b>Why it's hard</b><span>Two of the tissues beat every 0.96 seconds, slightly faster than the pulse, so they aren't following it. The difference is small, and an analysis that accepts anything close to once a second gets these two wrong.</span></div></li>
+        <li><div><b>Result</b><span>Claude Opus answered correctly in all three runs. The other models answered correctly in one run or none, and the failed Claude runs had measured the faster beat before calling it captured.</span></div></li>
+      </ol>
+    </div>
+    <div class="film-screen">
+      <figure class="screen" id="heroFig">
+        <video id="vidA3" autoplay muted loop playsinline aria-label="Two paced tissues side by side: one captured by the 1 Hz stimulus, one beating on its own rhythm"></video>
+      </figure>
+      <p class="fcap"><b>Figure 1.</b> Two of the nineteen tissues, in real time. On the left, each beat lands where the pulse says it should. On the right, each beat comes 40&nbsp;ms earlier than the last.</p>
+      <table class="mini" id="mini" aria-label="Task A3 results by model"></table>
+    </div>
+  </div>
+  <div class="film-bottom">
+    <div class="credits">Ryan Barrs, PhD</div>
+    <a class="cue" href="#study"><span>Details</span></a>
+    <div class="credits right"><a href="https://github.com/barrsr/cardiac-microscopy-evals">Code and transcripts</a></div>
+  </div>
+ </div>
+</header>
+
+<div class="wrap" id="study">
+<figure class="drift" id="drift">
+  <svg id="driftSvg" viewBox="0 0 1000 170" role="img" aria-label="Pulse beats every 1.000 seconds and tissue beats every 0.96 seconds over twelve seconds; the tissue drifts 40 milliseconds earlier on each beat, 480 milliseconds by the twelfth."></svg>
+  <figcaption>A tissue beating every 0.96&nbsp;s against a pulse every 1.000&nbsp;s. Each beat lands 40&nbsp;ms earlier than the one before, so after twelve beats it is nearly half a second ahead.</figcaption>
+</figure>
+
+<section id="background">
+  <div class="head"><div class="kicker">01 · The biology</div>
+    <div class="t"><h2>The biology behind the tasks</h2></div></div>
+  <div class="princ">
+    <div><h3>Engineered heart tissues</h3><p>Heart muscle cells made from human stem cells are grown into small strips stretched between two flexible pillars. The strips beat on their own, and labs use them to study disease variants and test drugs. Each contraction bends the pillars, and a brightfield camera records it.</p></div>
+    <div><h3>Pacing and capture</h3><p>Labs often pace these tissues with an electrical field at a fixed rate such as once per second (1&nbsp;Hz). A tissue is captured when every stimulus produces exactly one beat, which locks its beat interval to the stimulus period. A tissue whose own rate is above the pacing rate keeps its own rhythm, and its beats drift ahead of the stimulus.</p></div>
+  </div>
+</section>
+
+<section id="v1">
+  <div class="head"><div class="kicker">02 · Earlier versions</div>
+    <div class="t"><h2>Two easier versions came first</h2><p>The beat task went through two versions before A3. A1 asked for one beat rate, and its traps were in the signal processing. Every Claude run passed it, and GPT-6 Luna missed it in all three runs. A2 asked which tissues were captured. Its uncaptured tissues were clearly off the beat, so a check for a steady rhythm near 1&nbsp;Hz was nearly enough, and three runs still missed it.</p></div></div>
+  <article class="task">
+    <div class="text">
+      <div class="label"><b>A1</b><span>First version · 1 tissue</span></div>
+      <h2>What is this tissue's beat rate?</h2>
+      <p>The tissue is paced at 1&nbsp;Hz, so the answer is 60&nbsp;bpm. Three shortcuts give a wrong number. A motion trace has two peaks per beat, one for contraction and one for relaxation, so counting both gives 120&nbsp;bpm. The tallest peak in the spectrum is the third harmonic, at 180&nbsp;bpm. The data sheet says 30 frames per second while the file's own timestamps say 32.9, and using the sheet's figure gives 54.5 to 54.7&nbsp;bpm.</p>
+    </div>
+    <figure class="plate"><img id="figA1" alt="Two motion peaks per beat in the speed trace, one in the displacement trace"><figcaption class="figcap"><b>Figure 2.</b> Two speed peaks per beat; one displacement peak per beat.</figcaption></figure>
+  </article>
+
+  <article class="task long">
+    <div class="text">
+      <div class="label"><b>A2</b><span>Second version · 11 tissues</span></div>
+      <h2>Which paced tissues are captured?</h2>
+      <p>Eleven tissues were filmed on day 7 under 1&nbsp;Hz pacing, and the agent decides which ones follow the pulse beat for beat. A captured tissue beats exactly once a second, so the pacing itself supplies the answer key.</p>
+      <div class="answer"><span class="kicker">Answer</span><strong>8 captured</strong>; not captured <strong>Ex00636, Ex00637, Ex00638</strong></div>
+      <p>Every interval in the captured tissues sits within 0.010&nbsp;s of 1.000&nbsp;s. Each non-captured tissue has an interval at least 0.079&nbsp;s off and drifts at least 0.137&nbsp;s against the pacing grid. Ex00637 has intervals as short as 0.89&nbsp;s, which a 1&nbsp;Hz stimulus cannot produce.</p>
+      <table class="traps">
+        <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>"About 1 Hz" counts as captured (±5 to 10% rate window)</td><td><span class="res bad">n = 10</span></td></tr>
+          <tr><td>Dominant spectral frequency only</td><td><span class="res bad">n = 10</span></td></tr>
+          <tr><td>Regular rhythm alone, no phase check</td><td><span class="res bad">n = 9</span></td></tr>
+          <tr><td>Trusting the sheet's 30&nbsp;Hz frame rate (true 32.9)</td><td><span class="res bad">n = 0 or 9</span></td></tr>
+          <tr><td>Counting every motion peak as a beat</td><td><span class="res bad">n = 0</span></td></tr>
+          <tr class="ok"><td>Beat intervals on file timestamps, phase vs a 1.000&nbsp;s grid</td><td><span class="res good">n = 8 ✓</span></td></tr>
+        </tbody>
+      </table>
+      <p class="src">Data: Kobeissi, Lejeune et al., strain-gauge microbundle time-lapse dataset, Dryad <a href="https://doi.org/10.5061/dryad.sqv9s4nbg">10.5061/dryad.sqv9s4nbg</a>, CC0. Platform from Zhang et al., Science Advances 2021. Files used unmodified.</p>
+    </div>
+    <figure class="plate"><img id="figA2" alt="Beat phase against the 1 second pacing grid for captured and non-captured tissues"><figcaption class="figcap"><b>Figure 3.</b> Beat times against the 1.000&nbsp;s pacing grid. Captured tissues stay on the grid; the three others drift off it.</figcaption></figure>
+  </article>
+</section>
+
+<section id="test">
+  <div class="head"><div class="kicker">03 · Final version</div>
+    <div class="t"><h2>Captured or beating on its own?</h2><p>A3 uses nineteen different tissues, two of which beat as steadily as the captured ones and only slightly too fast.</p></div></div>
+  <article class="task long">
+    <div class="text">
+      <div class="label"><b>A3</b><span>Brightfield time-lapse · 19 tissues</span></div>
+      <p>Tissues grown from a patient's cells carrying a MYBPC3 variant linked to hypertrophic cardiomyopathy, filmed on day 7 under 1&nbsp;Hz pacing in three imaging sessions. The pulse itself doesn't appear in the images.</p>
+      <div class="answer"><span class="kicker">Answer</span><strong>6 captured</strong> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
+      <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98&nbsp;s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval sits within 0.010&nbsp;s of 1.000&nbsp;s; the closest uncaptured tissue, Ex00575, is 0.024 to 0.035&nbsp;s short on every interval.</p>
+      <table class="traps">
+        <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Every interval within 5% of 1.000&nbsp;s</td><td><span class="res bad">n = 8</span></td></tr>
+          <tr><td>Mean rate within 3% or 5% of 60&nbsp;bpm</td><td><span class="res bad">n = 8 or 11</span></td></tr>
+          <tr><td>Dominant spectral frequency at 1.00 ± 0.05&nbsp;Hz</td><td><span class="res bad">n = 10</span></td></tr>
+          <tr><td>Rate at or above 58.8&nbsp;bpm (98% of the pacing rate)</td><td><span class="res bad">n = 15</span></td></tr>
+          <tr><td>Trusting the sheet's 30&nbsp;Hz frame rate</td><td><span class="res bad">n = 2 or 12</span></td></tr>
+          <tr class="ok"><td>Upstroke times on file timestamps, every interval held to the 1.000&nbsp;s period</td><td><span class="res good">n = 6 ✓</span></td></tr>
+        </tbody>
+      </table>
+      <p class="src">These recordings come from condition 023 of the same deposit as A2. Nineteen of its twenty-three files were used unmodified. Four were left out because their beats are too faint or the call depends on how a beat is timed. The ground truth rests on the depositors' 1&nbsp;Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
+    </div>
+    <figure class="plate"><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption class="figcap"><b>Figure 4.</b> Every beat interval of every tissue. Captured tissues sit on 1.000&nbsp;s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
+  </article>
+</section>
+
+<div class="interlude"><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p><blockquote>"Ex00575 and Ex00576 run slightly under 1 s (about 0.97 and 0.94–0.97 s), and I kept them as captured."<cite>Claude Sonnet, run 1, explaining its answer</cite></blockquote></div>
+
+<section id="runs">
+  <div class="head"><div class="kicker">04 · The failures</div>
+    <div class="t"><h2>Every run and every failure</h2><p>Each bar is one agent run, given only the data and a Python environment. Every failed run is listed with what it got wrong; select one to read the agent's own reasoning.</p></div></div>
+  <div class="matrix-wrap"><table class="matrix" id="grid"></table></div>
+  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A3, A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
+  <div class="runs">
+    <div class="list"><h3>Failed runs <span id="nfail"></span></h3><ul class="fails" id="fails"></ul></div>
+    <div class="viewer" id="viewer"><p class="empty">Select a run to open its transcript.</p></div>
+  </div>
+</section>
+
+<section id="sarcomeres">
+  <div class="head"><div class="kicker">05 · A second measurement</div>
+    <div class="t"><h2>Sarcomeres in fluorescence images</h2><p>The same approach was applied to a second kind of image. A fluorescent tag on alpha-actinin marks the z-lines of the sarcomere, the repeating contractile unit of heart muscle. A mature cell shows regular stripes about 1.7&nbsp;µm apart, while an immature cell shows scattered dots and has no sarcomere length to measure. Every model passed both versions, so these two tasks don't separate the models yet.</p></div></div>
+  <article class="task">
+    <div class="text">
+      <div class="label"><b>B1</b><span>First version · 1 cell</span></div>
+      <h2>How long are this cell's sarcomeres?</h2>
+      <p>The answer is 1.72&nbsp;µm by two independent methods, within one pixel of the authors' value for this cell. Its myofibrils run at about 44° to the image axes, so measuring along x or y gives 1.91 to 2.39&nbsp;µm, and an answer left in pixels gives 14.1.</p>
+    </div>
+    <figure class="plate"><img id="figB1" alt="Z-line profile along the myofibril versus along the image x axis"><figcaption class="figcap"><b>Figure 5.</b> Along the myofibril 1.70&nbsp;µm; along image x 1.91&nbsp;µm.</figcaption></figure>
+  </article>
+
+  <article class="task wide">
+    <div class="col">
+      <div class="label"><b>B2</b><span>ACTN2-mEGFP confocal · 8 cells</span></div>
+      <h2>Which cells have sarcomeres, and how long are they?</h2>
+      <p>Eight day-32 heart muscle cells from one imaging session, each with its outline. The agent decides which cells have organized sarcomeres, then reports the median sarcomere length across only those cells. Immature cells have no sarcomeres, but a Fourier analysis or a line profile still returns a number for them. Which cells count as striated comes from the dataset's two expert scorers (4 to 5 versus 1 to 2 on their 5-point scale, with no borderline cells), and their calls agree with the authors' classifier.</p>
+      <div class="answer"><span class="kicker">Answer</span><strong>cells B, D, E</strong>; median <strong>1.73&nbsp;µm</strong> (±0.12)</div>
+    </div>
+    <div class="col">
+      <p>Every model passed every run of this panel. A spectrum of each outlined cell, with a check for a sarcomere peak, is enough to separate the two groups.</p>
+      <table class="traps">
+        <thead><tr><th>Approach, run on the real images</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Measure every cell and take the median</td><td><span class="res bad">2.04 to 2.75&nbsp;µm, n = 8</span></td></tr>
+          <tr><td>Authors' published GLCM spacing for every cell</td><td><span class="res bad">1.56&nbsp;µm, n = 8</span></td></tr>
+          <tr><td>Ignore the mask; neighbors' striations leak in</td><td><span class="res bad">n = 5</span></td></tr>
+          <tr class="ok"><td>Masked spectrum with a peak-prominence check</td><td><span class="res good">B, D, E; 1.69&nbsp;µm ✓</span></td></tr>
+        </tbody>
+      </table>
+      <p class="src">Data: Allen Institute for Cell Science, Gerbin et al., Cell Systems 2021, <a href="https://doi.org/10.1016/j.cels.2021.05.001">10.1016/j.cels.2021.05.001</a>. Pixel values unchanged; pixel size 0.1195&nbsp;µm from the raw files' SlideBook calibration. Allen terms of use allow noncommercial research use, so a commercial benchmark would need their written permission.</p>
+    </div>
+    <figure class="plate"><img id="figB2" alt="Striated versus immature cardiomyocytes with their power spectra"><figcaption class="figcap"><b>Figure 6.</b> Striated cells against immature cells, with their power spectra. Only the striated cells show a sarcomere peak.</figcaption></figure>
+  </article>
+</section>
+
+<section id="design" class="three">
+  <div class="head"><div class="kicker">06 · Design</div><div class="t"><h2>Design rules</h2></div></div>
+  <div class="princ">
+    <div><h3>Ground truth</h3><p>A tissue paced at 1&nbsp;Hz has a known period, and the dataset's expert scorers decide which cells are striated. The analysis measures each tissue or cell against that fixed reference.</p></div>
+    <div><h3>Where the trap sits</h3><p>A wrong frame rate can be caught by careful checking. Recognizing that a tissue beating a few percent faster than its stimulus is not captured takes training in cardiac physiology.</p></div>
+    <div><h3>What the prompt says</h3><p>It quotes the depositors' 30&nbsp;Hz frame rate because that is what anyone opening the deposit would read, and it never names the trap.</p></div>
+  </div>
+</section>
+
+<section id="method">
+  <div class="head"><div class="kicker">07 · Method</div><div class="t"><h2>How the runs were made</h2></div></div>
+  <div class="method-grid">
+  <ol class="method">
+    <li><span><b>Format.</b> Each eval follows the SpatialBench format: a fixed answer block, and notes giving the ground truth, the traps, a separation table and the tolerance rationale. Graded with <span class="mono">numeric_tolerance</span>, <span class="mono">label_set_jaccard</span> and <span class="mono">all_of</span>, checked against the latch-eval-tools grader classes.</span></li>
+    <li><span><b>Ground truth.</b> Every number in the trap tables comes from <span class="mono">ground_truth.py</span>, run on source files that <span class="mono">fetch_data.py</span> downloads and verifies by checksum.</span></li>
+    <li><span><b>Agents.</b> Each model ran in a fresh directory with only the data and shell access to Python: Claude through Claude Code, isolated from any personal configuration, and GPT through the Codex CLI in its workspace sandbox.</span></li>
+    <li><span><b>Input.</b> A short fixed environment note plus the task prompt was the only input, identical across models.</span></li>
+  </ol>
+  <figure class="repro">
+    <div class="kicker">Reproduce it</div>
+<pre><span class="c"># download the source data, checksums verified (2.4 GB)</span>
+python scripts/fetch_all.py
+
+<span class="c"># ground truth and every naive approach in the notes</span>
+python evals/task_A3_capture_vs_intrinsic_rhythm/\
+ground_truth.py
+
+<span class="c"># run the agents and grade them</span>
+python harness/run_models.py --evals A3 \
+  --models claude:opus,codex:gpt-6-luna --runs 3
+
+<span class="c"># rebuild this page from results/</span>
+python site/build_page.py</pre>
+    <figcaption class="figcap">Full instructions in the <a href="https://github.com/barrsr/cardiac-microscopy-evals#reproduce">README</a>.</figcaption>
+    <table class="runfacts" id="runfacts"></table>
+  </figure>
+</div>
+</section>
+
+<footer>
+  <span class="name">Ryan Barrs, PhD</span>
+  <span>Data: Kobeissi, Lejeune et al. (CC0) · Allen Institute for Cell Science · Code: MIT · <a href="https://github.com/barrsr/cardiac-microscopy-evals">github.com/barrsr/cardiac-microscopy-evals</a></span>
+</footer>
+</div>
+
+<script>
+const RUNS = /*__RUNS__*/[];
+const FIGS = /*__FIGS__*/{};
+for (const k of ['A3','A2','B2','A1','B1']) { const el = document.getElementById('fig'+k); if (el && FIGS[k]) el.src = FIGS[k]; }
+const vid = document.getElementById('vidA3');
+if (FIGS.A3poster) vid.poster = FIGS.A3poster;
+if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hidden = true;
+
+// drift figure: pair each pulse with the tissue beat it would be mistaken for; the pairs pull apart by 40 ms a beat
+(function () {
+  const svg = document.getElementById('driftSvg'), fig = document.getElementById('drift');
+  const x0 = 110, x1 = 890, span = 12, X = s => x0 + s / span * (x1 - x0), yp = 52, yt = 112;
+  let h = `<text class="lane" x="0" y="${yp+4}">Pulse</text><text class="lane t" x="0" y="${yt+4}">Tissue</text>`;
+  h += `<line class="axis" x1="${x0}" x2="${x1}" y1="${yp}" y2="${yp}"/><line class="axis" x1="${x0}" x2="${x1}" y1="${yt}" y2="${yt}"/>`;
+  for (let s = 0; s <= span; s += 3) h += `<text class="sec" x="${X(s)}" y="${yp-18}">${s} s</text>`;
+  for (let k = 0; k <= span; k++) {
+    const xp = X(k), xt = X(k * 0.96);
+    h += '<g>';
+    if (k) h += `<polygon class="gap" points="${xt},${yt} ${xp},${yp} ${xp},${yt}"/>`;
+    h += `<line class="c" x1="${xp}" y1="${yp}" x2="${xt}" y2="${yt}"/>`;
+    h += `<circle class="p" cx="${xp}" cy="${yp}" r="4.5"/><circle class="o" cx="${xt}" cy="${yt}" r="4.5"/>`;
+    if (k && k % 3 === 0) h += `<text class="ms" x="${xt}" y="${yt+28}">${k * 40} ms early</text>`;
+    h += '</g>';
+  }
+  svg.innerHTML = h;
+})();
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const order = ['Claude Opus','Claude Sonnet','Claude Haiku','GPT-6 Luna'];
+const MODELS = [...new Map(RUNS.map(r => [r.model, r.maker])).entries()].sort((a,b) => order.indexOf(a[0]) - order.indexOf(b[0]));
+const TASKS = [['A3','A3','capture vs own rhythm',true],['A2','A2','pacing capture',false],['B2','B2','striation panel',false],['A1','A1','beat rate, first version',false],['B1','B1','sarcomere, first version',false]];
+const of = (m,k) => RUNS.filter(r => r.model === m && r.task === k).sort((a,b) => a.run - b.run);
+
+document.getElementById('mini').innerHTML = MODELS.map(([m,maker]) => {
+  const rs = of(m,'A3'), n = rs.filter(r => r.pass).length;
+  return `<tr><td class="mm">${esc(m)}<small>${esc(maker)}</small></td><td><div class="tk">${rs.map(r => `<i class="${r.pass?'':'f'}"></i>`).join('')}</div></td><td class="fr num ${n*2<rs.length?'lo':''}">${n}/${rs.length}</td></tr>`;
+}).join('');
+
+const grid = document.getElementById('grid');
+let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s,lead],i) => `<th class="${lead?'lead':''} ${i>2?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
+for (const [m, maker] of MODELS) {
+  h += `<tr><td class="who">${esc(m)}<span>${esc(maker)}</span></td>`;
+  for (const [k,,,lead] of TASKS) {
+    const rs = of(m,k), n = rs.filter(r => r.pass).length;
+    h += `<td class="${lead?'lead':''}"><div class="cell"><div class="dots">` + rs.map(r => `<button class="dot ${r.pass?'':'f'}" aria-pressed="false" data-i="${RUNS.indexOf(r)}" title="${esc(m)} · ${k} · run ${r.run}${r.why?': '+esc(r.why):''}" aria-label="${esc(m)}, ${k}, run ${r.run}, ${r.pass?'passed':'failed'}"></button>`).join('')
+       + `</div><span class="frac num">${rs.length ? n+'/'+rs.length : 'not run'}</span></div></td>`;
+  }
+  h += '</tr>';
+}
+grid.innerHTML = h + '</tbody>';
+
+const fails = RUNS.map((r,i) => [r,i]).filter(([r]) => !r.pass)
+  .sort((a,b) => TASKS.findIndex(t => t[0]===a[0].task) - TASKS.findIndex(t => t[0]===b[0].task) || order.indexOf(a[0].model) - order.indexOf(b[0].model) || a[0].run - b[0].run);
+document.getElementById('nfail').textContent = `${fails.length} of ${RUNS.length}`;
+document.getElementById('fails').innerHTML = fails.map(([r,i]) =>
+  `<li><button data-i="${i}"><span class="t">${r.task}</span><span class="m">${esc(r.model)}, run ${r.run}</span><span class="r">${esc(r.why)}</span></button></li>`).join('');
+
+const viewer = document.getElementById('viewer');
+const label = {cmd:'command', out:'output', say:'model'};
+function open(i) {
+  const r = RUNS[i];
+  document.querySelectorAll('.dot').forEach(d => d.setAttribute('aria-pressed', d.dataset.i == i ? 'true' : 'false'));
+  document.querySelectorAll('.fails button').forEach(b => b.setAttribute('aria-current', b.dataset.i == i ? 'true' : 'false'));
+  viewer.innerHTML = `<h3>${esc(r.model)} · ${esc(r.task)} · run ${r.run}<span class="st ${r.pass?'p':'f'}">${r.pass?'passed':'failed'}${r.seconds?` · ${r.seconds} s`:''}</span></h3>
+    ${r.why ? `<div class="why">${esc(r.why)}</div>` : ''}<div class="ans">${esc(JSON.stringify(r.answer))}</div>
+    <div class="steps">${r.steps.map(([k,t]) => `<div class="step ${k}"><div class="k">${label[k]}</div>${k==='say'?`<p>${esc(t)}</p>`:`<pre>${esc(t)}</pre>`}</div>`).join('') || '<p class="empty">This CLI returns only the final message.</p>'}</div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) open(+b.dataset.i); });
+if (fails.length) open(fails[0][1]);
+
+// run facts, computed from the runs on this page
+(function () {
+  const secs = RUNS.map(r => r.seconds).filter(Boolean).sort((a,b) => a - b);
+  const med = secs.length % 2 ? secs[(secs.length-1)/2] : (secs[secs.length/2-1] + secs[secs.length/2]) / 2;
+  const fmt = s => s < 120 ? `${Math.round(s)} s` : `${Math.round(s/60)} min`;
+  const claude = RUNS.filter(r => r.model.startsWith('Claude') && r.cost != null);
+  const cost = claude.reduce((a,r) => a + r.cost, 0);
+  const rows = [['Agent runs', RUNS.length], ['Median run time', fmt(med)], ['Fastest and slowest run', `${fmt(secs[0])} and ${fmt(secs[secs.length-1])}`],
+                [`API-equivalent cost of the ${claude.length} Claude runs`, `$${cost.toFixed(2)}`], ['Transcripts kept', `${RUNS.length} of ${RUNS.length}`]];
+  document.getElementById('runfacts').innerHTML = rows.map(([a,b]) => `<tr><td>${a}</td><td class="num">${b}</td></tr>`).join('');
+})();
+</script>

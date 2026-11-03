@@ -37,12 +37,26 @@ h3{font:600 1rem/1.35 var(--sans);letter-spacing:-.005em}
 .mast nav{display:flex;gap:22px;font-size:.88rem;flex-wrap:wrap}
 .mast nav a{color:var(--ink-2);text-decoration:none}
 .mast nav a:hover{color:var(--accent)}
+@keyframes tick{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
+.big .ticks.play i{animation:fill .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes fill{from{transform:scaleY(.08);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+.big .r.play{animation:rise .6s ease-out both}
+@media (prefers-reduced-motion:reduce){h1 .off,h1 .beat,.drift *,.big .ticks.play i,.big .r.play,.metro .m{animation:none!important}}
 
 /* hero: a centered entrance. "Off" lands, "beat" arrives a beat late. */
 .hero{text-align:center;display:grid;justify-items:center;gap:22px;margin:24px 0 88px}
 h1{font:400 clamp(5.5rem,19vw,15.5rem)/.8 var(--serif);letter-spacing:-.04em;white-space:nowrap;margin-bottom:6px}
 h1 .off,h1 .beat{display:inline-block}
 h1 .beat{font-style:italic;color:var(--accent);transform:translateY(.06em) skewX(-2deg);margin-left:.01em}
+@keyframes rise{from{transform:translateY(.18em);opacity:0}to{transform:none;opacity:1}}
+@keyframes late{0%{transform:translate(.08em,.3em) skewX(-2deg);opacity:0}70%{transform:translate(0,.02em) skewX(-2deg);opacity:1}100%{transform:translateY(.06em) skewX(-2deg);opacity:1}}
+h1 .off{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+h1 .beat{animation:late .9s cubic-bezier(.2,.7,.2,1) .28s both}
+.metro{display:flex;justify-content:center;align-items:center;gap:10px 12px;flex-wrap:wrap;font:italic 400 1.2rem var(--serif);color:var(--ink-2)}
+.metro .m{width:12px;height:12px;border-radius:50%;display:inline-block;animation:pulse 1s infinite}
+.metro .stim{background:var(--ink)}
+.metro .own{background:var(--accent);animation-duration:.96s;margin-left:14px}
+@keyframes pulse{0%{transform:scale(1.8);opacity:1}18%{transform:scale(1);opacity:.85}100%{transform:scale(1);opacity:.25}}
 .tagline{font:400 clamp(1.6rem,3vw,2.35rem)/1.18 var(--serif);color:var(--ink);max-width:36ch;margin-top:18px;text-wrap:balance}
 .sub{font-size:1.02rem;color:var(--ink-2);max-width:62ch;text-wrap:balance}
 .hero .facts{width:min(720px,100%);margin-top:14px;text-align:center}
@@ -70,7 +84,7 @@ section{margin-bottom:96px}
 .head .kicker{padding-top:0}
 
 .head .t{display:grid;gap:14px;min-width:0;justify-items:center}
-.head .t p{max-width:92ch;text-wrap:pretty}
+.head .t p{max-width:92ch;text-wrap:balance}
 
 
 /* headline result */
@@ -214,6 +228,9 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .drift .ms{font:500 11px var(--mono);fill:var(--accent);text-anchor:middle}
 .drift .sec{font:400 11px var(--mono);fill:var(--muted);text-anchor:middle}
 .drift figcaption{margin:18px auto 0;max-width:92ch;font-size:.92rem;color:var(--muted);text-wrap:balance}
+.drift .b{opacity:0;transition:opacity .35s ease-out}
+.drift.seen .b{opacity:1}
+@media (prefers-reduced-motion:reduce){.drift .b{opacity:1;transition:none}}
 /* opening title sequence: a dark screen band, read before scrolling */
 .film{background:#0e0c0b;color:#efe9e1;margin-left:calc(max(24px,env(safe-area-inset-left,0px))*-1);margin-right:calc(max(24px,env(safe-area-inset-right,0px))*-1);margin-bottom:72px}
 .film-in{max-width:1232px;margin:0 auto;min-height:100svh;padding:24px max(24px,env(safe-area-inset-right,0px)) 26px max(24px,env(safe-area-inset-left,0px));display:grid;grid-template-rows:auto 1fr auto;gap:28px}
@@ -256,15 +273,38 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .credits span{margin-right:16px;white-space:nowrap}
 .credits.right{text-align:right}
 .cue{display:grid;justify-items:center;gap:8px;text-decoration:none;font:600 .66rem var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#a9a196!important}
+.cue i{width:1.5px;height:36px;background:linear-gradient(#d9737b,transparent);animation:drip 2.2s ease-in-out infinite;transform-origin:top}
+@keyframes drip{0%{transform:scaleY(0)}45%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+/* the title sequence: each element enters in order, the way opening titles do */
+@keyframes fadeup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.film .fkick{animation:fadein .8s ease-out both}
+.film .ftag{animation:fadeup .9s cubic-bezier(.2,.7,.2,1) .9s both}
+.film .acts li:nth-child(1){animation:fadeup .8s cubic-bezier(.2,.7,.2,1) 1.25s both}
+.film .acts li:nth-child(2){animation:fadeup .8s cubic-bezier(.2,.7,.2,1) 1.6s both}
+.film .acts li:nth-child(3){animation:fadeup .8s cubic-bezier(.2,.7,.2,1) 1.95s both}
+.film .screen{animation:fadein 1.4s ease-out .4s both}
+.film .fcap{animation:fadein 1s ease-out 1.1s both}
+.film .mini{animation:fadeup .9s cubic-bezier(.2,.7,.2,1) 2.2s both}
+.film .film-bottom{animation:fadein 1s ease-out 2.6s both}
+@media (prefers-reduced-motion:reduce){.film *,.film{animation:none!important}}
 /* story interludes between chapters */
 .interlude{margin:0 auto 96px;max-width:920px;text-align:center;display:grid;justify-items:center;gap:22px}
 .interlude blockquote{margin:0;max-width:64ch;font:400 1.02rem/1.6 var(--sans);color:var(--ink-2);text-wrap:balance}
 .interlude cite{display:block;margin-top:8px;font:600 .66rem var(--sans);letter-spacing:.14em;text-transform:uppercase;font-style:normal;color:var(--muted)}
+.interlude i{width:1.5px;height:44px;background:var(--accent)}
 .interlude p{font:400 clamp(1.9rem,4.2vw,3.2rem)/1.14 var(--serif);color:var(--ink);max-width:none;text-wrap:balance;letter-spacing:-.01em}
+.interlude.seen i{animation:grow .7s ease-out both}
+.interlude.seen p{animation:rise .8s cubic-bezier(.2,.7,.2,1) .12s both}
+.interlude.seen blockquote{animation:rise .8s cubic-bezier(.2,.7,.2,1) .4s both}
+@keyframes grow{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);z-index:20}
+@media (prefers-reduced-motion:reduce){.interlude.seen i,.interlude.seen p,.interlude.seen blockquote{animation:none!important}}
 footer{border-top:1.5px solid var(--ink);padding-top:16px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
 footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </style>
 
+<div class="progress" id="progress" aria-hidden="true"></div>
 <header class="film" id="top">
  <div class="film-in">
   <div class="film-top">
@@ -292,7 +332,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </div>
   <div class="film-bottom">
     <div class="credits">Ryan Barrs, PhD</div>
-    <a class="cue" href="#study"><span>Details</span></a>
+    <a class="cue" href="#study"><span>Details</span><i></i></a>
     <div class="credits right"><a href="https://github.com/barrsr/cardiac-microscopy-evals">Code and transcripts</a></div>
   </div>
  </div>
@@ -304,19 +344,18 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   <figcaption>A tissue beating every 0.96&nbsp;s against a pulse every 1.000&nbsp;s. Each beat lands 40&nbsp;ms earlier than the one before, so after twelve beats it is nearly half a second ahead.</figcaption>
 </figure>
 
-<section id="background" class="three">
+<section id="background">
   <div class="head"><div class="kicker">01 · The biology</div>
     <div class="t"><h2>The biology behind the tasks</h2></div></div>
   <div class="princ">
     <div><h3>Engineered heart tissues</h3><p>Heart muscle cells made from human stem cells are grown into small strips stretched between two flexible pillars. The strips beat on their own, and labs use them to study disease variants and test drugs. Each contraction bends the pillars, and a brightfield camera records it.</p></div>
     <div><h3>Pacing and capture</h3><p>Labs often pace these tissues with an electrical field at a fixed rate such as once per second (1&nbsp;Hz). A tissue is captured when every stimulus produces exactly one beat, which locks its beat interval to the stimulus period. A tissue whose own rate is above the pacing rate keeps its own rhythm, and its beats drift ahead of the stimulus.</p></div>
-    <div><h3>Sarcomeres</h3><p>The sarcomere is the repeating contractile unit of heart muscle. A fluorescent tag on alpha-actinin marks its z-lines. In a mature cell they form regular stripes about 1.7&nbsp;µm apart. Immature cells show scattered dots and fibers instead and have no sarcomere length to measure.</p></div>
   </div>
 </section>
 
 <section id="v1">
-  <div class="head"><div class="kicker">02 · First versions</div>
-    <div class="t"><h2>Measurement tasks</h2><p>The first two tasks each asked for one number, and their traps were in the signal processing, such as a misleading frame rate or measuring along the wrong image axis. Every Claude run passed both. GPT-6 Luna passed every sarcomere run and missed the beat rate in all three, answering 55 to 56&nbsp;bpm for a tissue paced at 60.</p></div></div>
+  <div class="head"><div class="kicker">02 · Earlier versions</div>
+    <div class="t"><h2>Two easier versions came first</h2><p>The beat task went through two versions before A3. A1 asked for one beat rate, and its traps were in the signal processing. Every Claude run passed it, and GPT-6 Luna missed it in all three runs. A2 asked which tissues were captured. Its uncaptured tissues were clearly off the beat, so checking for a steady rhythm near 1&nbsp;Hz was nearly enough. Three runs still missed it.</p></div></div>
   <article class="task">
     <div class="text">
       <div class="label"><b>A1</b><span>First version · 1 tissue</span></div>
@@ -326,19 +365,6 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
     <figure class="plate"><img id="figA1" alt="Two motion peaks per beat in the speed trace, one in the displacement trace"><figcaption class="figcap"><b>Figure 2.</b> Two speed peaks per beat; one displacement peak per beat.</figcaption></figure>
   </article>
 
-  <article class="task">
-    <div class="text">
-      <div class="label"><b>B1</b><span>First version · 1 cell</span></div>
-      <h2>How long are this cell's sarcomeres?</h2>
-      <p>The answer is 1.72&nbsp;µm by two independent methods, within one pixel of the authors' value for this cell. Its myofibrils run at about 44° to the image axes, so measuring along x or y gives 1.91 to 2.39&nbsp;µm, and an answer left in pixels gives 14.1.</p>
-    </div>
-    <figure class="plate"><img id="figB1" alt="Z-line profile along the myofibril versus along the image x axis"><figcaption class="figcap"><b>Figure 3.</b> Along the myofibril 1.70&nbsp;µm; along image x 1.91&nbsp;µm.</figcaption></figure>
-  </article>
-</section>
-
-<section id="v2">
-  <div class="head"><div class="kicker">03 · Second versions</div>
-    <div class="t"><h2>Judgment tasks</h2><p>The second versions asked for a judgment that depends on knowing how heart tissue behaves. The capture task was missed in three runs, and two of those counted tissues beating near 60&nbsp;bpm as captured. Every model passed the sarcomere panel.</p></div></div>
   <article class="task long">
     <div class="text">
       <div class="label"><b>A2</b><span>Second version · 11 tissues</span></div>
@@ -359,7 +385,59 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       </table>
       <p class="src">Data: Kobeissi, Lejeune et al., strain-gauge microbundle time-lapse dataset, Dryad <a href="https://doi.org/10.5061/dryad.sqv9s4nbg">10.5061/dryad.sqv9s4nbg</a>, CC0. Platform from Zhang et al., Science Advances 2021. Files used unmodified.</p>
     </div>
-    <figure class="plate"><img id="figA2" alt="Beat phase against the 1 second pacing grid for captured and non-captured tissues"><figcaption class="figcap"><b>Figure 4.</b> Beat times against the 1.000&nbsp;s pacing grid. Captured tissues stay on the grid; the three others drift off it.</figcaption></figure>
+    <figure class="plate"><img id="figA2" alt="Beat phase against the 1 second pacing grid for captured and non-captured tissues"><figcaption class="figcap"><b>Figure 3.</b> Beat times against the 1.000&nbsp;s pacing grid. Captured tissues stay on the grid; the three others drift off it.</figcaption></figure>
+  </article>
+</section>
+
+<section id="test">
+  <div class="head"><div class="kicker">03 · Final version</div>
+    <div class="t"><h2>Captured or beating on its own?</h2><p>A3 uses nineteen different tissues, two of which beat as steadily as the captured ones and only slightly too fast.</p></div></div>
+  <article class="task long">
+    <div class="text">
+      <div class="label"><b>A3</b><span>Brightfield time-lapse · 19 tissues</span></div>
+      <p>Tissues grown from a patient's cells carrying a MYBPC3 variant linked to hypertrophic cardiomyopathy, filmed on day 7 under 1&nbsp;Hz pacing in three imaging sessions. The pulse itself doesn't appear in the images.</p>
+      <div class="answer"><span class="kicker">Answer</span><strong>6 captured</strong> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
+      <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98&nbsp;s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval sits within 0.010&nbsp;s of 1.000&nbsp;s; the closest uncaptured tissue, Ex00575, is 0.024 to 0.035&nbsp;s short on every interval.</p>
+      <table class="traps">
+        <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Every interval within 5% of 1.000&nbsp;s</td><td><span class="res bad">n = 8</span></td></tr>
+          <tr><td>Mean rate within 3% or 5% of 60&nbsp;bpm</td><td><span class="res bad">n = 8 or 11</span></td></tr>
+          <tr><td>Dominant spectral frequency at 1.00 ± 0.05&nbsp;Hz</td><td><span class="res bad">n = 10</span></td></tr>
+          <tr><td>Rate at or above 58.8&nbsp;bpm (98% of the pacing rate)</td><td><span class="res bad">n = 15</span></td></tr>
+          <tr><td>Trusting the sheet's 30&nbsp;Hz frame rate</td><td><span class="res bad">n = 2 or 12</span></td></tr>
+          <tr class="ok"><td>Upstroke times on file timestamps, every interval held to the 1.000&nbsp;s period</td><td><span class="res good">n = 6 ✓</span></td></tr>
+        </tbody>
+      </table>
+      <p class="src">These recordings come from condition 023 of the same deposit as A2. Nineteen of its twenty-three files were used unmodified. Four were left out because their beats are too faint or the call depends on how a beat is timed. The ground truth rests on the depositors' 1&nbsp;Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
+    </div>
+    <figure class="plate"><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption class="figcap"><b>Figure 4.</b> Every beat interval of every tissue. Captured tissues sit on 1.000&nbsp;s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
+  </article>
+</section>
+
+<div class="interlude"><i></i><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p><blockquote>"Ex00575 and Ex00576 run slightly under 1 s (about 0.97 and 0.94–0.97 s), and I kept them as captured."<cite>Claude Sonnet, run 1, explaining its answer</cite></blockquote></div>
+
+<section id="runs">
+  <div class="head"><div class="kicker">04 · The failures</div>
+    <div class="t"><h2>Every run and every failure</h2><p>Each bar is one agent run, given only the data and a Python environment. Every failed run is listed with what it got wrong; select one to read the agent's own reasoning.</p></div></div>
+  <div class="matrix-wrap"><table class="matrix" id="grid"></table></div>
+  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A3, A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
+  <div class="runs">
+    <div class="list"><h3>Failed runs <span id="nfail"></span></h3><ul class="fails" id="fails"></ul></div>
+    <div class="viewer" id="viewer"><p class="empty">Select a run to open its transcript.</p></div>
+  </div>
+</section>
+
+<section id="sarcomeres">
+  <div class="head"><div class="kicker">05 · A second measurement</div>
+    <div class="t"><h2>Sarcomeres in fluorescence images</h2><p>The same approach was applied to a second kind of image. A fluorescent tag on alpha-actinin marks the z-lines of the sarcomere, the repeating contractile unit of heart muscle. A mature cell shows regular stripes about 1.7&nbsp;µm apart, while an immature cell shows scattered dots and has no sarcomere length to measure. Every model passed both versions, so these two tasks don't separate the models yet.</p></div></div>
+  <article class="task">
+    <div class="text">
+      <div class="label"><b>B1</b><span>First version · 1 cell</span></div>
+      <h2>How long are this cell's sarcomeres?</h2>
+      <p>The answer is 1.72&nbsp;µm by two independent methods, within one pixel of the authors' value for this cell. Its myofibrils run at about 44° to the image axes, so measuring along x or y gives 1.91 to 2.39&nbsp;µm, and an answer left in pixels gives 14.1.</p>
+    </div>
+    <figure class="plate"><img id="figB1" alt="Z-line profile along the myofibril versus along the image x axis"><figcaption class="figcap"><b>Figure 5.</b> Along the myofibril 1.70&nbsp;µm; along image x 1.91&nbsp;µm.</figcaption></figure>
   </article>
 
   <article class="task wide">
@@ -382,47 +460,8 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       </table>
       <p class="src">Data: Allen Institute for Cell Science, Gerbin et al., Cell Systems 2021, <a href="https://doi.org/10.1016/j.cels.2021.05.001">10.1016/j.cels.2021.05.001</a>. Pixel values unchanged; pixel size 0.1195&nbsp;µm from the raw files' SlideBook calibration. Allen terms of use allow noncommercial research use, so a commercial benchmark would need their written permission.</p>
     </div>
-    <figure class="plate"><img id="figB2" alt="Striated versus immature cardiomyocytes with their power spectra"><figcaption class="figcap"><b>Figure 5.</b> Striated cells against immature cells, with their power spectra. Only the striated cells show a sarcomere peak.</figcaption></figure>
+    <figure class="plate"><img id="figB2" alt="Striated versus immature cardiomyocytes with their power spectra"><figcaption class="figcap"><b>Figure 6.</b> Striated cells against immature cells, with their power spectra. Only the striated cells show a sarcomere peak.</figcaption></figure>
   </article>
-</section>
-
-<section id="test">
-  <div class="head"><div class="kicker">04 · Third version</div>
-    <div class="t"><h2>Captured or beating on its own?</h2><p>In A2, every tissue that wasn't captured had at least one beat interval 0.08&nbsp;s or more away from a second, so a check for a steady rhythm near 1&nbsp;Hz was nearly enough. A3 uses nineteen different tissues, two of which beat as steadily as the captured ones and only slightly too fast.</p></div></div>
-  <article class="task long">
-    <div class="text">
-      <div class="label"><b>A3</b><span>Brightfield time-lapse · 19 tissues</span></div>
-      <p>Tissues grown from a patient's cells carrying a MYBPC3 variant linked to hypertrophic cardiomyopathy, filmed on day 7 under 1&nbsp;Hz pacing in three imaging sessions. The pulse itself doesn't appear in the images.</p>
-      <div class="answer"><span class="kicker">Answer</span><strong>6 captured</strong> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
-      <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98&nbsp;s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval sits within 0.010&nbsp;s of 1.000&nbsp;s; the closest uncaptured tissue, Ex00575, is 0.024 to 0.035&nbsp;s short on every interval.</p>
-      <table class="traps">
-        <thead><tr><th>Approach, run on the real files</th><th>Result</th></tr></thead>
-        <tbody>
-          <tr><td>Every interval within 5% of 1.000&nbsp;s</td><td><span class="res bad">n = 8</span></td></tr>
-          <tr><td>Mean rate within 3% or 5% of 60&nbsp;bpm</td><td><span class="res bad">n = 8 or 11</span></td></tr>
-          <tr><td>Dominant spectral frequency at 1.00 ± 0.05&nbsp;Hz</td><td><span class="res bad">n = 10</span></td></tr>
-          <tr><td>Rate at or above 58.8&nbsp;bpm (98% of the pacing rate)</td><td><span class="res bad">n = 15</span></td></tr>
-          <tr><td>Trusting the sheet's 30&nbsp;Hz frame rate</td><td><span class="res bad">n = 2 or 12</span></td></tr>
-          <tr class="ok"><td>Upstroke times on file timestamps, every interval held to the 1.000&nbsp;s period</td><td><span class="res good">n = 6 ✓</span></td></tr>
-        </tbody>
-      </table>
-      <p class="src">These recordings come from condition 023 of the same deposit as A2. Nineteen of its twenty-three files were used unmodified. Four were left out because their beats are too faint or the call depends on how a beat is timed. The ground truth rests on the depositors' 1&nbsp;Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
-    </div>
-    <figure class="plate"><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption class="figcap"><b>Figure 6.</b> Every beat interval of every tissue. Captured tissues sit on 1.000&nbsp;s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
-  </article>
-</section>
-
-<div class="interlude"><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p><blockquote>"Ex00575 and Ex00576 run slightly under 1 s (about 0.97 and 0.94–0.97 s), and I kept them as captured."<cite>Claude Sonnet, run 1, explaining its answer</cite></blockquote></div>
-
-<section id="runs">
-  <div class="head"><div class="kicker">05 · The failures</div>
-    <div class="t"><h2>Every run and every failure</h2><p>Each bar is one agent run, given only the data and a Python environment. Every failed run is listed with what it got wrong; select one to read the agent's own reasoning.</p></div></div>
-  <div class="matrix-wrap"><table class="matrix" id="grid"></table></div>
-  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A3, A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
-  <div class="runs">
-    <div class="list"><h3>Failed runs <span id="nfail"></span></h3><ul class="fails" id="fails"></ul></div>
-    <div class="viewer" id="viewer"><p class="empty">Select a run to open its transcript.</p></div>
-  </div>
 </section>
 
 <section id="design" class="three">
@@ -486,8 +525,8 @@ if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hi
   h += `<line class="axis" x1="${x0}" x2="${x1}" y1="${yp}" y2="${yp}"/><line class="axis" x1="${x0}" x2="${x1}" y1="${yt}" y2="${yt}"/>`;
   for (let s = 0; s <= span; s += 3) h += `<text class="sec" x="${X(s)}" y="${yp-18}">${s} s</text>`;
   for (let k = 0; k <= span; k++) {
-    const xp = X(k), xt = X(k * 0.96);
-    h += '<g>';
+    const xp = X(k), xt = X(k * 0.96), d = `style="transition-delay:${k * .12}s"`;
+    h += `<g class="b" ${d}>`;
     if (k) h += `<polygon class="gap" points="${xt},${yt} ${xp},${yp} ${xp},${yt}"/>`;
     h += `<line class="c" x1="${xp}" y1="${yp}" x2="${xt}" y2="${yt}"/>`;
     h += `<circle class="p" cx="${xp}" cy="${yp}" r="4.5"/><circle class="o" cx="${xt}" cy="${yt}" r="4.5"/>`;
@@ -495,6 +534,9 @@ if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hi
     h += '</g>';
   }
   svg.innerHTML = h;
+  if (!('IntersectionObserver' in window)) { fig.classList.add('seen'); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { fig.classList.add('seen'); io.disconnect(); } }), {threshold: .5});
+  io.observe(fig);
 })();
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -507,6 +549,16 @@ document.getElementById('mini').innerHTML = MODELS.map(([m,maker]) => {
   const rs = of(m,'A3'), n = rs.filter(r => r.pass).length;
   return `<tr><td class="mm">${esc(m)}<small>${esc(maker)}</small></td><td><div class="tk">${rs.map(r => `<i class="${r.pass?'':'f'}"></i>`).join('')}</div></td><td class="fr num ${n*2<rs.length?'lo':''}">${n}/${rs.length}</td></tr>`;
 }).join('');
+
+// story: interludes rise into place as they scroll in; a reading-progress line fills along the top
+(function () {
+  const bar = document.getElementById('progress');
+  const upd = () => { const h = document.documentElement; const f = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight); bar.style.transform = `scaleX(${f})`; };
+  addEventListener('scroll', upd, {passive: true}); upd();
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); } }), {threshold: .4});
+  document.querySelectorAll('.interlude').forEach(el => io.observe(el));
+})();
 
 const grid = document.getElementById('grid');
 let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s,lead],i) => `<th class="${lead?'lead':''} ${i>2?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
