@@ -290,13 +290,16 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 @media (prefers-reduced-motion:reduce){.film *,.film{animation:none!important}}
 /* story interludes between chapters */
 .interlude{margin:0 auto 96px;max-width:920px;text-align:center;display:grid;justify-items:center;gap:22px}
+.interlude blockquote{margin:0;max-width:64ch;font:400 1.02rem/1.6 var(--sans);color:var(--ink-2);text-wrap:balance}
+.interlude cite{display:block;margin-top:8px;font:600 .66rem var(--sans);letter-spacing:.14em;text-transform:uppercase;font-style:normal;color:var(--muted)}
 .interlude i{width:1.5px;height:44px;background:var(--accent)}
 .interlude p{font:400 clamp(1.9rem,4.2vw,3.2rem)/1.14 var(--serif);color:var(--ink);max-width:none;text-wrap:balance;letter-spacing:-.01em}
 .interlude.seen i{animation:grow .7s ease-out both}
 .interlude.seen p{animation:rise .8s cubic-bezier(.2,.7,.2,1) .12s both}
+.interlude.seen blockquote{animation:rise .8s cubic-bezier(.2,.7,.2,1) .4s both}
 @keyframes grow{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
 .progress{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);z-index:20}
-@media (prefers-reduced-motion:reduce){.interlude.seen i,.interlude.seen p{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.interlude.seen i,.interlude.seen p,.interlude.seen blockquote{animation:none!important}}
 footer{border-top:1.5px solid var(--ink);padding-top:16px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
 footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </style>
@@ -315,8 +318,8 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       <p class="ftag">Testing whether AI agents can analyze heart cells like a cardiac biologist.</p>
       <ol class="acts">
         <li><div><b>Task</b><span>Heart tissue grown in a dish beats on its own. An electrical pulse once a second can take over and set the pace, and a tissue that follows it beats exactly once a second. The agent watched videos of nineteen paced tissues and reported which ones were following the pulse.</span></div></li>
-        <li><div><b>Why it's hard</b><span>Two of the tissues ignored the pulse and kept their own rhythm, a beat every 0.96 seconds. That's so regular and so close to once a second that they look like they're following. Only exact timing of each beat shows they aren't.</span></div></li>
-        <li><div><b>Result</b><span>Claude Opus answered correctly in all three runs. The other models answered correctly in one run or none.</span></div></li>
+        <li><div><b>Why it's hard</b><span>Two of the tissues beat every 0.96 seconds, slightly faster than the pulse. Timing the beats shows this easily. Knowing what it means takes physiology: a pulse can only take over a tissue that beats slower than it does, so these two are keeping their own rhythm.</span></div></li>
+        <li><div><b>Result</b><span>Claude Opus answered correctly in all three runs. The other models answered correctly in one run or none, and the failed Claude runs had measured the faster beat before calling it captured.</span></div></li>
       </ol>
     </div>
     <div class="film-screen">
@@ -449,7 +452,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   </article>
 </section>
 
-<div class="interlude"><i></i><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p></div>
+<div class="interlude"><i></i><p>Every failed run counted the two 0.96&nbsp;s tissues as captured.</p><blockquote>"Ex00575 and Ex00576 run slightly under 1 s (about 0.97 and 0.94–0.97 s), and I kept them as captured."<cite>Claude Sonnet, run 1, explaining its answer</cite></blockquote></div>
 
 <section id="runs">
   <div class="head"><div class="kicker">05 · The failures</div>
