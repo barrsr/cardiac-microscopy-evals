@@ -93,6 +93,38 @@ def condense(path, folder):
     return steps
 
 
+def why(ev, ans):
+    """One line on what a failed answer got wrong, read off the eval's own grader config."""
+    if not isinstance(ans, dict):
+        return 'no answer block'
+    g = ev['grader']
+    kids = g['config']['children'] if g['type'] == 'all_of' else [g]
+    bits = []
+    for ch in sorted(kids, key=lambda c: c['type'] != 'label_set_jaccard'):  # name the labels first
+        cfg = ch['config']
+        if ch['type'] == 'label_set_jaccard':
+            f = cfg['answer_field']
+            truth, got = set(cfg['ground_truth_labels']), set(ans.get(f) or [])
+            name = lambda s: ', '.join(sorted(x.replace('cell_', 'cell ') for x in s))
+            if f == 'not_captured':
+                if truth - got:
+                    bits.append('counted ' + name(truth - got) + ' as captured')
+                if got - truth:
+                    bits.append('called ' + name(got - truth) + ' not captured')
+            else:
+                if got - truth:
+                    bits.append('called ' + name(got - truth) + ' striated')
+                if truth - got:
+                    bits.append('missed ' + name(truth - got))
+        elif not bits:
+            for k, gt in cfg['ground_truth'].items():
+                v = ans.get(k)
+                if isinstance(v, (int, float)) and abs(v - gt) > cfg['tolerances'][k]['value']:
+                    unit = {'beat_rate_bpm': ' bpm', 'sarcomere_length_um': ' µm', 'median_sarcomere_length_um': ' µm'}.get(k, '')
+                    bits.append(f'answered {v:g}{unit} (truth {gt:g}{unit})' if unit else f'{k} = {v} (truth {gt})')
+    return '; '.join(bits) or 'outside tolerance'
+
+
 def runs():
     out = []
     for ev, (folder, key) in TASKS.items():
@@ -102,7 +134,8 @@ def runs():
                 tj = (rj.parent / 'trajectory.jsonl').read_text(errors='ignore')
                 if 'exhausted your daily quota' in tj or ('status: 503' in tj and not r.get('answer')):
                     continue  # provider quota or outage, not a model answer
-                out.append({'task': key, 'model': label, 'maker': maker, 'run': r['run'],
+                evj = json.loads((ROOT / 'evals' / folder / 'eval.json').read_text())
+                out.append({'task': key, 'model': label, 'maker': maker, 'run': r['run'], 'why': '' if r.get('pass') else why(evj, r.get('answer')),
                             'answer': r.get('answer'), 'pass': r.get('pass'), 'seconds': r.get('seconds'),
                             'steps': condense(rj.parent / 'trajectory.jsonl', mdir)})
     return out
@@ -122,6 +155,10 @@ if __name__ == '__main__':
         'A1': img('evals/task_A_beat_rate/figures/fig1_motion_trace.png'),
         'B1': img('evals/task_B_sarcomere_length/figures/fig1_profile_axis_vs_myofibril.png'),
     }
+    vid = ROOT / 'evals/task_A3_escape_capture/figures/beating_side_by_side.mp4'
+    if vid.exists():
+        figs['A3vid'] = 'data:video/mp4;base64,' + base64.b64encode(vid.read_bytes()).decode()
+        figs['A3poster'] = img('evals/task_A3_escape_capture/figures/beating_side_by_side_poster.png')
     tpl = (HERE / 'template.html').read_text()
     page = (tpl.replace('/*__RUNS__*/[]', json.dumps(data))
                .replace('/*__FIGS__*/{}', json.dumps(figs)))
