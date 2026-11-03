@@ -189,7 +189,7 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .devwrap{max-width:1040px;margin:0 auto;overflow-x:auto}
 .dev td,.dev th{text-align:left;vertical-align:top;padding-right:24px}
 .traps.dev td:last-child,.traps.dev th:last-child{padding-right:0;padding-left:0;text-align:left;white-space:normal}
-.dev td:first-child{white-space:nowrap;color:var(--accent)}
+.dev td:first-child{color:var(--accent)}
 .dev .r{white-space:nowrap}
 .dev{table-layout:fixed}
 .traps th,.traps td{padding:9px 0;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
@@ -342,7 +342,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       <ol class="acts">
         <li><div><b>Task</b><span>Heart tissue grown in a dish beats on its own. An electrical pulse once a second can take over and set the pace, and a tissue that follows it beats exactly once a second. The agent watched videos of nineteen paced tissues and reported which ones were following the pulse.</span></div></li>
         <li><div><b>Why it's hard</b><span>Two of the tissues beat every 0.96 seconds, slightly faster than the pulse, so they aren't following it. The difference is small, and an analysis that accepts anything close to once a second gets these two wrong.</span></div></li>
-        <li><div><b>Result</b><span>On this task, A3, Claude Opus answered correctly in all three runs and the other models in one run or none. The failed Claude runs had measured the faster beat before calling it captured. A2, the easier companion task, caught three of twelve runs.</span></div></li>
+        <li><div><b>Result</b><span>On this task, Ahead of the beat, Claude Opus answered correctly in all three runs and the other models in one run or none. The failed Claude runs had measured the faster beat before calling it captured. Near the beat, the easier first task, caught three of twelve runs.</span></div></li>
       </ol>
     </div>
     <div class="film-screen">
@@ -350,7 +350,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
         <video id="vidA3" autoplay muted loop playsinline aria-label="Two paced tissues side by side: one captured by the 1 Hz stimulus, one beating on its own rhythm"></video>
       </figure>
       <p class="fcap"><b>Figure 1.</b> Two of the nineteen tissues, in real time. On the left, each beat lands where the pulse says it should. On the right, each beat comes 40&nbsp;ms earlier than the last.</p>
-      <table class="mini" id="mini" aria-label="Tasks A2 and A3, results by model"></table>
+      <table class="mini" id="mini" aria-label="Tasks 1 and 2, results by model"></table>
     </div>
   </div>
   <div class="film-bottom">
@@ -377,11 +377,11 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </section>
 
 <section id="v1">
-  <div class="head"><div class="kicker">02 · First task</div>
+  <div class="head"><div class="kicker">02 · Task 1</div>
     <div class="t"><h2>Which paced tissues are captured?</h2><p>Eleven tissues were paced at 1&nbsp;Hz. Three of them aren't following the pulse, and two of those still average close to once a second, at 57 and 62&nbsp;bpm, so an analysis that accepts anything near 1&nbsp;Hz counts them as captured.</p></div></div>
   <article class="task long">
     <div class="text">
-      <div class="label"><b>A2</b><span>Brightfield time-lapse · 11 tissues</span></div>
+      <div class="label"><b>1</b><span>Near the beat · 11 tissues</span></div>
       <p>Eleven tissues were filmed on day 7 under 1&nbsp;Hz pacing, and the agent decides which ones follow the pulse beat for beat. A captured tissue beats exactly once a second, so the pacing itself supplies the answer key.</p>
       <div class="answer"><span class="kicker">Answer</span><strong>8 captured</strong>; not captured <strong>Ex00636, Ex00637, Ex00638</strong></div>
       <p>Every interval in the captured tissues sits within 0.010&nbsp;s of 1.000&nbsp;s. Each non-captured tissue has an interval at least 0.079&nbsp;s off and drifts at least 0.137&nbsp;s against the pacing grid. Ex00637 has intervals as short as 0.89&nbsp;s, which a 1&nbsp;Hz stimulus cannot produce.</p>
@@ -403,11 +403,11 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </section>
 
 <section id="test">
-  <div class="head"><div class="kicker">03 · Second task</div>
-    <div class="t"><h2>Captured or beating on its own?</h2><p>A2 can be passed by accepting any tissue whose mean rate is within 2 to 3% of 60&nbsp;bpm. On A3 that rule returns 7 or 8 captured tissues instead of 6, because two of its nineteen tissues beat as steadily as the captured ones, only slightly too fast.</p></div></div>
+  <div class="head"><div class="kicker">03 · Task 2</div>
+    <div class="t"><h2>Captured or beating on its own?</h2><p>Task 1 can be passed by accepting any tissue whose mean rate is within 2 to 3% of 60&nbsp;bpm. On Task 2 that rule returns 7 or 8 captured tissues instead of 6, because two of its nineteen tissues beat as steadily as the captured ones, only slightly too fast.</p></div></div>
   <article class="task long">
     <div class="text">
-      <div class="label"><b>A3</b><span>Brightfield time-lapse · 19 tissues</span></div>
+      <div class="label"><b>2</b><span>Ahead of the beat · 19 tissues</span></div>
       <p>Tissues grown from a patient's cells carrying a MYBPC3 variant linked to hypertrophic cardiomyopathy, filmed on day 7 under 1&nbsp;Hz pacing in three imaging sessions. The pulse itself doesn't appear in the images.</p>
       <div class="answer"><span class="kicker">Answer</span><strong>6 captured</strong> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
       <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98&nbsp;s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval, timed at the contraction upstroke, sits within 0.010&nbsp;s of 1.000&nbsp;s; the closest uncaptured tissue, Ex00575, is 0.024 to 0.035&nbsp;s short on every interval.</p>
@@ -422,7 +422,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
           <tr class="ok"><td>Upstroke times on file timestamps, every interval held to the 1.000&nbsp;s period</td><td><span class="res good">n = 6 ✓</span></td></tr>
         </tbody>
       </table>
-      <p class="src">These recordings come from condition 023 of the same deposit as A2. Nineteen of its twenty-three files were used unmodified. Four were left out because their beats are too faint or the call depends on how a beat is timed. The ground truth rests on the depositors' 1&nbsp;Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
+      <p class="src">These recordings come from condition 023 of the same deposit as Task 1. Nineteen of its twenty-three files were used unmodified. Four were left out because their beats are too faint or the call depends on how a beat is timed. The ground truth rests on the depositors' 1&nbsp;Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
     </div>
     <figure class="plate"><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption class="figcap"><b>Figure 3.</b> Every beat interval of every tissue. Captured tissues sit on 1.000&nbsp;s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
   </article>
@@ -434,7 +434,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   <div class="head"><div class="kicker">04 · The failures</div>
     <div class="t"><h2>Every run and every failure</h2><p>Each bar is one agent run, given only the data and a Python environment. Every failed run is listed below with its mistake. Select one to see its answer and its own explanation; the full transcript sits underneath.</p></div></div>
   <div class="matrix-wrap"><table class="matrix" id="grid"></table></div>
-  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A2 and A3 are the two tasks. A1, B1 and B2 are earlier versions, kept to show how the tasks were developed.</span></div>
+  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>Tasks 1 and 2 are the submission. The other three are early versions, kept to show how the tasks were developed.</span></div>
   <div class="runs">
     <div class="list"><h3>Failed runs <span id="nfail"></span></h3><ul class="fails" id="fails"></ul></div>
     <div class="viewer" id="viewer"><p class="empty">Select a run to open its transcript.</p></div>
@@ -445,12 +445,12 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   <div class="head"><div class="kicker">05 · Development</div>
     <div class="t"><h2>Earlier versions</h2><p>Three earlier tasks were built and run the same way, then set aside. Their notes, ground truth and transcripts stay in the repository.</p></div></div>
   <div class="devwrap"><table class="traps dev">
-    <colgroup><col style="width:6%"><col style="width:48%"><col style="width:16%"><col style="width:30%"></colgroup>
+    <colgroup><col style="width:16%"><col style="width:40%"><col style="width:16%"><col style="width:28%"></colgroup>
     <thead><tr><th>Task</th><th>What it tested</th><th>Result</th><th>Why it was set aside</th></tr></thead>
     <tbody>
-      <tr><td><b>A1</b></td><td>Beat rate of one paced tissue, with traps in the signal processing: two motion peaks per beat, and a 30&nbsp;Hz frame rate on the data sheet against 32.9&nbsp;fps in the file timestamps</td><td class="r">Claude 9/9<br>GPT-6 Luna 0/3</td><td>No Claude run failed it</td></tr>
-      <tr><td><b>B1</b></td><td>Sarcomere length in one cell whose myofibrils run at 44° to the image axes</td><td class="r">12/12 passed</td><td>Every model measured along the myofibrils</td></tr>
-      <tr><td><b>B2</b></td><td>Which of eight cells have sarcomeres, and their median length, with expert scores as ground truth</td><td class="r">12/12 passed</td><td>A spectrum check inside each cell's outline separates the two groups</td></tr>
+      <tr><td><b>Beat rate</b></td><td>Beat rate of one paced tissue, with traps in the signal processing: two motion peaks per beat, and a 30&nbsp;Hz frame rate on the data sheet against 32.9&nbsp;fps in the file timestamps</td><td class="r">Claude 9/9<br>GPT-6 Luna 0/3</td><td>No Claude run failed it</td></tr>
+      <tr><td><b>Sarcomere length</b></td><td>Sarcomere length in one cell whose myofibrils run at 44° to the image axes</td><td class="r">12/12 passed</td><td>Every model measured along the myofibrils</td></tr>
+      <tr><td><b>Sarcomere maturity</b></td><td>Which of eight cells have sarcomeres, and their median length, with expert scores as ground truth</td><td class="r">12/12 passed</td><td>A spectrum check inside each cell's outline separates the two groups</td></tr>
     </tbody>
   </table></div>
 </section>
@@ -482,7 +482,7 @@ python scripts/fetch_all.py
 python evals/task_A3_capture_vs_intrinsic_rhythm/\
 ground_truth.py
 
-<span class="c"># run the agents and grade them</span>
+<span class="c"># run the agents and grade them (eval keys: A2 = Task 1, A3 = Task 2)</span>
 python harness/run_models.py --evals A3 \
   --models claude:opus,codex:gpt-6-luna --runs 3
 
@@ -533,10 +533,12 @@ if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hi
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const order = ['Claude Opus','Claude Sonnet','Claude Haiku','GPT-6 Luna'];
 const MODELS = [...new Map(RUNS.map(r => [r.model, r.maker])).entries()].sort((a,b) => order.indexOf(a[0]) - order.indexOf(b[0]));
-const TASKS = [['A2','A2','pacing capture',true],['A3','A3','capture vs own rhythm',true],['A1','A1','beat rate, first version',false],['B1','B1','sarcomere, first version',false],['B2','B2','striation panel, set aside',false]];
+const TASKS = [['A2','Task 1','near the beat',true],['A3','Task 2','ahead of the beat',true],['A1','Beat rate','early version',false],['B1','Sarcomere length','early version',false],['B2','Sarcomere maturity','early version',false]];
+const NAME = {A2:'Task 1', A3:'Task 2', A1:'Beat rate', B1:'Sarcomere length', B2:'Sarcomere maturity'};
+const SHORT = {A2:'1', A3:'2', A1:'BR', B1:'SL', B2:'SM'};
 const of = (m,k) => RUNS.filter(r => r.model === m && r.task === k).sort((a,b) => a.run - b.run);
 
-document.getElementById('mini').innerHTML = '<tr class="mh"><td></td><td>A2</td><td></td><td>A3</td><td></td></tr>' + MODELS.map(([m,maker]) => {
+document.getElementById('mini').innerHTML = '<tr class="mh"><td></td><td>Task 1</td><td></td><td>Task 2</td><td></td></tr>' + MODELS.map(([m,maker]) => {
   const cell = k => { const rs = of(m,k), n = rs.filter(r => r.pass).length;
     return `<td><div class="tk">${rs.map(r => `<i class="${r.pass?'':'f'}"></i>`).join('')}</div></td><td class="fr num ${n*2<rs.length?'lo':''}">${n}/${rs.length}</td>`; };
   return `<tr><td class="mm">${esc(m)}<small>${esc(maker)}</small></td>${cell('A2')}${cell('A3')}</tr>`;
@@ -558,7 +560,7 @@ for (const [m, maker] of MODELS) {
   h += `<tr><td class="who">${esc(m)}<span>${esc(maker)}</span></td>`;
   for (const [k,,,lead] of TASKS) {
     const rs = of(m,k), n = rs.filter(r => r.pass).length;
-    h += `<td class="${lead?'lead':''}"><div class="cell"><div class="dots">` + rs.map(r => `<button class="dot ${r.pass?'':'f'}" aria-pressed="false" data-i="${RUNS.indexOf(r)}" title="${esc(m)} · ${k} · run ${r.run}${r.why?': '+esc(r.why):''}" aria-label="${esc(m)}, ${k}, run ${r.run}, ${r.pass?'passed':'failed'}"></button>`).join('')
+    h += `<td class="${lead?'lead':''}"><div class="cell"><div class="dots">` + rs.map(r => `<button class="dot ${r.pass?'':'f'}" aria-pressed="false" data-i="${RUNS.indexOf(r)}" title="${esc(m)} · ${NAME[k]} · run ${r.run}${r.why?': '+esc(r.why):''}" aria-label="${esc(m)}, ${k}, run ${r.run}, ${r.pass?'passed':'failed'}"></button>`).join('')
        + `</div><span class="frac num">${rs.length ? n+'/'+rs.length : 'not run'}</span></div></td>`;
   }
   h += '</tr>';
@@ -569,7 +571,7 @@ const fails = RUNS.map((r,i) => [r,i]).filter(([r]) => !r.pass)
   .sort((a,b) => TASKS.findIndex(t => t[0]===a[0].task) - TASKS.findIndex(t => t[0]===b[0].task) || order.indexOf(a[0].model) - order.indexOf(b[0].model) || a[0].run - b[0].run);
 document.getElementById('nfail').textContent = `${fails.length} of ${RUNS.length}`;
 document.getElementById('fails').innerHTML = fails.map(([r,i]) =>
-  `<li><button data-i="${i}"><span class="t">${r.task}</span><span class="m">${esc(r.model)}, run ${r.run}</span><span class="r">${esc(r.why)}</span></button></li>`).join('');
+  `<li><button data-i="${i}"><span class="t">${SHORT[r.task]}</span><span class="m">${esc(r.model)}, run ${r.run}</span><span class="r">${esc(r.why)}</span></button></li>`).join('');
 
 const viewer = document.getElementById('viewer');
 const label = {cmd:'command', out:'output', say:'model'};
@@ -582,7 +584,7 @@ function open(i) {
   const a = r.answer || {};
   const plain = ('n_captured' in a) ? `${a.n_captured} captured. Not captured: ${(a.not_captured || []).join(', ') || 'none'}.`
     : Object.entries(a).map(([k,v]) => `${k.replace(/_/g,' ')}: ${Array.isArray(v) ? v.join(', ') : v}`).join('; ');
-  viewer.innerHTML = `<h3>${esc(r.model)} · ${esc(r.task)} · run ${r.run}<span class="st ${r.pass?'p':'f'}">${r.pass?'passed':'failed'}${r.seconds?` · ${r.seconds} s`:''}</span></h3>
+  viewer.innerHTML = `<h3>${esc(r.model)} · ${NAME[r.task]} · run ${r.run}<span class="st ${r.pass?'p':'f'}">${r.pass?'passed':'failed'}${r.seconds?` · ${r.seconds} s`:''}</span></h3>
     ${r.why ? `<div class="blk"><div class="k">What it got wrong</div><div class="why">${esc(r.why)}</div></div>` : ''}
     <div class="blk"><div class="k">Its answer</div><p>${esc(plain || JSON.stringify(a))}</p></div>
     ${last ? `<div class="blk"><div class="k">Its explanation, in its own words</div><div class="say">${esc(last)}</div></div>` : ''}
