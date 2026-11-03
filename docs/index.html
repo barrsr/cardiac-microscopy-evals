@@ -47,23 +47,35 @@ h3{font:600 1rem/1.35 var(--sans);letter-spacing:-.005em}
 .vernier i{position:absolute;width:1.5px;height:10px;background:var(--ink);top:0}
 .vernier i.own{top:20px;background:var(--accent);height:10px}
 .vernier b{position:absolute;top:34px;transform:translateX(-50%);font:400 .62rem var(--mono);color:var(--accent);white-space:nowrap}
+.vernier i{animation:tick .5s ease-out both}
+@keyframes tick{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
+.big .ticks.play i{animation:fill .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes fill{from{transform:scaleY(.08);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+.big .r.play{animation:rise .6s ease-out both}
+@media (prefers-reduced-motion:reduce){h1 .off,h1 .beat,.vernier i,.big .ticks.play i,.big .r.play,.metro .m{animation:none!important}}
 .vernier .row{position:absolute;right:0;font:500 .6rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:var(--paper);padding-left:10px}
 .vernier .row.r1{top:-2px} .vernier .row.r2{top:18px;color:var(--accent)}
 @media (max-width:620px){.vernier .row{display:none}}
 
-/* hero */
-.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:end;margin-bottom:56px}
-@media (max-width:920px){.hero{grid-template-columns:minmax(0,1fr);gap:28px}}
-h1{font:400 clamp(5rem,15vw,12.5rem)/.82 var(--serif);letter-spacing:-.035em;white-space:nowrap}
-h1 span{font-style:italic;color:var(--accent);display:inline-block;transform:translateY(.06em) skewX(-2deg);margin-left:.01em}
-.hero .left{display:grid;gap:26px;min-width:0}
-.metro{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;font:400 .78rem var(--mono);color:var(--muted)}
+/* hero: a centered entrance. "Off" lands, "beat" arrives a beat late. */
+.hero{text-align:center;display:grid;justify-items:center;gap:22px;margin:24px 0 88px}
+h1{font:400 clamp(5.5rem,19vw,15.5rem)/.8 var(--serif);letter-spacing:-.04em;white-space:nowrap;margin-bottom:6px}
+h1 .off,h1 .beat{display:inline-block}
+h1 .beat{font-style:italic;color:var(--accent);transform:translateY(.06em) skewX(-2deg);margin-left:.01em}
+@keyframes rise{from{transform:translateY(.18em);opacity:0}to{transform:none;opacity:1}}
+@keyframes late{0%{transform:translate(.08em,.3em) skewX(-2deg);opacity:0}70%{transform:translate(0,.02em) skewX(-2deg);opacity:1}100%{transform:translateY(.06em) skewX(-2deg);opacity:1}}
+h1 .off{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+h1 .beat{animation:late .9s cubic-bezier(.2,.7,.2,1) .28s both}
+.metro{display:flex;justify-content:center;align-items:center;gap:10px 12px;flex-wrap:wrap;font:400 .78rem var(--mono);color:var(--muted)}
 .metro .m{width:12px;height:12px;border-radius:50%;display:inline-block;animation:pulse 1s infinite}
 .metro .stim{background:var(--ink)}
 .metro .own{background:var(--accent);animation-duration:.96s;margin-left:14px}
 @keyframes pulse{0%{transform:scale(1.8);opacity:1}18%{transform:scale(1);opacity:.85}100%{transform:scale(1);opacity:.25}}
-@media (prefers-reduced-motion:reduce){.metro .m{animation:none;opacity:1}}
-.hero .right{display:grid;gap:22px;min-width:0}
+.tagline{font:400 clamp(1.6rem,3vw,2.35rem)/1.18 var(--serif);color:var(--ink);max-width:36ch;margin-top:18px;text-wrap:balance}
+.sub{font-size:1.02rem;color:var(--ink-2);max-width:62ch}
+.hero .facts{width:min(720px,100%);margin-top:14px;text-align:center}
+.hero .facts div{padding-left:0;padding-right:0}
+.hero .byline{max-width:none}
 .lede{font-size:1.14rem;line-height:1.58;color:var(--ink)}
 .byline{font-size:.88rem;color:var(--muted)}
 .byline b{color:var(--ink);font-weight:500}
@@ -226,20 +238,17 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </div>
 <div class="vernier" id="vernier" aria-hidden="true"></div>
 
-<div class="hero">
-  <div class="left">
-    <h1>Off<span>beat</span></h1>
-    <div class="metro" aria-hidden="true">
-      <span class="m stim"></span><span class="lab">stimulus, every 1.000 s</span>
-      <span class="m own"></span><span class="lab">tissue, every 0.96 s</span>
-    </div>
+<header class="hero">
+  <h1><span class="off">Off</span><span class="beat">beat</span></h1>
+  <div class="metro" aria-hidden="true">
+    <span class="m stim"></span><span class="lab">stimulus, every 1.000 s</span>
+    <span class="m own"></span><span class="lab">tissue, every 0.96 s</span>
   </div>
-  <div class="right">
-    <p class="lede">Benchmark tasks built from public cardiac microscopy data. Each has one right answer that is fixed by the experiment or by expert annotation, and each carries a trap built from how paced cardiac tissue and immature cardiomyocytes behave. I ran each as an autonomous agent task on Anthropic and OpenAI models, three runs each, graded with SpatialBench grader types.</p>
-    <div class="facts" id="facts"></div>
-    <p class="byline"><b>Ryan Barrs, PhD</b> · bioengineer, hiPSC-cardiomyocyte and human donor-eye models · <a href="https://github.com/barrsr/cardiac-microscopy-evals">code, data scripts and full transcripts</a></p>
-  </div>
-</div>
+  <p class="tagline">Microscopy tasks that test whether an AI agent understands the heart cells it is analyzing.</p>
+  <p class="sub">Built from real lab data, with answers fixed by the experiment, run on frontier models from Anthropic and OpenAI, and every transcript public.</p>
+  <div class="facts" id="facts"></div>
+  <p class="byline"><b>Ryan Barrs, PhD</b> · bioengineer, hiPSC-cardiomyocyte and human donor-eye models · <a href="https://github.com/barrsr/cardiac-microscopy-evals">code, data scripts and full transcripts</a></p>
+</header>
 
 <figure class="plate" id="heroFig" style="margin-bottom:104px">
   <video id="vidA3" autoplay muted loop playsinline aria-label="Two paced tissues side by side: one captured by the 1 Hz stimulus, one beating on its own rhythm"></video>
@@ -248,7 +257,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 
 <section id="background">
   <div class="head"><div class="kicker">Background</div>
-    <div class="t"><h2>The biology behind the tasks</h2></div></div>
+    <div class="t"><h2>The biology behind the tasks</h2><p>Each task has one right answer that is fixed by the experiment or by expert annotation, and each carries a trap built from how paced cardiac tissue and immature cardiomyocytes behave. I ran each as an autonomous agent task on Anthropic and OpenAI models, three runs each, graded with SpatialBench grader types.</p></div></div>
   <div class="princ">
     <div><h3>Engineered heart tissues</h3><p>Heart muscle cells made from human stem cells are grown into small strips stretched between two flexible pillars. The strips beat on their own, and labs use them to study disease variants and test drugs. Each contraction bends the pillars, and a brightfield camera records it.</p></div>
     <div><h3>Pacing and capture</h3><p>Labs often pace these tissues with an electrical field, for example once a second (1 Hz), so every tissue beats at the same rate. A tissue is captured when every stimulus produces exactly one beat, which locks its beat interval to the stimulus period. A tissue whose own rate is above the pacing rate keeps its own rhythm, and its beats drift ahead of the stimulus.</p></div>
@@ -428,10 +437,10 @@ if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hi
 (function () {
   const v = document.getElementById('vernier'), span = 12; let h = '';
   const W = 86;  // leave the right edge for the row labels
-  for (let k = 0; k <= span; k++) h += `<i style="left:${k/span*W}%"></i>`;
+  for (let k = 0; k <= span; k++) h += `<i style="left:${k/span*W}%;animation-delay:${.4 + k*.06}s"></i>`;
   for (let k = 0; k * 0.96 <= span; k++) {
     const x = k * 0.96 / span * W;
-    h += `<i class="own" style="left:${x}%"></i>`;
+    h += `<i class="own" style="left:${x}%;animation-delay:${.55 + k*.06}s"></i>`;
     if (k && k % 3 === 0) h += `<b style="left:${x}%">${-Math.round(k * 40)} ms</b>`;
   }
   h += '<span class="row r1">stimulus 1.000 s</span><span class="row r2">tissue 0.96 s</span>';
@@ -452,6 +461,17 @@ document.getElementById('big').innerHTML = MODELS.map(([m,maker]) => {
   const rs = of(m,'A3'), n = rs.filter(r => r.pass).length;
   return `<tr><td class="m">${esc(m)}<small>${esc(maker)}</small></td><td><div class="ticks">${rs.map(r => `<i class="${r.pass?'':'f'}"></i>`).join('')}</div></td><td class="r num ${n*2<rs.length?'lo':''}">${n}/${rs.length}</td></tr>`;
 }).join('');
+
+// fill the A3 score bars when they come into view (they are fully drawn at rest)
+(function () {
+  const big = document.getElementById('big');
+  if (!('IntersectionObserver' in window)) return;
+  new IntersectionObserver((es, o) => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    big.querySelectorAll('.ticks, .r').forEach((el, n) => { el.style.animationDelay = (n * .08) + 's'; el.querySelectorAll('i').forEach((i, m) => i.style.animationDelay = (n * .08 + m * .07) + 's'); el.classList.add('play'); });
+    o.disconnect();
+  }), {threshold: .35}).observe(big);
+})();
 
 const grid = document.getElementById('grid');
 let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s,lead],i) => `<th class="${lead?'lead':''} ${i>2?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
