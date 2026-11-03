@@ -178,9 +178,9 @@ table.matrix{border-collapse:collapse;width:100%;min-width:760px}
 @media (max-width:920px){.task.long > figure{position:static}}
 @media (max-width:920px){.task{grid-template-columns:minmax(0,1fr);gap:28px}}
 .task .text,.task .col{display:grid;gap:18px;min-width:0;align-content:start}
-.task .label{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
-.task .label b{font:400 3.2rem/1 var(--serif);color:var(--accent)}
-.task .label span{font:500 .9rem var(--sans);letter-spacing:.01em;color:var(--muted)}
+.task .label{display:grid;gap:8px}
+.task .label b{font:400 clamp(2rem,3.2vw,2.6rem)/1.05 var(--serif);color:var(--accent);letter-spacing:-.01em}
+.task .label span{font:600 .68rem var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 .task h2{font-size:clamp(1.8rem,3vw,2.4rem)}
 .answer{border-top:1px solid var(--ink);border-bottom:1px solid var(--rule-2);padding:12px 0;font-size:.96rem;color:var(--ink-2)}
 .answer strong{color:var(--ink);font-weight:600}
@@ -381,8 +381,8 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
     <div class="t"><h2>Which paced tissues are captured?</h2><p>Eleven tissues were paced at 1&nbsp;Hz. Three of them aren't following the pulse, and two of those still average close to once a second, at 57 and 62&nbsp;bpm, so an analysis that accepts anything near 1&nbsp;Hz counts them as captured.</p></div></div>
   <article class="task long">
     <div class="text">
-      <div class="label"><b>1</b><span>Near the beat · 11 tissues</span></div>
-      <p>Eleven tissues were filmed on day 7 under 1&nbsp;Hz pacing, and the agent decides which ones follow the pulse beat for beat. A captured tissue beats exactly once a second, so the pacing itself supplies the answer key.</p>
+      <div class="label"><span>Brightfield time-lapse · 11 tissues</span><b>Near the beat</b></div>
+      <p>Filmed on day 7. The agent decides which tissues follow the pulse beat for beat. A captured tissue beats exactly once a second, so the pacing itself supplies the answer key.</p>
       <div class="answer"><span class="kicker">Answer</span><strong>8 captured</strong>; not captured <strong>Ex00636, Ex00637, Ex00638</strong></div>
       <p>Every interval in the captured tissues sits within 0.010&nbsp;s of 1.000&nbsp;s. Each non-captured tissue has an interval at least 0.079&nbsp;s off and drifts at least 0.137&nbsp;s against the pacing grid. Ex00637 has intervals as short as 0.89&nbsp;s, which a 1&nbsp;Hz stimulus cannot produce.</p>
       <table class="traps">
@@ -407,7 +407,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
     <div class="t"><h2>Captured or beating on its own?</h2><p>Task 1 can be passed by accepting any tissue whose mean rate is within 2 to 3% of 60&nbsp;bpm. On Task 2 that rule returns 7 or 8 captured tissues instead of 6, because two of its nineteen tissues beat as steadily as the captured ones, only slightly too fast.</p></div></div>
   <article class="task long">
     <div class="text">
-      <div class="label"><b>2</b><span>Ahead of the beat · 19 tissues</span></div>
+      <div class="label"><span>Brightfield time-lapse · 19 tissues</span><b>Ahead of the beat</b></div>
       <p>Tissues grown from a patient's cells carrying a MYBPC3 variant linked to hypertrophic cardiomyopathy, filmed on day 7 under 1&nbsp;Hz pacing in three imaging sessions. The pulse itself doesn't appear in the images.</p>
       <div class="answer"><span class="kicker">Answer</span><strong>6 captured</strong> (Ex00560, Ex00561, Ex00567, Ex00569, Ex00570, Ex00572); the other 13 are not</div>
       <p>Ex00575 and Ex00576 beat as regularly as several of the captured tissues, at 0.96 to 0.98&nbsp;s per beat. Each beat arrives before the next stimulus could have triggered it, so these tissues are running their own rhythm a little faster than the pacing. Every captured interval, timed at the contraction upstroke, sits within 0.010&nbsp;s of 1.000&nbsp;s; the closest uncaptured tissue, Ex00575, is 0.024 to 0.035&nbsp;s short on every interval.</p>
