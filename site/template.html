@@ -3,13 +3,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* A journal plate: one deliberate light look, ink on white, a single ultramarine accent,
+/* A journal plate: one deliberate light look, ink on white, a single oxblood accent,
    numbered figures and ruled tables. The rule under the masthead is a 1 Hz time axis. */
 :root{
   color-scheme:light;
   --paper:#fcfcfa; --plate:#ffffff; --ink:#0e0f12; --ink-2:#3a3d45; --muted:#6f737c; --faint:#a3a7ae;
-  --rule:#e4e3df; --rule-2:#cfcdc7; --accent:#2433c9; --accent-wash:#eef0fc;
-  --pass:#13774f; --pass-wash:#e6f2ec; --fail:#c23a21; --fail-wash:#fbebe6;
+  --rule:#e4e3df; --rule-2:#cfcdc7; --accent:#7a1f2b; --accent-wash:#f6eded;
+  --pass:#13774f; --pass-wash:#e6f2ec; --fail:#d4471f; --fail-wash:#fcece6;
   --serif:"Instrument Serif", "Iowan Old Style", Georgia, serif;
   --sans:"IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -381,10 +381,10 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 <section id="design">
   <div class="head"><div class="kicker">07 · Design</div><div class="t"><h2>How I build a trap</h2></div></div>
   <div class="princ">
-    <div><h3>The experiment sets the answer</h3><p>A tissue paced at 1 Hz has a known period, and the dataset's expert scorers decide which cells are striated. The analysis measures each tissue or cell against that fixed reference.</p></div>
-    <div><h3>The trap comes from the biology</h3><p>A frame-rate slip tests care. Recognizing that a tissue beating 3% faster than its stimulus is not captured by it tests training in cardiac physiology.</p></div>
-    <div><h3>The prompt gives what an analyst would have</h3><p>It quotes the depositors' 30 Hz frame rate because that is what anyone opening the deposit would read, and it never names the trap.</p></div>
-    <div><h3>I raise the bar until the strongest agent is tested</h3><p>I drop a design once its answer stops being unambiguous. A twitch-force task and a paced-versus-spontaneous task were dropped for that reason.</p></div>
+    <div><h3>Ground truth</h3><p>A tissue paced at 1 Hz has a known period, and the dataset's expert scorers decide which cells are striated. The analysis measures each tissue or cell against that fixed reference.</p></div>
+    <div><h3>Where the trap sits</h3><p>A frame-rate slip tests care. Recognizing that a tissue beating 3% faster than its stimulus is not captured by it tests training in cardiac physiology.</p></div>
+    <div><h3>What the prompt says</h3><p>It quotes the depositors' 30 Hz frame rate because that is what anyone opening the deposit would read, and it never names the trap.</p></div>
+    <div><h3>When to drop a task</h3><p>I drop a design once its answer stops being unambiguous. A twitch-force task and a paced-versus-spontaneous task were dropped for that reason.</p></div>
   </div>
 </section>
 
