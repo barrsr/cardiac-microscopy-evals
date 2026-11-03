@@ -16,7 +16,7 @@ The tasks follow the [SpatialBench](https://github.com/latchbio/spatialbench) ev
 | A1 beat rate (first version) | one tissue from A2's set | Beat rate in bpm | 60.0 bpm |
 | B1 sarcomere length (first version) | one ACTN2-mEGFP confocal z-stack | Sarcomere length in µm | 1.72 µm |
 
-A3 is the hardest: two of its tissues beat as regularly as captured ones but a few percent faster than the stimulus, so they are beating on their own rhythm, not following it. A1 and B1 are the first versions. Their traps sat in signal processing (two motion peaks per beat, a stated 30 Hz frame rate against 32.9 fps file timestamps, measuring along the image axis instead of the myofibril). A2 and B2 move the trap into the biology: what capture of a pacing stimulus means, and when there is no sarcomere to measure.
+A3 is the hardest. Two of its tissues beat as regularly as captured ones but a few percent faster than the stimulus, which means they are beating on their own rhythm. A1 and B1 are the first versions. Their traps were in the signal processing, such as two motion peaks per beat, a stated 30 Hz frame rate that disagrees with the 32.9 fps file timestamps, and measuring along the image axis instead of the myofibril. A2 and B2 put the trap in the biology, in what capture of a pacing stimulus means and in when a cell has no sarcomeres to measure.
 
 ## Results
 
