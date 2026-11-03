@@ -3,11 +3,15 @@
 Usage:
     MPLBACKEND=Agg python make_video.py [data_dir]
 
+Set FONT_DIR to a folder holding IBM Plex Sans, IBM Plex Mono and Instrument Serif TTFs to match the
+results page; otherwise the system sans is used.
+
 Left: Ex00567 (1:1 capture). Right: Ex00576 (intrinsic rhythm above the pacing rate). Beat times come from
 ground_truth.analyze (contraction upstroke on the per-plane MetaMorph timestamps), so the
 markers are exactly the beat times the ground truth uses. Frames play in real time from the
 per-frame timestamps. Writes figures/beating_side_by_side.mp4 and a poster PNG of the last frame.
 """
+import os
 import shutil
 import subprocess
 import sys
@@ -25,17 +29,31 @@ from ground_truth import PACING_S, analyze, load  # noqa: E402
 
 FFMPEG = shutil.which("ffmpeg") or "ffmpeg"
 OUT_FPS = 30
-W, H = 960, 540
-DPI = 100
+W, H = 960, 540                       # layout units; the video is rendered at 4/3 scale (1280x720)
+DPI = 100 * 4 / 3
 ROWS = (106, 406)                     # crop: the tissue between the pillars, full width
-INK, MUTED, FAINT, GRID = "#1a1a1a", "#5f5f5f", "#9a9a9a", "#d4d4d4"
+PAPER, INK, MUTED, FAINT, GRID = "#fcfcfa", "#0e0f12", "#6f737c", "#a3a7ae", "#dedcd6"
 PANELS = [
-    dict(id="Ex00567", color="#1f8a5b", label="captured: every beat on the 1.000 s period"),
-    dict(id="Ex00576", color="#c23b2a", label="not captured: its own rhythm, a beat every 0.96 s"),
+    dict(id="Ex00567", color="#13774f", label="Follows the pulse",
+         sub="A beat every 1.00 s, in step with the pulse"),
+    dict(id="Ex00576", color="#7a1f2b", label="Keeps its own rhythm",
+         sub="A beat every 0.96 s, pulling ahead of the pulse"),
 ]
 
-plt.rcParams.update({"font.family": ["Arial", "Helvetica", "DejaVu Sans"], "font.size": 10,
-                     "text.color": INK})
+SANS, SERIF, MONO = ["Arial", "Helvetica", "DejaVu Sans"], ["Georgia", "DejaVu Serif"], ["Menlo", "DejaVu Sans Mono"]
+if os.environ.get("FONT_DIR"):
+    from matplotlib import font_manager
+    for f in Path(os.environ["FONT_DIR"]).glob("*.ttf"):
+        font_manager.fontManager.addfont(str(f))
+    SANS, SERIF, MONO = ["IBM Plex Sans"] + SANS, ["Instrument Serif"] + SERIF, ["IBM Plex Mono"] + MONO
+plt.rcParams.update({"font.family": SANS, "font.size": 10, "text.color": INK})
+
+
+def when(ms):
+    """Offset from the expected beat time, in words."""
+    if abs(ms) <= 10:
+        return "on time"
+    return f"{abs(ms)} ms {'early' if ms < 0 else 'late'}"
 
 
 def prepare(ddir, p):
@@ -50,66 +68,70 @@ def prepare(ddir, p):
 
 
 def build(panels, dur):
-    fig = plt.figure(figsize=(W / DPI, H / DPI), dpi=DPI, facecolor="white")
-    px = lambda x, y, w, h: [x / W, 1 - (y + h) / H, w / W, h / H]   # top-left pixel rects
-    fig.text(24 / W, 1 - 26 / H, "Engineered heart tissues under 1 Hz field stimulation",
-             fontsize=13, color=INK, weight="bold", va="center")
-    clock = fig.text(936 / W, 1 - 26 / H, "", fontsize=11, color=MUTED, ha="right", va="center",
-                     family="DejaVu Sans Mono")
+    fig = plt.figure(figsize=(W / 100, H / 100), dpi=DPI, facecolor=PAPER)
+    px = lambda x, y, w, h: [x / W, 1 - (y + h) / H, w / W, h / H]   # top-left rects in layout units
+    fig.text(24 / W, 1 - 28 / H, "Two engineered heart tissues, both paced once a second",
+             fontsize=19, family=SERIF, color=INK, va="center")
+    clock = fig.text(936 / W, 1 - 28 / H, "", fontsize=10, color=MUTED, ha="right", va="center",
+                     family=MONO)
     pw, x0s = 444, (24, 492)
     ih = int(round((ROWS[1] - ROWS[0]) * pw / 512))
     dyn = []
     for p, x0 in zip(panels, x0s):
-        fig.text(x0 / W, 1 - 58 / H, p["id"], fontsize=12, weight="bold", color=INK, va="center")
-        fig.text(x0 / W, 1 - 78 / H, p["label"], fontsize=10.5, color=p["color"], va="center")
-        ax = fig.add_axes(px(x0, 92, pw, ih))
+        fig.text(x0 / W, 1 - 64 / H, p["label"], fontsize=15, family=SERIF, color=p["color"], va="center")
+        fig.text((x0 + pw) / W, 1 - 64 / H, p["id"], fontsize=8, family=MONO, color=FAINT, ha="right",
+                 va="center")
+        fig.text(x0 / W, 1 - 84 / H, p["sub"], fontsize=9, color=MUTED, va="center")
+        ax = fig.add_axes(px(x0, 98, pw, ih))
         ax.set_axis_off()
         p["small"] = [cv2.resize(f, (pw, ih), interpolation=cv2.INTER_AREA) for f in p["frames"]]
         im = ax.imshow(p["small"][0], cmap="gray", vmin=0, vmax=255, interpolation="nearest",
                        aspect="auto")
-        # Timeline strip
-        tl = fig.add_axes(px(x0, 92 + ih + 16, pw, 74))
+        # Timeline: rings where a beat is due if the tissue follows the pulse, dots where it beat
+        tl = fig.add_axes(px(x0, 98 + ih + 14, pw, 62))
+        tl.set_facecolor(PAPER)
         tl.set_xlim(0, dur)
-        tl.set_ylim(-1.15, 1.45)
-        for s in ("top", "right", "left"):
-            tl.spines[s].set_visible(False)
-        tl.spines["bottom"].set_color(FAINT)
+        tl.set_ylim(-1.15, 0.9)
+        for sp in tl.spines.values():
+            sp.set_visible(False)
+        tl.set_xticks([])
         tl.set_yticks([])
+        tl.axhline(0.15, color=GRID, lw=1, zorder=0)
         grid = p["bt"][0] + PACING_S * np.arange(10)
         grid = grid[grid <= p["t"][-1]]
         for g in grid:
-            tl.plot([g, g], [-0.55, 0.85], color=GRID, lw=1.2, zorder=1)
-            tl.plot([g], [0.15], "o", ms=9, mfc="white", mec=FAINT, mew=1.3, zorder=2)
-        tl.set_xticks(grid)
-        tl.set_xticklabels([f"{g:.2f}" for g in grid], fontsize=8.5, color=MUTED)
-        tl.tick_params(axis="x", length=0, pad=4)
-        tl.text(0, 1.45, "gray rings: expected stimulus-locked beat times (s)", fontsize=8, color=FAINT,
-                va="top")
+            tl.plot([g], [0.15], "o", ms=10, mfc=PAPER, mec=FAINT, mew=1.3, zorder=2)
         marks = []
-        for b, ph in zip(p["bt"], p["phase"]):
+        for k, (b, ph) in enumerate(zip(p["bt"], p["phase"])):
             g = b - ph
-            bar, = tl.plot([g, b], [0.15, 0.15], color=p["color"], lw=2, alpha=0.6, zorder=3)
+            bar, = tl.plot([g, b], [0.15, 0.15], color=p["color"], lw=2.2, alpha=0.55, zorder=3)
             dot, = tl.plot([b], [0.15], "o", ms=7, color=p["color"], zorder=4)
-            ms = int(round(ph * 1000))
-            txt = tl.text(b, -0.35, f"{ms:+d} ms".replace("-", "−") if ms else "0 ms",
-                          fontsize=8.5, color=p["color"], ha="center", va="top")
+            txt = tl.text(b, -0.4, when(int(round(ph * 1000))) if k else "first beat", fontsize=8, color=p["color"],
+                          ha="center", va="top")
             marks.append((b, (bar, dot, txt)))
-        cur = tl.axvline(0, ymin=0, ymax=0.8, color=INK, lw=1.2, zorder=5)
+        cur = tl.axvline(0, ymin=0.3, ymax=0.85, color=INK, lw=1, zorder=5)
         dyn.append((p, im, marks, cur))
-    cap = ["Brightfield, 4x, played in real time from the per-frame timestamps. Dots: contraction upstrokes "
-           "from the task's ground-truth code.",
-           "Gray rings: a 1.000 s grid anchored at each tissue's first upstroke. The stimulus itself is not "
-           "recorded, so the grid is anchored to the first beat.",
-           "A beat cut off by either end of the recording is not timed."]
-    for k, line in enumerate(cap):
-        fig.text(24 / W, 1 - (474 + 16 * k) / H, line, fontsize=8.5, color=MUTED, va="center")
-    fig.text(24 / W, 1 - 526 / H, "Data: Kobeissi, Lejeune et al., Zenodo 11120809, CC0",
-             fontsize=7.5, color=FAINT, va="center")
+    # Key, drawn with the same marks as the timelines
+    key = fig.add_axes(px(24, 466, 912, 18))
+    key.set_axis_off()
+    key.set_xlim(0, 912)
+    key.set_ylim(-1, 1)
+    key.plot([6], [0], "o", ms=9, mfc=PAPER, mec=FAINT, mew=1.3)
+    key.text(18, 0, "when a beat is due if the tissue follows the pulse", fontsize=8.5, color=MUTED,
+             va="center")
+    key.plot([300], [0], "o", ms=7, color=INK)
+    key.text(312, 0, "when the tissue actually beat", fontsize=8.5, color=MUTED, va="center")
+    fig.text(24 / W, 1 - 500 / H,
+             "Brightfield, 4x, shown in real time from the per-frame timestamps. Beat time: contraction upstroke, "
+             "from the task's ground-truth code.", fontsize=7.5, color=FAINT, va="center")
+    fig.text(24 / W, 1 - 514 / H,
+             "Rings: a 1.000 s grid from each tissue's first beat; the pulse itself is not recorded. "
+             "Data: Kobeissi, Lejeune et al., Zenodo 11120809, CC0.", fontsize=7.5, color=FAINT, va="center")
     return fig, clock, dyn
 
 
 def render(fig, clock, dyn, tau):
-    clock.set_text(f"t = {tau:4.2f} s")
+    clock.set_text(f"{tau:4.2f} s")
     for p, im, marks, cur in dyn:
         i = int(np.searchsorted(p["t"], tau, side="right") - 1)
         im.set_data(p["small"][max(0, min(i, len(p["t"]) - 1))])
@@ -136,7 +158,7 @@ def main():
     mp4 = out / "beating_side_by_side.mp4"
     n_out = int(np.ceil(dur * OUT_FPS))
     cmd = [FFMPEG, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
-           "-s", f"{W}x{H}", "-r", str(OUT_FPS), "-i", "-", "-an", "-c:v", "libx264",
+           "-s", f"{round(W * DPI / 100)}x{round(H * DPI / 100)}", "-r", str(OUT_FPS), "-i", "-", "-an", "-c:v", "libx264",
            "-preset", "veryslow", "-crf", "18", "-pix_fmt", "yuv420p", "-movflags", "+faststart",
            str(mp4)]
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
