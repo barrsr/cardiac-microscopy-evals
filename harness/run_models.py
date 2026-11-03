@@ -12,7 +12,7 @@ Agents:
   gemini:<model>  Gemini CLI (`gemini -p`), macOS seatbelt sandbox; needs GEMINI_API_KEY
 
 usage:
-  python harness/run_models.py --evals A2,B2 --models claude:haiku,claude:sonnet,claude:opus,codex:gpt-6-luna --runs 3
+  python harness/run_models.py --evals A2,A3 --models claude:haiku,claude:sonnet,claude:opus,codex:gpt-6-luna --runs 3
 Fetch the data first: python scripts/fetch_all.py
 """
 import argparse, concurrent.futures as cf, json, os, re, shutil, subprocess, sys, tempfile, time
@@ -125,7 +125,7 @@ def one(key, model, run):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument('--evals', default='A2,B2')
+    ap.add_argument('--evals', default='A2,A3')
     ap.add_argument('--models', default='claude:haiku,claude:sonnet,claude:opus,codex:gpt-6-luna')
     ap.add_argument('--runs', type=int, default=3)
     ap.add_argument('--jobs', type=int, default=4)

@@ -258,7 +258,8 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .fcap b{color:#efe9e1;font-weight:600}
 .mini{width:100%;border-collapse:collapse;font-size:.9rem}
 .mini td{padding:7px 0;border-bottom:1px solid #2b2724;vertical-align:middle}
-.mini tr:first-child td{border-top:1px solid #2b2724}
+.mini tr.mh td{font:600 .64rem var(--sans);letter-spacing:.16em;color:#8f887e;text-align:right;padding:0 0 6px;border-bottom:1px solid #2b2724}
+.mini tr.mh td:nth-child(2),.mini tr.mh td:nth-child(4){text-align:right}
 .mini .mm{font:400 1.12rem var(--serif);color:#efe9e1}
 .mini .mm small{font:400 .72rem var(--sans);color:#8f887e;margin-left:8px}
 .mini .tk{display:flex;gap:4px;justify-content:flex-end}
@@ -319,7 +320,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       <ol class="acts">
         <li><div><b>Task</b><span>Heart tissue grown in a dish beats on its own. An electrical pulse once a second can take over and set the pace, and a tissue that follows it beats exactly once a second. The agent watched videos of nineteen paced tissues and reported which ones were following the pulse.</span></div></li>
         <li><div><b>Why it's hard</b><span>Two of the tissues beat every 0.96 seconds, slightly faster than the pulse, so they aren't following it. The difference is small, and an analysis that accepts anything close to once a second gets these two wrong.</span></div></li>
-        <li><div><b>Result</b><span>Claude Opus answered correctly in all three runs. The other models answered correctly in one run or none, and the failed Claude runs had measured the faster beat before calling it captured.</span></div></li>
+        <li><div><b>Result</b><span>On this task, A3, Claude Opus answered correctly in all three runs and the other models in one run or none. The failed Claude runs had measured the faster beat before calling it captured. A2, the easier companion task, caught three of twelve runs.</span></div></li>
       </ol>
     </div>
     <div class="film-screen">
@@ -327,7 +328,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
         <video id="vidA3" autoplay muted loop playsinline aria-label="Two paced tissues side by side: one captured by the 1 Hz stimulus, one beating on its own rhythm"></video>
       </figure>
       <p class="fcap"><b>Figure 1.</b> Two of the nineteen tissues, in real time. On the left, each beat lands where the pulse says it should. On the right, each beat comes 40&nbsp;ms earlier than the last.</p>
-      <table class="mini" id="mini" aria-label="Task A3 results by model"></table>
+      <table class="mini" id="mini" aria-label="Tasks A2 and A3, results by model"></table>
     </div>
   </div>
   <div class="film-bottom">
@@ -354,21 +355,11 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </section>
 
 <section id="v1">
-  <div class="head"><div class="kicker">02 · Earlier versions</div>
-    <div class="t"><h2>Two easier versions came first</h2><p>The beat task went through two versions before A3. A1 asked for one beat rate, and its traps were in the signal processing. Every Claude run passed it, and GPT-6 Luna missed it in all three runs. A2 asked which tissues were captured. Its uncaptured tissues were clearly off the beat, so checking for a steady rhythm near 1&nbsp;Hz was nearly enough. Three runs still missed it.</p></div></div>
-  <article class="task">
-    <div class="text">
-      <div class="label"><b>A1</b><span>First version · 1 tissue</span></div>
-      <h2>What is this tissue's beat rate?</h2>
-      <p>The tissue is paced at 1&nbsp;Hz, so the answer is 60&nbsp;bpm. Three shortcuts give a wrong number. A motion trace has two peaks per beat, one for contraction and one for relaxation, so counting both gives 120&nbsp;bpm. The tallest peak in the spectrum is the third harmonic, at 180&nbsp;bpm. The data sheet says 30 frames per second while the file's own timestamps say 32.9, and using the sheet's figure gives 54.5 to 54.7&nbsp;bpm.</p>
-    </div>
-    <figure class="plate"><img id="figA1" alt="Two motion peaks per beat in the speed trace, one in the displacement trace"><figcaption class="figcap"><b>Figure 2.</b> Two speed peaks per beat; one displacement peak per beat.</figcaption></figure>
-  </article>
-
+  <div class="head"><div class="kicker">02 · First task</div>
+    <div class="t"><h2>Which paced tissues are captured?</h2><p>Eleven tissues were paced at 1&nbsp;Hz. Three of them aren't following the pulse, and two of those still average close to once a second, at 57 and 62&nbsp;bpm, so an analysis that accepts anything near 1&nbsp;Hz counts them as captured.</p></div></div>
   <article class="task long">
     <div class="text">
-      <div class="label"><b>A2</b><span>Second version · 11 tissues</span></div>
-      <h2>Which paced tissues are captured?</h2>
+      <div class="label"><b>A2</b><span>Brightfield time-lapse · 11 tissues</span></div>
       <p>Eleven tissues were filmed on day 7 under 1&nbsp;Hz pacing, and the agent decides which ones follow the pulse beat for beat. A captured tissue beats exactly once a second, so the pacing itself supplies the answer key.</p>
       <div class="answer"><span class="kicker">Answer</span><strong>8 captured</strong>; not captured <strong>Ex00636, Ex00637, Ex00638</strong></div>
       <p>Every interval in the captured tissues sits within 0.010&nbsp;s of 1.000&nbsp;s. Each non-captured tissue has an interval at least 0.079&nbsp;s off and drifts at least 0.137&nbsp;s against the pacing grid. Ex00637 has intervals as short as 0.89&nbsp;s, which a 1&nbsp;Hz stimulus cannot produce.</p>
@@ -385,13 +376,13 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       </table>
       <p class="src">Data: Kobeissi, Lejeune et al., strain-gauge microbundle time-lapse dataset, Dryad <a href="https://doi.org/10.5061/dryad.sqv9s4nbg">10.5061/dryad.sqv9s4nbg</a>, CC0. Platform from Zhang et al., Science Advances 2021. Files used unmodified.</p>
     </div>
-    <figure class="plate"><img id="figA2" alt="Beat phase against the 1 second pacing grid for captured and non-captured tissues"><figcaption class="figcap"><b>Figure 3.</b> Beat times against the 1.000&nbsp;s pacing grid. Captured tissues stay on the grid; the three others drift off it.</figcaption></figure>
+    <figure class="plate"><img id="figA2" alt="Beat phase against the 1 second pacing grid for captured and non-captured tissues"><figcaption class="figcap"><b>Figure 2.</b> Beat times against the 1.000&nbsp;s pacing grid. Captured tissues stay on the grid; the three others drift off it.</figcaption></figure>
   </article>
 </section>
 
 <section id="test">
-  <div class="head"><div class="kicker">03 · Final version</div>
-    <div class="t"><h2>Captured or beating on its own?</h2><p>A3 uses nineteen different tissues, two of which beat as steadily as the captured ones and only slightly too fast.</p></div></div>
+  <div class="head"><div class="kicker">03 · Second task</div>
+    <div class="t"><h2>Captured or beating on its own?</h2><p>A3 closes the shortcut A2 left open. Its nineteen tissues include two that beat as steadily as the captured ones, only slightly too fast.</p></div></div>
   <article class="task long">
     <div class="text">
       <div class="label"><b>A3</b><span>Brightfield time-lapse · 19 tissues</span></div>
@@ -411,7 +402,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       </table>
       <p class="src">These recordings come from condition 023 of the same deposit as A2. Nineteen of its twenty-three files were used unmodified. Four were left out because their beats are too faint or the call depends on how a beat is timed. The ground truth rests on the depositors' 1&nbsp;Hz condition label plus the analysis in <span class="mono">ground_truth.py</span>.</p>
     </div>
-    <figure class="plate"><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption class="figcap"><b>Figure 4.</b> Every beat interval of every tissue. Captured tissues sit on 1.000&nbsp;s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
+    <figure class="plate"><img id="figA3" alt="Every beat interval of every tissue against the 1.000 second pacing period"><figcaption class="figcap"><b>Figure 3.</b> Every beat interval of every tissue. Captured tissues sit on 1.000&nbsp;s; Ex00575 and Ex00576 sit just short of it.</figcaption></figure>
   </article>
 </section>
 
@@ -421,7 +412,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
   <div class="head"><div class="kicker">04 · The failures</div>
     <div class="t"><h2>Every run and every failure</h2><p>Each bar is one agent run, given only the data and a Python environment. Every failed run is listed with what it got wrong; select one to read the agent's own reasoning.</p></div></div>
   <div class="matrix-wrap"><table class="matrix" id="grid"></table></div>
-  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A3, A2 and B2 are the main tasks. A1 and B1 are the first versions, kept to show how the tasks were hardened.</span></div>
+  <div class="key"><span><i></i>passed</span><span><i class="f"></i>failed</span><span>A2 and A3 are the two tasks. A1, B1 and B2 are earlier versions, kept to show how the tasks were developed.</span></div>
   <div class="runs">
     <div class="list"><h3>Failed runs <span id="nfail"></span></h3><ul class="fails" id="fails"></ul></div>
     <div class="viewer" id="viewer"><p class="empty">Select a run to open its transcript.</p></div>
@@ -429,8 +420,17 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </section>
 
 <section id="sarcomeres">
-  <div class="head"><div class="kicker">05 · A second measurement</div>
-    <div class="t"><h2>Sarcomeres in fluorescence images</h2><p>The same approach was applied to a second kind of image. A fluorescent tag on alpha-actinin marks the z-lines of the sarcomere, the repeating contractile unit of heart muscle. A mature cell shows regular stripes about 1.7&nbsp;µm apart, while an immature cell shows scattered dots and has no sarcomere length to measure. Every model passed both versions, so these two tasks don't separate the models yet.</p></div></div>
+  <div class="head"><div class="kicker">05 · Development</div>
+    <div class="t"><h2>Earlier versions</h2><p>A1 was the first version of the beat task, with its traps in the signal processing, such as a misleading frame rate. Every Claude run passed it, and GPT-6 Luna missed it in all three runs. B1 and B2 applied the same approach to fluorescence images of sarcomeres. Every model passed both, so they were set aside.</p></div></div>
+  <article class="task">
+    <div class="text">
+      <div class="label"><b>A1</b><span>First version · 1 tissue</span></div>
+      <h2>What is this tissue's beat rate?</h2>
+      <p>The tissue is paced at 1&nbsp;Hz, so the answer is 60&nbsp;bpm. Three shortcuts give a wrong number. A motion trace has two peaks per beat, one for contraction and one for relaxation, so counting both gives 120&nbsp;bpm. The tallest peak in the spectrum is the third harmonic, at 180&nbsp;bpm. The data sheet says 30 frames per second while the file's own timestamps say 32.9, and using the sheet's figure gives 54.5 to 54.7&nbsp;bpm.</p>
+    </div>
+    <figure class="plate"><img id="figA1" alt="Two motion peaks per beat in the speed trace, one in the displacement trace"><figcaption class="figcap"><b>Figure 4.</b> Two speed peaks per beat; one displacement peak per beat.</figcaption></figure>
+  </article>
+
   <article class="task">
     <div class="text">
       <div class="label"><b>B1</b><span>First version · 1 cell</span></div>
@@ -467,7 +467,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 <section id="design" class="three">
   <div class="head"><div class="kicker">06 · Design</div><div class="t"><h2>Design rules</h2></div></div>
   <div class="princ">
-    <div><h3>Ground truth</h3><p>A tissue paced at 1&nbsp;Hz has a known period, and the dataset's expert scorers decide which cells are striated. The analysis measures each tissue or cell against that fixed reference.</p></div>
+    <div><h3>Ground truth</h3><p>A tissue paced at 1&nbsp;Hz has a known period of 1.000&nbsp;s. The analysis times every beat from the file's own timestamps and holds each interval to that period.</p></div>
     <div><h3>Where the trap sits</h3><p>A wrong frame rate can be caught by careful checking. Recognizing that a tissue beating a few percent faster than its stimulus is not captured takes training in cardiac physiology.</p></div>
     <div><h3>What the prompt says</h3><p>It quotes the depositors' 30&nbsp;Hz frame rate because that is what anyone opening the deposit would read, and it never names the trap.</p></div>
   </div>
@@ -542,12 +542,13 @@ if (FIGS.A3vid) vid.src = FIGS.A3vid; else document.getElementById('heroFig').hi
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const order = ['Claude Opus','Claude Sonnet','Claude Haiku','GPT-6 Luna'];
 const MODELS = [...new Map(RUNS.map(r => [r.model, r.maker])).entries()].sort((a,b) => order.indexOf(a[0]) - order.indexOf(b[0]));
-const TASKS = [['A3','A3','capture vs own rhythm',true],['A2','A2','pacing capture',false],['B2','B2','striation panel',false],['A1','A1','beat rate, first version',false],['B1','B1','sarcomere, first version',false]];
+const TASKS = [['A2','A2','pacing capture',true],['A3','A3','capture vs own rhythm',true],['A1','A1','beat rate, first version',false],['B1','B1','sarcomere, first version',false],['B2','B2','striation panel, set aside',false]];
 const of = (m,k) => RUNS.filter(r => r.model === m && r.task === k).sort((a,b) => a.run - b.run);
 
-document.getElementById('mini').innerHTML = MODELS.map(([m,maker]) => {
-  const rs = of(m,'A3'), n = rs.filter(r => r.pass).length;
-  return `<tr><td class="mm">${esc(m)}<small>${esc(maker)}</small></td><td><div class="tk">${rs.map(r => `<i class="${r.pass?'':'f'}"></i>`).join('')}</div></td><td class="fr num ${n*2<rs.length?'lo':''}">${n}/${rs.length}</td></tr>`;
+document.getElementById('mini').innerHTML = '<tr class="mh"><td></td><td>A2</td><td></td><td>A3</td><td></td></tr>' + MODELS.map(([m,maker]) => {
+  const cell = k => { const rs = of(m,k), n = rs.filter(r => r.pass).length;
+    return `<td><div class="tk">${rs.map(r => `<i class="${r.pass?'':'f'}"></i>`).join('')}</div></td><td class="fr num ${n*2<rs.length?'lo':''}">${n}/${rs.length}</td>`; };
+  return `<tr><td class="mm">${esc(m)}<small>${esc(maker)}</small></td>${cell('A2')}${cell('A3')}</tr>`;
 }).join('');
 
 // story: interludes rise into place as they scroll in; a reading-progress line fills along the top
@@ -561,7 +562,7 @@ document.getElementById('mini').innerHTML = MODELS.map(([m,maker]) => {
 })();
 
 const grid = document.getElementById('grid');
-let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s,lead],i) => `<th class="${lead?'lead':''} ${i>2?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
+let h = '<thead><tr><th>Model</th>' + TASKS.map(([k,t,s,lead],i) => `<th class="${lead?'lead':''} ${i>1?'v1':''}">${t}<small>${s}</small></th>`).join('') + '</tr></thead><tbody>';
 for (const [m, maker] of MODELS) {
   h += `<tr><td class="who">${esc(m)}<span>${esc(maker)}</span></td>`;
   for (const [k,,,lead] of TASKS) {
