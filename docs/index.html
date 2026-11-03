@@ -316,8 +316,8 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       <h1><span class="off">Off</span><span class="beat">beat</span></h1>
       <p class="ftag">Testing whether AI agents can analyze heart cells like a cardiac biologist.</p>
       <ol class="acts">
-        <li><div><b>Task</b><span>Nineteen engineered heart tissues were paced at 1&nbsp;Hz and filmed. The agent reports which tissues follow the stimulus.</span></div></li>
-        <li><div><b>Difficulty</b><span>Two tissues beat regularly, every 0.96&nbsp;s. A 1&nbsp;Hz stimulus can't produce that interval, so they aren't following it.</span></div></li>
+        <li><div><b>Task</b><span>Heart tissue grown in a dish beats on its own. An electrical pulse once a second can take over and set the pace, and a tissue that follows it beats exactly once a second. The agent watched videos of nineteen paced tissues and reported which ones were following the pulse.</span></div></li>
+        <li><div><b>Why it's hard</b><span>Two of the tissues ignored the pulse and kept their own rhythm, a beat every 0.96 seconds. That's so regular and so close to once a second that they look like they're following. Only exact timing of each beat shows they aren't.</span></div></li>
         <li><div><b>Result</b><span>Claude Opus answered correctly in all three runs. The other models answered correctly in one run or none.</span></div></li>
       </ol>
     </div>
@@ -325,7 +325,7 @@ footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
       <figure class="screen" id="heroFig">
         <video id="vidA3" autoplay muted loop playsinline aria-label="Two paced tissues side by side: one captured by the 1 Hz stimulus, one beating on its own rhythm"></video>
       </figure>
-      <p class="fcap"><b>Figure 1.</b> On the left, Ex00567 beats once per stimulus. On the right, Ex00576 beats every 0.96&nbsp;s and runs ahead of it. Played in real time; the stimulus is not recorded, so each grid starts at the tissue's first beat.</p>
+      <p class="fcap"><b>Figure 1.</b> Two of the tissues, in real time. The left one follows the pulse, so each beat lands on its gray ring. The right one keeps its own rhythm, so its beats arrive a little earlier each second.</p>
       <table class="mini" id="mini" aria-label="Task A3 results by model"></table>
     </div>
   </div>
