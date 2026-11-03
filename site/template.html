@@ -233,9 +233,12 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 @media (prefers-reduced-motion:reduce){.drift .b{opacity:1;transition:none}}
 /* opening title sequence: a dark screen band, read before scrolling */
 .film{background:#0e0c0b;color:#efe9e1;margin-left:calc(max(24px,env(safe-area-inset-left,0px))*-1);margin-right:calc(max(24px,env(safe-area-inset-right,0px))*-1);margin-bottom:72px}
-.film-in{max-width:1232px;margin:0 auto;min-height:100svh;padding:24px max(24px,env(safe-area-inset-right,0px)) 26px max(24px,env(safe-area-inset-left,0px));display:grid;grid-template-rows:auto 1fr auto;gap:28px}
+.film-in{max-width:1232px;margin:0 auto;min-height:100svh;padding:92px max(24px,env(safe-area-inset-right,0px)) 26px max(24px,env(safe-area-inset-left,0px));display:grid;grid-template-rows:1fr auto;gap:28px}
 .film a{color:#efe9e1}
-.film-top{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;border-bottom:1px solid #2b2724;padding-bottom:16px}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:30;background:rgba(14,12,11,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid #2b2724}
+.topbar a{color:#efe9e1}
+.film-top{max-width:1232px;margin:0 auto;padding:14px max(24px,env(safe-area-inset-right,0px)) 14px max(24px,env(safe-area-inset-left,0px));display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;color:#efe9e1}
+html{scroll-padding-top:72px}
 .fname{font:400 1.55rem/1 var(--serif)} .fname em{color:#d9737b}
 .film-top nav{display:flex;gap:22px;flex-wrap:wrap;font-size:.86rem}
 .film-top nav a{color:#a9a196;text-decoration:none} .film-top nav a:hover{color:#efe9e1}
@@ -299,19 +302,19 @@ table.traps{width:100%;border-collapse:collapse;font-size:.9rem}
 .interlude.seen p{animation:rise .8s cubic-bezier(.2,.7,.2,1) .12s both}
 .interlude.seen blockquote{animation:rise .8s cubic-bezier(.2,.7,.2,1) .4s both}
 @keyframes grow{from{transform:scaleY(0);transform-origin:top}to{transform:scaleY(1);transform-origin:top}}
-.progress{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);z-index:20}
+.progress{position:fixed;top:0;left:0;height:2px;width:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);z-index:40}
 @media (prefers-reduced-motion:reduce){.interlude.seen i,.interlude.seen p,.interlude.seen blockquote{animation:none!important}}
 footer{border-top:1.5px solid var(--ink);padding-top:16px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
 footer .name{font:400 1.1rem var(--serif);color:var(--ink)}
 </style>
 
 <div class="progress" id="progress" aria-hidden="true"></div>
-<header class="film" id="top">
- <div class="film-in">
-  <div class="film-top">
+<header class="topbar"><div class="film-top">
     <div class="fname">Off<em>beat</em></div>
     <nav><a href="#background">Biology</a><a href="#v1">Tasks</a><a href="#runs">Failures</a><a href="#design">Design</a><a href="#method">Method</a><a href="https://github.com/barrsr/cardiac-microscopy-evals">GitHub</a></nav>
-  </div>
+  </div></header>
+<header class="film" id="top">
+ <div class="film-in">
   <div class="film-main">
     <div class="film-copy">
       <div class="fkick">Cardiac microscopy evals for AI agents</div>
